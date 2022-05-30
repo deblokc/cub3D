@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:22:26 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/11 14:55:49 by ghanquer         ###   ########.fr       */
+/*   Updated: 2022/05/30 18:41:41 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ char	*trim_free(char *s1, char const *set)
 	size_t	k;
 	char	*dest;
 
+	if (!s1)
+		return (NULL);
 	i = ft_strlen(s1);
 	j = 0;
 	k = 0;

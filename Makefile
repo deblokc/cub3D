@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/30 11:59:08 by tnaton            #+#    #+#              #
-#    Updated: 2022/05/30 13:07:04 by tnaton           ###   ########.fr        #
+#    Updated: 2022/05/30 16:02:38 by tnaton           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ CC = clang
 object = $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 
 $(NAME) : $(object) $(LIBFT) $(MLX)
-	$(CC) $(CFLAGS) $(MLX) $(LIBFT) -lXext -lX11 -lm -Iminilibx -o $@ $(object)
+	$(CC) $(CFLAGS) $(object) $(MLX) $(LIBFT) -lXext -lX11 -lm -Iminilibx -o $@
 
 -include libft/Makefile
 
@@ -46,21 +46,21 @@ $(MLX) :
 $(object) : | $(OBJDIR)
 
 $(OBJDIR)/%.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJDIR) :
 	mkdir $(OBJDIR)
 
 .PHONY: debug
 debug : $(object) $(LIBFT) $(MLX)
-	gcc -g3 -fsanitize=address $(object) $(MLX) $(LIBFT) -lXext -lX11 -lm -Iminilibx -o $@
+	gcc -g3 -fsanitize=address $(object) $(MLX) -lXext -lX11 -lm -Iminilibx -o $@ $(LIBFT)
 
 .PHONY: all
 all : $(NAME)
 
 .PHONY: clean
 clean :
-	rm -rf $(object)
+	rm -rf $(object) $(OBJDIR)
 	$(MAKE) clean -C ./libft
 
 .PHONY: fclean
