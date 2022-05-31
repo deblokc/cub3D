@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/30 11:59:08 by tnaton            #+#    #+#              #
-#    Updated: 2022/05/30 16:02:38 by tnaton           ###   ########.fr        #
+#    Updated: 2022/05/31 11:53:36 by tnaton           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRC = main.c
 
 source = $(addprefix srcs/,$(SRC))
 
-CFLAGS = -Wall -Werror -Wextra -Iinc
+CFLAGS = -Wall -Werror -Wextra -Iinc -g
 
 CC = clang
 

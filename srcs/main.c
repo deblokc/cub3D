@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/30 20:29:03 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/05/31 12:48:30 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,24 @@ int	substrinstr(char *str, char *substr)
 
 char	*getlaststr(char *ligne)
 {
-	int	i;
+	int		i;
+	int		j;
+	char	*ret;
 
 	i = 0;
 	while (ligne[i] && ligne[i] == ' ')
 		i++;
+	j = i;
 	while (ligne[i] && ligne[i] != ' ')
 		i++;
+	j = i - j;
 	while (ligne[i] && ligne[i] == ' ')
 		i++;
-	return (ft_substr(ligne, i, ft_strlen(ligne) - i));
+	ret = ft_substr(ligne, i, ft_strlen(ligne) - i);
+	ret = ft_strtrim_free(ret, " \n");
+	if (charinstr(ret, ' ') && j == 2)
+		return (free(ligne), free(ret), NULL);
+	return (free(ligne), ret);
 }
 
 unsigned char	*getlist(char *str)
@@ -96,26 +104,38 @@ unsigned char	*getlist(char *str)
 	int	j;
 	unsigned char *lst;
 
+	if (!str)
+		return (NULL);
 	lst = malloc(sizeof(unsigned char) * 3);
 	if (!lst)
-		return (NULL);
+		return (free(str), NULL);
 	i = 0;
 	j = 0;
 	while (str[i] && str[i] != ',')
 		i++;
-	lst[0] = ft_atoi(ft_substr(str, j, i - j));
+	j = ft_atoi_free(ft_substr(str, j, i - j));
+	if (j < 0 || j > 255)
+		return (free(lst), free(str), NULL);
+	lst[0] = j;
 	i++;
 	j = i;
 	while (str[i] && str[i] != ',')
 		i++;
-	lst[1] = ft_atoi(ft_substr(str, j, i - j));
+	j = ft_atoi_free(ft_substr(str, j, i - j));
+	if (j < 0 || j > 255)
+		return (free(lst), free(str), NULL);
+	lst[1] = j;
 	i++;
 	j = i;
 	while (str[i] && str[i] != ',')
 		i++;
-	lst[2] = ft_atoi(ft_substr(str, j, i - j));
+	j = ft_atoi_free(ft_substr(str, j, i - j));
+	if (j < 0 || j > 255)
+		return (free(lst), free(str), NULL);
+	lst[2] = j;
 	i++;
 	j = i;
+	free(str);
 	return (lst);
 }
 
@@ -123,6 +143,7 @@ t_info	getinfo(t_map *map)
 {
 	t_info	info;
 	t_map	*current;
+	t_map	*tmp;
 
 	current = map;
 	info.NO = NULL;
@@ -131,6 +152,7 @@ t_info	getinfo(t_map *map)
 	info.EA = NULL;
 	info.F = NULL;
 	info.C = NULL;
+	info.map = NULL;
 	while (current)
 	{
 		if (substrinstr(current->ligne, "NO"))
@@ -145,14 +167,29 @@ t_info	getinfo(t_map *map)
 			info.F = getlist(getlaststr(current->ligne));
 		else if (charinstr(current->ligne, 'C'))
 			info.C = getlist(getlaststr(current->ligne));
-		else if (ft_strcmp(ft_strtrim(current->ligne, " "), "\n"))
+		else if (ft_strcmp_free(ft_strtrim(current->ligne, " "), "\n"))
 		{
 			info.map = current;
 			break;
 		}
+		else
+			free(current->ligne);
+		tmp = current;
 		current = current->next;
+		free(tmp);
 	}
 	return (info);
+}
+
+void	freeinfo(t_info *info)
+{
+	free(info->F);
+	free(info->C);
+	free(info->NO);
+	free(info->SO);
+	free(info->WE);
+	free(info->EA);
+	freeallchunk(info->map);
 }
 
 int	main(int ac, char **av)
@@ -168,6 +205,8 @@ int	main(int ac, char **av)
 	if (fd <= 0)
 		return (ft_putstr_fd("Error\nFichier d'entree inaccessible !\n", 2), 1);
 	current = newchunk(get_next_line(fd));
+	if (!current->ligne)
+		return (free(current), ft_putstr_fd("Error\nFichier d'entree invalide !\n", 2), 1);
 	map = current;
 	while (current->ligne)
 	{
@@ -177,12 +216,15 @@ int	main(int ac, char **av)
 		current = current->next;
 	}
 	info = getinfo(map);
-	printf("%s", info.NO);
-	printf("%s", info.SO);
-	printf("%s", info.WE);
-	printf("%s", info.EA);
+	if (!info.NO || !info.SO || !info.WE || !info.EA || !info.F || !info.C || !info.map)
+		return (freeinfo(&info), ft_putstr_fd("Error\nFichier d'entree invalide !\n", 2), 1);
+	printf("%s\n", info.NO);
+	printf("%s\n", info.SO);
+	printf("%s\n", info.WE);
+	printf("%s\n", info.EA);
 	printf("%d %d %d\n", info.F[0], info.F[1], info.F[2]);
 	printf("%d %d %d\n", info.C[0], info.C[1], info.C[2]);
 	printf("%s", info.map->ligne);
+	freeinfo(&info);
 	return (0);
 }
