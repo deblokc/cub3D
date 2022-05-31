@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:09:49 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/31 15:57:24 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/05/31 18:24:27 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ char	*semitrim(char *str)
 	char	*ret;
 
 	str = ft_strtrim_free(str, "\n");
+	if (!str)
+		return (NULL);
 	i = ft_strlen(str) - 1;
 	while (str[i] == ' ')
 		i--;
@@ -98,7 +100,7 @@ char	**parsemap(t_map *lstmap)
 	if (!map)
 		return (NULL);
 	maxlen = getmaxlen(lstmap);
-	while (lstmap->ligne)
+	while (ft_strcmp_free(ft_strtrim(lstmap->ligne, " \n"), ""))
 	{
 		map[i] = NULL;
 		map[i] = getligne(lstmap->ligne, maxlen);
@@ -106,6 +108,11 @@ char	**parsemap(t_map *lstmap)
 			return (freecharchar(map), NULL);
 		printf("%s\n", map[i]);
 		i++;
+		lstmap = lstmap->next;
+	}
+	while (lstmap)
+	{
+		free(lstmap->ligne);
 		lstmap = lstmap->next;
 	}
 	map[i] = NULL;
