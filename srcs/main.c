@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/31 15:56:38 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/05/31 19:31:11 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,15 @@ int	isvalid(char **map, t_info *info)
 	return (0);
 }
 
+void	freelstmap(t_map *map)
+{
+	while (map)
+	{
+		free(map->ligne);
+		map = map->next;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_map	*map;
@@ -159,7 +168,7 @@ int	main(int ac, char **av)
 	info = getinfo(map);
 	if (!info.no || !info.so || !info.we || !info.ea \
 			|| !info.f || !info.c || !info.lstmap)
-		return (freeinfo(&info), \
+		return (freelstmap(info.lstmap), freeinfo(&info),\
 				ft_putstr_fd("Error\nFichier d'entree invalide !\n", 2), 1);
 	info.map = parsemap(info.lstmap);
 	if (!info.map || !isvalid(info.map, &info))
