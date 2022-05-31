@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 11:10:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/31 15:49:30 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/05/31 20:02:07 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	ft_isdigitstr(char *str)
 	int	i;
 
 	i = 0;
+	if (!str || !*str)
+		return (0);
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
