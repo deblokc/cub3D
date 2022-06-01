@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/31 19:31:11 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 12:12:25 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,27 @@ int	checkcub(char **map, int i, int j)
 	return (1);
 }
 
+void	printerrcoo(char *str, int i, int j, t_info *info)
+{
+	char	*tmp;
+
+	puterr(str, info);
+	tmp = ft_itoa(i);
+	ft_putstr_fd(tmp, 2);
+	ft_putstr_fd(", ", 2);
+	free(tmp);
+	tmp = ft_itoa(j);
+	ft_putstr_fd(tmp, 2);
+	ft_putstr_fd(" !\n", 2);
+}
+
 int	isvalid(char **map, t_info *info)
 {
 	int	i;
 	int	j;
+	int	isvalid;
 
+	isvalid = 1;
 	i = 0;
 	while (map[i])
 	{
@@ -108,25 +124,36 @@ int	isvalid(char **map, t_info *info)
 		while (map[i][j])
 		{
 			if (!ischr(map[i][j]) && map[i][j] != ' ')
-				return (0);
+			{
+				printerrcoo("Charactere invalide dans la map en ", i, j, info);
+				isvalid = 0;
+			}
 			if (map[i][j] == '0' || map[i][j] == 'E' || map[i][j] == 'W' \
 					|| map[i][j] == 'N' || map[i][j] == 'S')
 				if (!checkcub(map, i, j))
-					return (0);
+				{
+					printerrcoo("La map n'est pas fermee en ", i, j, info);
+					isvalid = 0;
+				}
 			if (map[i][j] == 'E' || map[i][j] == 'W' || map[i][j] == 'N' \
 					|| map[i][j] == 'S')
 			{
 				if (!info->dir)
 					info->dir = map[i][j];
 				else
-					return (0);
+				{
+					printerrcoo("Point de spawn excedant en ", i, j, info);
+					isvalid = 0;
+				}
 			}
 			j++;
 		}
 		i++;
 	}
-	if (info->dir)
+	if (info->dir && isvalid)
 		return (1);
+	else if (!info->dir)
+		return (puterr("Pas de point de spawn !\n", info), 0);
 	return (0);
 }
 
@@ -156,7 +183,7 @@ int	main(int ac, char **av)
 	current = newchunk(get_next_line(fd));
 	if (!current->ligne)
 		return (free(current), \
-				ft_putstr_fd("Error\nFichier d'entree invalide !\n", 2), 1);
+				ft_putstr_fd("Error\nFichier d'entree vide !\n", 2), 1);
 	map = current;
 	while (current->ligne)
 	{
@@ -168,11 +195,10 @@ int	main(int ac, char **av)
 	info = getinfo(map);
 	if (!info.no || !info.so || !info.we || !info.ea \
 			|| !info.f || !info.c || !info.lstmap)
-		return (freelstmap(info.lstmap), freeinfo(&info),\
-				ft_putstr_fd("Error\nFichier d'entree invalide !\n", 2), 1);
+		return (freelstmap(info.lstmap), freeinfo(&info), 1);
 	info.map = parsemap(info.lstmap);
 	if (!info.map || !isvalid(info.map, &info))
-		return (freeinfo(&info), ft_putstr_fd("Error\nMap invalide !\n", 2), 1);
+		return (freeinfo(&info), 1);
 	printf("%s\n", info.no);
 	printf("%s\n", info.so);
 	printf("%s\n", info.we);

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/31 19:27:03 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 11:51:35 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,32 @@ unsigned char	*getlist(char *str)
 	return (lst);
 }
 
+void	puterr(char *str, t_info *info)
+{
+	if (!info->printerr)
+	{
+		ft_putstr_fd("Error\n", 2);
+		info->printerr = 1;
+	}
+	ft_putstr_fd(str, 2);
+}
+
+void	printerr(t_info *info)
+{
+	if (!info->no)
+		puterr("Erreur sur la ligne NO\n", info);
+	if (!info->so)
+		puterr("Erreur sur la ligne SO\n", info);
+	if (!info->we)
+		puterr("Erreur sur la ligne WE\n", info);
+	if (!info->ea)
+		puterr("Erreur sur la ligne EA\n", info);
+	if (!info->f)
+		puterr("Erreur sur la ligne F\n", info);
+	if (!info->c)
+		puterr("Erreur sur la ligne C\n", info);
+}
+
 t_info	getinfo(t_map *map)
 {
 	t_info	info;
@@ -132,6 +158,7 @@ t_info	getinfo(t_map *map)
 	info.c = NULL;
 	info.map = NULL;
 	info.dir = 0;
+	info.printerr = 0;
 	while (current)
 	{
 		if (substrinstr(current->ligne, "NO"))
@@ -157,5 +184,6 @@ t_info	getinfo(t_map *map)
 		current = current->next;
 		free(tmp);
 	}
+	printerr(&info);
 	return (info);
 }

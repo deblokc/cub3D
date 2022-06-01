@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/31 15:51:54 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 12:05:47 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_map
 
 typedef struct s_info
 {
+	int				printerr;
 	char			*no;
 	char			*so;
 	char			*we;
@@ -46,5 +47,6 @@ t_info			getinfo(t_map *map);
 unsigned char	*getlist(char *str);
 char			**parsemap(t_map *lstmap);
 void			freecharchar(char **lst);
+void			puterr(char *str, t_info *info);
 
 #endif
