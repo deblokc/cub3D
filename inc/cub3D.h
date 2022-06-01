@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 13:32:14 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/01 14:40:36 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <math.h>
 # include <unistd.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -28,8 +29,8 @@ typedef struct s_map
 
 typedef struct s_player
 {
-	int		x;
-	int		y;
+	double	x;
+	double	y;
 	double	angle;
 }	t_player;
 
