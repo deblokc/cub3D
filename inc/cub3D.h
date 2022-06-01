@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 12:05:47 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 14:37:24 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ typedef struct s_map
 	struct s_map	*next;
 }	t_map;
 
+typedef struct s_player
+{
+	double	x;
+	double	y;
+	double	angle;
+} t_player;
+
 typedef struct s_info
 {
 	int				printerr;
@@ -38,6 +45,7 @@ typedef struct s_info
 	t_map			*lstmap;
 	char			**map;
 	char			dir;
+	t_player		player;
 }	t_info;
 
 int				charinstr(char *str, char c);
@@ -48,5 +56,6 @@ unsigned char	*getlist(char *str);
 char			**parsemap(t_map *lstmap);
 void			freecharchar(char **lst);
 void			puterr(char *str, t_info *info);
+void			freelstmap(t_map *map);
 
 #endif
