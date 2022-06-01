@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:09:49 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 14:32:36 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 16:25:09 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	**parsemap(t_map *lstmap)
 		map[i] = getligne(lstmap->ligne, maxlen);
 		if (!map[i])
 			return (freecharchar(map), ft_putstr_fd("Error\nLe malloc est KC !\n", 2), NULL);
-		printf("%s\n", map[i]);
+	//	printf("%s\n", map[i]);
 		i++;
 		lstmap = lstmap->next;
 	}

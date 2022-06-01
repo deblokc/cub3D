@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 11:51:35 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 20:41:10 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,24 +76,24 @@ char	*getlaststr(char *ligne)
 	return (free(ligne), ret);
 }
 
-unsigned char	*getlist(char *str)
+unsigned int	getlist(char *str)
 {
 	int				i;
 	int				j;
 	unsigned char	*lst;
 
 	if (!str || !*str)
-		return (free(str), NULL);
+		return (free(str), 0);
 	lst = malloc(sizeof(unsigned char) * 3);
 	if (!lst)
-		return (free(str), NULL);
+		return (free(str), 0);
 	i = 0;
 	j = 0;
 	while (str[i] && str[i] != ',')
 		i++;
 	j = ft_atoi_free(ft_substr(str, j, i - j));
 	if (j < 0 || j > 255)
-		return (free(lst), free(str), NULL);
+		return (free(lst), free(str), 0);
 	lst[0] = j;
 	i++;
 	j = i;
@@ -101,7 +101,7 @@ unsigned char	*getlist(char *str)
 		i++;
 	j = ft_atoi_free(ft_substr(str, j, i - j));
 	if (j < 0 || j > 255)
-		return (free(lst), free(str), NULL);
+		return (free(lst), free(str), 0);
 	lst[1] = j;
 	i++;
 	j = i;
@@ -109,12 +109,12 @@ unsigned char	*getlist(char *str)
 		i++;
 	j = ft_atoi_free(ft_substr(str, j, i - j));
 	if (j < 0 || j > 255)
-		return (free(lst), free(str), NULL);
+		return (free(lst), free(str), 0);
 	lst[2] = j;
 	i++;
 	j = i;
 	free(str);
-	return (lst);
+	return (((lst[0]&0x0ff) << 16) | ((lst[1]&0x0ff) << 8) | (lst[2]&0x0ff));
 }
 
 void	puterr(char *str, t_info *info)
@@ -129,13 +129,13 @@ void	puterr(char *str, t_info *info)
 
 void	printerr(t_info *info)
 {
-	if (!info->no)
+	if (!info->no.path)
 		puterr("Erreur sur la ligne NO\n", info);
-	if (!info->so)
+	if (!info->so.path)
 		puterr("Erreur sur la ligne SO\n", info);
-	if (!info->we)
+	if (!info->we.path)
 		puterr("Erreur sur la ligne WE\n", info);
-	if (!info->ea)
+	if (!info->ea.path)
 		puterr("Erreur sur la ligne EA\n", info);
 	if (!info->f)
 		puterr("Erreur sur la ligne F\n", info);
@@ -150,29 +150,39 @@ t_info	getinfo(t_map *map)
 	t_map	*tmp;
 
 	current = map;
-	info.no = NULL;
-	info.so = NULL;
-	info.we = NULL;
-	info.ea = NULL;
-	info.f = NULL;
-	info.c = NULL;
+	info.no.path = NULL;
+	info.so.path = NULL;
+	info.we.path = NULL;
+	info.ea.path = NULL;
+	info.f = 0;
+	info.c = 0;
 	info.map = NULL;
+	info.lstmap = NULL;
 	info.dir = 0;
 	info.printerr = 0;
+	info.no.texture = NULL;
+	info.so.texture = NULL;
+	info.we.texture = NULL;
+	info.ea.texture = NULL;
+	info.mlx = NULL;
+	info.win = NULL;
 	while (current)
 	{
-		if (substrinstr(current->ligne, "NO"))
-			info.no = getlaststr(current->ligne);
-		else if (substrinstr(current->ligne, "SO"))
-			info.so = getlaststr(current->ligne);
-		else if (substrinstr(current->ligne, "WE"))
-			info.we = getlaststr(current->ligne);
-		else if (substrinstr(current->ligne, "EA"))
-			info.ea = getlaststr(current->ligne);
-		else if (charinstr(current->ligne, 'F'))
+		if (substrinstr(current->ligne, "NO") && !info.no.path)
+			info.no.path = getlaststr(current->ligne);
+		else if (substrinstr(current->ligne, "SO") && !info.so.path)
+			info.so.path = getlaststr(current->ligne);
+		else if (substrinstr(current->ligne, "WE") && !info.we.path)
+			info.we.path = getlaststr(current->ligne);
+		else if (substrinstr(current->ligne, "EA") && !info.ea.path)
+			info.ea.path = getlaststr(current->ligne);
+		else if (charinstr(current->ligne, 'F') && !info.f)
 			info.f = getlist(getlaststr(current->ligne));
-		else if (charinstr(current->ligne, 'C'))
+		else if (charinstr(current->ligne, 'C') && !info.c)
 			info.c = getlist(getlaststr(current->ligne));
+		else if (substrinstr(current->ligne, "NO") || substrinstr(current->ligne, "SO") || substrinstr(current->ligne, "WE") || substrinstr(current->ligne, "EA") || charinstr(current->ligne, 'F') || charinstr(current->ligne, 'C'))
+			return (puterr("Cette ligne est en trop : ", &info), ft_putstr_fd(current->ligne, 2) ,\
+					freelstmap(current), freeallchunk(current), info);
 		else if (ft_strcmp_free(ft_strtrim(current->ligne, " "), "\n"))
 		{
 			info.lstmap = current;

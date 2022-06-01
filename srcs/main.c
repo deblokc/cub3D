@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 14:37:10 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 20:25:03 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,34 @@ void	freecharchar(char **lst)
 	}
 }
 
+void	freetexture(t_info *info)
+{
+	if (info->no.texture)
+		mlx_destroy_image(info->mlx, info->no.texture);
+	if (info->so.texture)
+		mlx_destroy_image(info->mlx, info->so.texture);
+	if (info->we.texture)
+		mlx_destroy_image(info->mlx, info->we.texture);
+	if (info->ea.texture)
+		mlx_destroy_image(info->mlx, info->ea.texture);
+}
+
 void	freeinfo(t_info *info)
 {
-	free(info->f);
-	free(info->c);
-	free(info->no);
-	free(info->so);
-	free(info->we);
-	free(info->ea);
+	free(info->no.path);
+	free(info->so.path);
+	free(info->we.path);
+	free(info->ea.path);
 	freeallchunk(info->lstmap);
 	freecharchar(info->map);
+	freetexture(info);
+	if (info->win)
+		mlx_destroy_window(info->mlx, info->win);
+	if (info->mlx)
+	{
+		mlx_destroy_display(info->mlx);
+		free(info->mlx);
+	}
 }
 
 int	ispointcub(char *str)
@@ -196,18 +214,14 @@ int	main(int ac, char **av)
 		current = current->next;
 	}
 	info = getinfo(map);
-	if (!info.no || !info.so || !info.we || !info.ea \
+	if (!info.no.path || !info.so.path || !info.we.path || !info.ea.path \
 			|| !info.f || !info.c || !info.lstmap)
 		return (freelstmap(info.lstmap), freeinfo(&info), 1);
 	info.map = parsemap(info.lstmap);
 	if (!info.map || !isvalid(info.map, &info))
 		return (freeinfo(&info), 1);
-	printf("%s\n", info.no);
-	printf("%s\n", info.so);
-	printf("%s\n", info.we);
-	printf("%s\n", info.ea);
-	printf("%d %d %d\n", info.f[0], info.f[1], info.f[2]);
-	printf("%d %d %d\n", info.c[0], info.c[1], info.c[2]);
+	if (mlx(&info))
+		return (freeinfo(&info), 1);
 	freeinfo(&info);
 	return (0);
 }
