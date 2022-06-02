@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/02 13:13:39 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/02 14:43:36 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,29 @@ int	draw_first_wall(t_info *info, double cur[2], int hit, double v[2])
 	double	central_vector[0];
 	double	end[2];
 
-	distance0 = hypot(fabs(cur[0] - info->player.x), fabs(cur[1] - info->player.y)) * cos((M_PI / 2));
+	distance0 = hypot(fabs(cur[0] - info->player.x), fabs(cur[1] - info->player.y)) * cos((M_PI / 4));
 	central_vector[0] = cos(info->player.angle);
 	central_vector[1] = -sin(info->player.angle);
 	printf("found intersection at %.4f; %.4f\n", cur[0], cur[1]);
+	printf("Hit on %c\n", hit==1?'y':'x');
+	printf("Distance to projection plane: %.8f\n", distance0);
+	if (hit == 1)
+	{
+		if (v[1] < 0)
+			end[0] = ceil(cur[0]) - 0.0001;
+		else
+			end[0] = floor(cur[0]);
+		end[1] = cur[1];
+	}
+	else
+	{
+		if (v[0] < 0)
+			end[1] = floor(cur[1]);
+		else
+			end[1] = ceil(cur[1]) - 0.0001;
+		end[0] = cur[0];
+	}
+	printf("End point of block at %.4f; %.4f\n", end[0], end[1]);
 	return (hit);
 }
 
@@ -225,9 +244,9 @@ int main()
 	info.map[4][2] = '1';
 	info.map[4][3] = '1';
 	info.map[4][4] = '1';
-	info.player.angle = (3 * M_PI) /2;
-	info.player.x = 3.5;
-	info.player.y = 2.5;
+	info.player.angle = M_PI / 2;
+	info.player.x = 1.5;
+	info.player.y = 1.5;
 	raisewalls(&info);
 	return (0);
 }
