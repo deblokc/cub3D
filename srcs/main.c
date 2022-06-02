@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 20:25:03 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/02 17:43:12 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,12 @@ int	isvalid(char **map, t_info *info)
 				if (!info->dir)
 				{
 					info->dir = map[i][j];
+					if (map[i][j] == 'N')
+						info->player.angle = 270;
+					if (map[i][j] == 'W')
+						info->player.angle = 180;
+					if (map[i][j] == 'S')
+						info->player.angle = 90;
 					info->player.x = j + 0.5;
 					info->player.y = i + 0.5;
 				}

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 20:20:59 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/02 19:07:08 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "../minilibx/mlx.h"
 # define WIDTH 1920
 # define HEIGHT 1080
+# define STEP 0.25
 
 typedef struct s_map
 {
@@ -84,5 +85,6 @@ void			freelstmap(t_map *map);
 int				mlx(t_info *info);
 void			freeallchunk(t_map *map);
 void			freeinfo(t_info *info);
+void			loop(t_info *info);
 
 #endif

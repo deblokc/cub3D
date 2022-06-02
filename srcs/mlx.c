@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 20:35:03 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/02 19:12:39 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,81 @@ int	closewin(t_info *info)
 	exit(0);
 }
 
+int	iswall(t_info *info, double y, double x)
+{
+//	printf("%.4f|%.4f|%d|%d\n", x, y, (int)floor(x), (int)floor(y));
+	if (info->map[(int)floor(y)][(int)floor(x)] == '1')
+		return (1);
+	return (0);
+}
+
+void	goforward(t_info *info)
+{
+	mlx_destroy_image(info->mlx, info->img.img);
+	if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * STEP), info->player.x))
+		info->player.y += (sin((info->player.angle * (M_PI/180))) * STEP);
+	else
+	{
+		if (sin((info->player.angle * (M_PI/180))) > 0)
+			info->player.y = ceil(info->player.y) - 0.0001;
+		else
+			info->player.y = floor(info->player.y) + 0.0001;
+	}
+	if (!iswall(info, info->player.y, info->player.x + cos((info->player.angle * (M_PI/180))) * STEP))
+		info->player.x += (cos((info->player.angle * (M_PI/180))) * STEP);
+	else
+	{
+		if (cos((info->player.angle * (M_PI/180))) > 0)
+			info->player.x = ceil(info->player.x) - 0.0001;
+		else
+			info->player.x = floor(info->player.x) + 0.0001;
+	}
+	loop(info);
+}
+
+void	goback(t_info *info)
+{
+	mlx_destroy_image(info->mlx, info->img.img);
+	if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * -STEP), info->player.x))
+		info->player.y += (sin((info->player.angle * (M_PI/180))) * -STEP);
+	if (!iswall(info, info->player.y, info->player.x + cos((info->player.angle * (M_PI/180))) * -STEP))
+		info->player.x += (cos((info->player.angle * (M_PI/180))) * -STEP);
+	loop(info);
+}
+
+void	goright(t_info *info)
+{
+	mlx_destroy_image(info->mlx, info->img.img);
+	info->player.angle += 5;
+	if (info->player.angle == 360)
+		info->player.angle = 0;
+//	printf("%.4f\n", info->player.angle);
+	loop(info);
+}
+
+void	goleft(t_info *info)
+{
+	mlx_destroy_image(info->mlx, info->img.img);
+	info->player.angle -= 5;
+	if (info->player.angle == 360)
+		info->player.angle = 0;
+//	printf("%.4f\n", info->player.angle);
+	loop(info);
+}
+
 int	hook(int keycode, t_info *info)
 {
 	printf("%d\n", keycode);
 	if (keycode == 65307)
 		closewin(info);
+	if (keycode == 65362)
+		goforward(info);
+	if (keycode == 65364)
+		goback(info);
+	if (keycode == 65363)
+		goright(info);
+	if (keycode == 65361)
+		goleft(info);
 	return (0);
 }
 
@@ -42,6 +112,138 @@ int	gettexture(t_info *info)
 	return (0);
 }
 
+int	getdiff(t_info *info)
+{
+	int	x;
+	int	y;
+	int	max;
+
+	y = 0;
+	x = 0;
+	max = WIDTH;
+	if (max > HEIGHT)
+		max = HEIGHT;
+	while (info->map[y])
+		y++;
+	while (info->map[0][x])
+		x++;
+	if (max/(x + 10) > max/(y + 10))
+		return (max/(y + 10));
+	return (max/(x + 10));
+}
+
+void	putplayer(t_img *img, int x, int y, t_info *info, unsigned int color)
+{
+	int	diff;
+	int	nexty;
+	int	nextx;
+	int	rety;
+	int	retx;
+	char *dest;
+
+	diff = getdiff(info) + 1;
+	retx = x - 3;
+	rety = y;
+	nexty = y + 3;
+	nextx = x + 3;
+	y -= 3;
+	while (y < nexty)
+	{
+		x = retx;
+		while (x < nextx)
+		{
+			if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+			{
+				dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+				*(unsigned int*)dest = color; 
+			}
+			x++;
+		}
+		y++;
+	}
+	y = (info->player.y + (sin((info->player.angle * (M_PI/180))) * STEP)) * diff;
+	x = (info->player.x + (cos((info->player.angle * (M_PI/180))) * STEP)) * diff;
+	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+	{
+		dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+		*(unsigned int*)dest = color; 
+	}
+}
+
+void	putsquare(t_img *img, int x, int y, t_info *info, unsigned int color)
+{
+	int	diff;
+	int	nexty;
+	int	nextx;
+	int	retx;
+	int	rety;
+	char *dest;
+
+	diff = getdiff(info);
+	retx = x;
+	rety = y;
+	nexty = y + diff;
+	nextx = x + diff;
+	while (y < nexty)
+	{
+		x = retx;
+		while (x < nextx)
+		{
+			if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+			{
+				dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+				*(unsigned int*)dest = color; 
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+void	putmaptoimg(t_info *info, t_img *img)
+{
+	int	xmap;
+	int	ymap;
+	int	ximg;
+	int	yimg;
+	int	diff;
+
+	diff = getdiff(info) + 1;
+	ymap = 0;
+	ximg = 0;
+	yimg = 0;
+	while (info->map[ymap])
+	{
+		xmap = 0;
+		ximg = 0;
+		while (info->map[ymap][xmap])
+		{
+			if (info->map[ymap][xmap] == '1')
+				putsquare(img, ximg, yimg, info, 0xFFFFFF);
+			if (info->map[ymap][xmap] == '0')
+				putsquare(img, ximg, yimg, info, 0x0000FF);
+			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' || info->map[ymap][xmap] == 'E' || info->map[ymap][xmap] == 'S')
+				putsquare(img, ximg, yimg, info, 0x00FF00);
+			ximg += diff;
+			xmap++;
+		}
+		yimg += diff;
+		ymap++;
+	}
+	putplayer(img, diff * info->player.x, diff * info->player.y, info, 0xFF0000);
+}
+
+void	loop(t_info *info)
+{
+	info->img.img = mlx_new_image(info->mlx, WIDTH, HEIGHT);
+	info->img.addr = mlx_get_data_addr(info->img.img, &info->img.bits_per_pixel, &info->img.line_length, &info->img.endian);
+	putmaptoimg(info, &info->img);
+	mlx_put_image_to_window(info->mlx, info->win, info->img.img, 0, 0);
+	mlx_hook(info->win, 17, 0, closewin, info);
+	mlx_hook(info->win, 2, 1L << 0, hook, info);
+	mlx_loop(info->mlx);
+}
+
 int	mlx(t_info *info)
 {
 	int decalage;
@@ -54,12 +256,11 @@ int	mlx(t_info *info)
 	if (gettexture(info))
 		return (1);
 	info->win = mlx_new_window(info->mlx, WIDTH, HEIGHT, "cub3D");
-	printf("%x\n", info->f);
-	printf("%x\n", info->c);
-	t_img tmp;
+	loop(info);
+	return (0);
+}
 
-	tmp.img = mlx_new_image(info->mlx, WIDTH, HEIGHT);
-	tmp.addr = mlx_get_data_addr(tmp.img, &tmp.bits_per_pixel, &tmp.line_length, &tmp.endian);
+/*
 	int i = 0;
 	int j = 0;
 	char *dest;
@@ -84,7 +285,7 @@ int	mlx(t_info *info)
 			i++;
 		}
 		j++;
-	}
+	}*/
 /*	tmp.img = info->no.texture;
 	tmp.addr = mlx_get_data_addr(tmp.img, &tmp.bits_per_pixel, &tmp.line_length, &tmp.endian);
 	printf("%d\n", tmp.line_length);
@@ -120,9 +321,4 @@ int	mlx(t_info *info)
 	mlx_put_image_to_window(info->mlx, info->win, info->ea.texture, decalage, 0);
 	decalage += info->ea.width;
 */	
-	mlx_put_image_to_window(info->mlx, info->win, tmp.img, decalage, 0);
-	mlx_hook(info->win, 17, 0, closewin, info);
-	mlx_hook(info->win, 2, 1L << 0, hook, info);
-	mlx_loop(info->mlx);
-	return (0);
-}
+
