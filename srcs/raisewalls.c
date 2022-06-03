@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/03 18:04:34 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/03 19:15:32 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 	prev[1] = info->player.y;
 	while (!hit)
 	{
-		if (!v[0] || !v[1])
+		if (fabs(v[0]) < 0.0001 || fabs(v[1]) < 0.0001)
 			hit = straight_line(info, cur, v, i);
 		else
 		{

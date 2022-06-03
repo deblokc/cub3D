@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 18:17:29 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/03 18:58:45 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ void	goforward(t_info *info)
 	mlx_destroy_image(info->mlx, info->img.img);
 	if (sin(info->player.angle) > 0)
 	{
-		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) + 0.1), info->player.x))
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
 			info->player.y -= (sin(info->player.angle) * STEP);
 		else
 			info->player.y = floor(info->player.y) + 0.1;
 	}
 	else
 	{
-		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) + 0.1), info->player.x))
 			info->player.y -= (sin(info->player.angle) * STEP);
 		else
 			info->player.y = ceil(info->player.y) - 0.1;
@@ -72,11 +72,46 @@ void	goforward(t_info *info)
 
 void	goback(t_info *info)
 {
+	double	oldy;
+	double	oldx;
+
+	oldy = info->player.y;
+	oldx = info->player.x;
 	mlx_destroy_image(info->mlx, info->img.img);
-	if (!iswall(info, info->player.y + (sin(info->player.angle) * -STEP), info->player.x))
-		info->player.y += (sin(info->player.angle) * -STEP);
-	if (!iswall(info, info->player.y, info->player.x + cos(info->player.angle) * -STEP))
-		info->player.x += (cos(info->player.angle) * -STEP);
+	if (sin(info->player.angle) < 0)
+	{
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (-STEP)) + 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle) * -STEP);
+		else
+			info->player.y = floor(info->player.y) + 0.1;
+	}
+	else
+	{
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (-STEP)) - 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle) * -STEP);
+		else
+			info->player.y = ceil(info->player.y) - 0.1;
+	}
+	if (cos(info->player.angle) < 0)
+	{
+		if (!iswall(info, oldy, (info->player.x + cos(info->player.angle) * (-STEP) + 0.1)))
+			info->player.x += (cos(info->player.angle) * -STEP);
+		else
+			info->player.x = ceil(info->player.x) - 0.1;
+	}
+	else
+	{
+		if (!iswall(info, oldy, (info->player.x + cos(info->player.angle) * (-STEP) - 0.1)))
+			info->player.x += (cos(info->player.angle) * -STEP);
+		else
+			info->player.x = floor(info->player.x) + 0.1;
+	}
+	if (iswall(info, info->player.y, info->player.x))
+	{
+		info->player.y = oldy;
+		info->player.x = oldx;
+	}
+	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
 	loop(info);
 }
 
