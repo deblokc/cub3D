@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 16:03:00 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/03 18:17:29 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,17 @@ void	goforward(t_info *info)
 	mlx_destroy_image(info->mlx, info->img.img);
 	if (sin(info->player.angle) > 0)
 	{
-		if (!iswall(info, (info->player.y + (sin(info->player.angle) * (STEP)) + 0.1), info->player.x))
-			info->player.y += (sin(info->player.angle) * STEP);
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) + 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle) * STEP);
 		else
-			info->player.y = ceil(info->player.y) - 0.1;
+			info->player.y = floor(info->player.y) + 0.1;
 	}
 	else
 	{
-		if (!iswall(info, (info->player.y + (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
-			info->player.y += (sin(info->player.angle) * STEP);
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle) * STEP);
 		else
-			info->player.y = floor(info->player.y) + 0.1;
+			info->player.y = ceil(info->player.y) - 0.1;
 	}
 	if (cos(info->player.angle) > 0)
 	{
@@ -66,6 +66,7 @@ void	goforward(t_info *info)
 		info->player.y = oldy;
 		info->player.x = oldx;
 	}
+	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
 	loop(info);
 }
 
@@ -82,7 +83,7 @@ void	goback(t_info *info)
 void	goright(t_info *info)
 {
 	mlx_destroy_image(info->mlx, info->img.img);
-	info->player.angle += ((5 * M_PI)/180);
+	info->player.angle -= ((5 * M_PI)/180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
 //	printf("%.4f\n", info->player.angle);
@@ -92,7 +93,7 @@ void	goright(t_info *info)
 void	goleft(t_info *info)
 {
 	mlx_destroy_image(info->mlx, info->img.img);
-	info->player.angle -= ((5 * M_PI)/180);
+	info->player.angle += ((5 * M_PI)/180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
 //	printf("%.4f\n", info->player.angle);
@@ -117,9 +118,11 @@ int	hook(int keycode, t_info *info)
 
 int	gettext(t_texture *text, t_info *info)
 {
-	text->texture = mlx_xpm_file_to_image(info->mlx, text->path, &text->width, &text->height);
-	if (!text->texture)
+	text->texture.img = mlx_xpm_file_to_image(info->mlx, text->path, &text->width, &text->height);
+	if (!text->texture.img)
 		return (puterr("Impossible d'ouvrir ", info), ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+	text->texture.addr = mlx_get_data_addr(text->texture.img, &text->texture.bits_per_pixel, &text->texture.line_length,
+								&text->texture.endian);
 	return (0);
 }
 
@@ -254,9 +257,36 @@ void	putmaptoimg(t_info *info, t_img *img)
 
 void	loop(t_info *info)
 {
+	int i = 0;
+	int j = 0;
+	char *dest;
+
 	info->img.img = mlx_new_image(info->mlx, WIDTH, HEIGHT);
 	info->img.addr = mlx_get_data_addr(info->img.img, &info->img.bits_per_pixel, &info->img.line_length, &info->img.endian);
-	putmaptoimg(info, &info->img);
+	while (j < HEIGHT / 2)
+	{
+		i = 0;
+		while (i < WIDTH)
+		{
+			dest = info->img.addr + (j * info->img.line_length + i * (info->img.bits_per_pixel / 8));
+			*(unsigned int*)dest = info->c; 
+			i++;
+		}
+		j++;
+	}
+	while (j < HEIGHT)
+	{
+		i = 0;
+		while (i < WIDTH)
+		{
+			dest = info->img.addr + (j * info->img.line_length + i * (info->img.bits_per_pixel / 8));
+			*(unsigned int*)dest = info->f; 
+			i++;
+		}
+		j++;
+	}
+	raisewalls(info);
+//	putmaptoimg(info, &info->img);
 	mlx_put_image_to_window(info->mlx, info->win, info->img.img, 0, 0);
 	mlx_hook(info->win, 17, 0, closewin, info);
 	mlx_hook(info->win, 2, 1L << 0, hook, info);

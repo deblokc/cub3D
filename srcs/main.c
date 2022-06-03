@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 15:11:40 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/03 18:07:09 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ void	freecharchar(char **lst)
 
 void	freetexture(t_info *info)
 {
-	if (info->no.texture)
-		mlx_destroy_image(info->mlx, info->no.texture);
-	if (info->so.texture)
-		mlx_destroy_image(info->mlx, info->so.texture);
-	if (info->we.texture)
-		mlx_destroy_image(info->mlx, info->we.texture);
-	if (info->ea.texture)
-		mlx_destroy_image(info->mlx, info->ea.texture);
+	if (info->no.texture.img)
+		mlx_destroy_image(info->mlx, info->no.texture.img);
+	if (info->so.texture.img)
+		mlx_destroy_image(info->mlx, info->so.texture.img);
+	if (info->we.texture.img)
+		mlx_destroy_image(info->mlx, info->we.texture.img);
+	if (info->ea.texture.img)
+		mlx_destroy_image(info->mlx, info->ea.texture.img);
 }
 
 void	freeinfo(t_info *info)
@@ -159,11 +159,11 @@ int	isvalid(char **map, t_info *info)
 				{
 					info->dir = map[i][j];
 					if (map[i][j] == 'N')
-						info->player.angle = (3 * M_PI)/2;
+						info->player.angle = M_PI/2;
 					if (map[i][j] == 'W')
 						info->player.angle = M_PI;
 					if (map[i][j] == 'S')
-						info->player.angle = M_PI / 2;
+						info->player.angle = (3 * M_PI) / 2;
 					if (map[i][j] == 'E')
 						info->player.angle = 2 * M_PI;
 					info->player.x = j + 0.5;
