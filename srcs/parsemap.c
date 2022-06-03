@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:09:49 by tnaton            #+#    #+#             */
-/*   Updated: 2022/05/31 18:24:27 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 14:32:36 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ char	*getligne(char *str, int maxlen)
 
 	i = 0;
 	str = semitrim(str);
+	if (!str)
+		return (NULL);
 	ret = malloc(sizeof(char) * (maxlen + 1));
 	if (!ret)
 		return (NULL);
@@ -98,23 +100,25 @@ char	**parsemap(t_map *lstmap)
 	lenmap = lenof(lstmap);
 	map = malloc(sizeof(char *) * (lenmap));
 	if (!map)
-		return (NULL);
+		return (ft_putstr_fd("Error\nLe malloc est KC !\n", 2), NULL);
 	maxlen = getmaxlen(lstmap);
 	while (ft_strcmp_free(ft_strtrim(lstmap->ligne, " \n"), ""))
 	{
 		map[i] = NULL;
 		map[i] = getligne(lstmap->ligne, maxlen);
 		if (!map[i])
-			return (freecharchar(map), NULL);
+			return (freecharchar(map), ft_putstr_fd("Error\nLe malloc est KC !\n", 2), NULL);
 		printf("%s\n", map[i]);
 		i++;
 		lstmap = lstmap->next;
 	}
+	map[i] = NULL;
 	while (lstmap)
 	{
+		if (ft_strcmp_free(ft_strtrim(lstmap->ligne, " \n"), ""))
+			return (freecharchar(map), freelstmap(lstmap), ft_putstr_fd("Error\nLigne non-vide apres la map\n", 2), NULL);
 		free(lstmap->ligne);
 		lstmap = lstmap->next;
 	}
-	map[i] = NULL;
 	return (map);
 }

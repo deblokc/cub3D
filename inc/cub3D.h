@@ -35,7 +35,7 @@ typedef struct s_player
 	double	x;
 	double	y;
 	double	angle;
-}	t_player;
+} t_player;
 
 typedef struct s_info
 {
@@ -60,5 +60,6 @@ unsigned char	*getlist(char *str);
 char			**parsemap(t_map *lstmap);
 void			freecharchar(char **lst);
 void			puterr(char *str, t_info *info);
+void			freelstmap(t_map *map);
 
 #endif

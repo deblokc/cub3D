@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 12:12:25 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/01 14:37:10 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_map	*newchunk(char *str)
 	return (tmp);
 }
 
-int	freeallchunk(t_map *map)
+void	freeallchunk(t_map *map)
 {
 	t_map	*tmp;
 
@@ -34,7 +34,6 @@ int	freeallchunk(t_map *map)
 		map = map->next;
 		free(tmp);
 	}
-	return (1);
 }
 
 void	freecharchar(char **lst)
@@ -67,10 +66,10 @@ int	ispointcub(char *str)
 	int	i;
 
 	i = ft_strlen(str);
-	if (i < 4)
+	if (i < 5)
 		return (0);
 	if (str[i - 1] == 'b' && str[i - 2] == 'u' && str[i - 3] == 'c' \
-			&& str[i - 4] == '.')
+			&& str[i - 4] == '.' && str[i - 5] != '/')
 		return (1);
 	return (0);
 }
@@ -132,14 +131,18 @@ int	isvalid(char **map, t_info *info)
 					|| map[i][j] == 'N' || map[i][j] == 'S')
 				if (!checkcub(map, i, j))
 				{
-					printerrcoo("La map n'est pas fermee en ", i, j, info);
+					printerrcoo("Il manque des murs pour le chemin en ", i, j, info);
 					isvalid = 0;
 				}
 			if (map[i][j] == 'E' || map[i][j] == 'W' || map[i][j] == 'N' \
 					|| map[i][j] == 'S')
 			{
 				if (!info->dir)
+				{
 					info->dir = map[i][j];
+					info->player.x = j + 0.5;
+					info->player.y = i + 0.5;
+				}
 				else
 				{
 					printerrcoo("Point de spawn excedant en ", i, j, info);
@@ -189,7 +192,7 @@ int	main(int ac, char **av)
 	{
 		current->next = newchunk(get_next_line(fd));
 		if (!current->next)
-			return (freeallchunk(map));
+			return (freeallchunk(map), ft_putstr_fd("Error\nLe malloc est KC !\n",2), 1);
 		current = current->next;
 	}
 	info = getinfo(map);
