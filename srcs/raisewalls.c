@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/03 19:15:32 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/03 19:58:49 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,20 @@ int	draw_wall(t_info *info, double cur[2], int hit, double v[2], int i)
 	double	wall_ratio;
 	int		wall_height;
 
-	distance0 = hypot(fabs(cur[0] - info->player.x), fabs(cur[1] - info->player.y));
+	if (fabs(cur[0] - info->player.x) < 0.0001)
+		distance0 = fabs(cur[1] - info->player.y);
+	else if (fabs(cur[1] - info->player.y) < 0.0001)
+		distance0 = fabs(cur[0] - info->player.x);
+	else
+		distance0 = hypot(fabs(cur[0] - info->player.x), fabs(cur[1] - info->player.y));
 	if (fabs(v[0]) < 0.0001)
-		distance1 = v[1];
+		distance1 = fabs(v[1]);
 	else if (fabs(v[1]) < 0.0001)
-		distance1 = v[0];
+		distance1 = fabs(v[0]);
 	else
 		distance1 = hypot(fabs(v[0]), fabs(v[1]));
 	wall_ratio = distance1 / distance0;
 	wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
-//	printf("found intersection at %.4f; %.4f\n", cur[0], cur[1]);
-//	printf("Hit on %c\n", hit==1?'y':'x');
-//	printf("Ratio: %.8f\n", wall_ratio);
-//	printf("Wall height: %d\n", wall_height);
 	draw_strip(info, hit, v, i, wall_height, cur);
 	return (hit);
 }
@@ -133,7 +134,7 @@ void	get_next_edge(double v[2], double delta[2], double cur[2], int fixed)
 
 int	straight_line(t_info *info, double cur[2], double v[2], int i)
 {
-	if (fabs(v[0]) < 0.000001)
+	if (fabs(v[0]) < 0.0001)
 	{
 		if (info->map[(int)cur[1]][(int)cur[0]] == '1')
 			return (draw_wall(info, cur, 1, v, i));
@@ -210,23 +211,23 @@ void	init_search(t_info *info, double v[2], int i)
 	double	delta[2];
 
 	cur[0] = info->player.x;
-	if (v[0] < -0.000001)
+	if (v[0] < -0.0001)
 	{
 		cur[0] = floor(info->player.x) - 0.0001;
 		delta[0] = fabs(info->player.x - cur[0]) / fabs(v[0]);
 	}
-	else if (v[0] > 0.000001)
+	else if (v[0] > 0.0001)
 	{
 		cur[0] = ceil(info->player.x);
 		delta[0] = fabs(cur[0] - info->player.x) / fabs(v[0]);
 	}
 	cur[1] = info->player.y;
-	if (v[1] < -0.000001)
+	if (v[1] < -0.0001)
 	{
 		cur[1] = floor(info->player.y) - 0.0001;
 		delta[1] = fabs(info->player.y - cur[1]) / fabs(v[1]);
 	}
-	else if (v[1] > 0.000001)
+	else if (v[1] > 0.0001)
 	{
 		cur[1] = ceil(info->player.y);
 		delta[1] = fabs(cur[1] - info->player.y) / fabs(v[1]);
@@ -257,13 +258,13 @@ void	raisewalls(t_info *info)
 	int		i;
 	double	director_vector[2];
 
-	if (fabs(info->player.angle + M_PI / 2) < 0.00001)
+	if (fabs(info->player.angle + M_PI / 2) < 0.0001)
 		info->player.angle = 3 * M_PI * 2;
-	else if (fabs(info->player.angle) < 0.00001)
+	else if (fabs(info->player.angle) < 0.0001)
 		info->player.angle = 2 * M_PI;
 	get_projection_screen(info, projection_screen);
 	get_director_vector(projection_screen, director_vector);
-	printf("Player position: %.4f ; %.4f\n", info->player.x, info->player.y);
+//	printf("Player position: %.4f ; %.4f\n", info->player.x, info->player.y);
 	//printf("Player position: %.4f ; %.4f\nProjection screen 0: %.4f ; %.4f\nProjection screen 1: %.4f ; %.4f\n", info->player.x, info->player.y, projection_screen[0], projection_screen[1], projection_screen[2], projection_screen[3]);
 //	printf("director vector: %.8f ; %.8f\n", director_vector[0], director_vector[1]);
 	i = 0;
