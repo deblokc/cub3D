@@ -6,17 +6,28 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/03 13:39:25 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/03 16:05:37 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-int	draw_wall(t_info *info, double cur[2], int hit, double v[2])
+void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height)
+{
+	int	start_pixel;
+	int	end_pixel;
+
+	start_pixel = (int)ceil((((double)WIN_HEIGHT - 1) / 2) - ((double)wall_height / 2));
+	end_pixel = (int)ceil((((double)WIN_HEIGHT - 1) / 2) + ((double)wall_height / 2));
+
+}
+
+int	draw_wall(t_info *info, double cur[2], int hit, double v[2], int i)
 {
 	double	distance0;
 	double	distance1;
 	double	wall_ratio;
+	int		wall_height;
 
 	distance0 = hypot(fabs(cur[0] - info->player.x), fabs(cur[1] - info->player.y));
 	if (fabs(v[0]) < 0.0001)
@@ -26,9 +37,12 @@ int	draw_wall(t_info *info, double cur[2], int hit, double v[2])
 	else
 		distance1 = hypot(fabs(v[0]), fabs(v[1]));
 	wall_ratio = distance1 / distance0;
+	wall_height = (int)round(wall_ratio * ((double)WIN_WIDTH / 2));
 	printf("found intersection at %.4f; %.4f\n", cur[0], cur[1]);
 	printf("Hit on %c\n", hit==1?'y':'x');
 	printf("Ratio: %.8f\n", wall_ratio);
+	printf("Wall height: %d\n", wall_height);
+	draw_strip(info, hit, v, i, wall_height);
 	return (hit);
 }
 
@@ -66,12 +80,12 @@ void	get_next_edge(double v[2], double delta[2], double cur[2], int fixed)
 	cur[1] = tmp[1];
 }
 
-int	straight_line(t_info *info, double cur[2], double v[2])
+int	straight_line(t_info *info, double cur[2], double v[2], int i)
 {
 	if (fabs(v[0]) < 0.000001)
 	{
 		if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-			return (draw_wall(info, cur, 1, v));
+			return (draw_wall(info, cur, 1, v, i));
 		else
 		{
 			if (v[1] < 0)
@@ -83,7 +97,7 @@ int	straight_line(t_info *info, double cur[2], double v[2])
 	else
 	{
 		if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-			return (draw_wall(info, cur, 2, v));
+			return (draw_wall(info, cur, 2, v, i));
 		else
 		{
 			if (v[0] < 0)
@@ -95,7 +109,7 @@ int	straight_line(t_info *info, double cur[2], double v[2])
 	return (0);
 }
 
-int	get_walls(t_info *info, double v[2], double delta[2], double cur[2])
+int	get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 {
 	double	prev[2];
 	int		hit;
@@ -106,14 +120,14 @@ int	get_walls(t_info *info, double v[2], double delta[2], double cur[2])
 	while (!hit)
 	{
 		if (!v[0] || !v[1])
-			hit = straight_line(info, cur, v);
+			hit = straight_line(info, cur, v, i);
 		else
 		{
 			if (delta[0] < delta[1])
 			{
 				cur[1] = delta[0] * v[1] + prev[1];
 				if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-					hit = draw_wall(info, cur, 2, v);
+					hit = draw_wall(info, cur, 2, v, i);
 				else
 				{
 					prev[0] = cur[0];
@@ -125,7 +139,7 @@ int	get_walls(t_info *info, double v[2], double delta[2], double cur[2])
 			{
 				cur[0] = delta[1] * v[0] + prev[0];
 				if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-					hit = draw_wall(info, cur, 1, v);
+					hit = draw_wall(info, cur, 1, v, i);
 				else
 				{
 					prev[0] = cur[0];
@@ -137,7 +151,7 @@ int	get_walls(t_info *info, double v[2], double delta[2], double cur[2])
 	}
 }
 
-void	init_search(t_info *info, double v[2])
+void	init_search(t_info *info, double v[2], int i)
 {
 	double	cur[2];
 	double	delta[2];
@@ -164,17 +178,17 @@ void	init_search(t_info *info, double v[2])
 		cur[1] = ceil(info->player.y);
 		delta[1] = fabs(cur[1] - info->player.y) / fabs(v[1]);
 	}
-	get_walls(info, v, delta, cur);
+	get_walls(info, v, delta, cur, i);
 }
 
 void	get_projection_screen(t_info *info, double projection_screen[4])
 {
 	projection_screen[0] = info->player.angle + (M_PI / 4);
-	projection_screen[1] = (-sin(projection_screen[0])) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.x;
-	projection_screen[0] = cos(projection_screen[0]) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.y;
+	projection_screen[1] = (-sin(projection_screen[0])) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.y;
+	projection_screen[0] = cos(projection_screen[0]) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.x;
 	projection_screen[2] = info->player.angle - (M_PI / 4);
-	projection_screen[3] = (-sin(projection_screen[2])) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.x;
-	projection_screen[2] = cos(projection_screen[2]) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.y;
+	projection_screen[3] = (-sin(projection_screen[2])) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.y;
+	projection_screen[2] = cos(projection_screen[2]) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.x;
 }
 
 void get_director_vector(double projection_screen[4], double director_vector[2])
@@ -190,6 +204,10 @@ void	raisewalls(t_info *info)
 	int		i;
 	double	director_vector[2];
 
+	if (fabs(info->player.angle + M_PI / 2) < 0.00001)
+		info->player.angle = 3 * M_PI * 2;
+	else if (fabs(info->player.angle) < 0.00001)
+		info->player.angle = 2 * M_PI;
 	get_projection_screen(info, projection_screen);
 	get_director_vector(projection_screen, director_vector);
 	printf("Player position: %.4f ; %.4f\nProjection screen 0: %.4f ; %.4f\nProjection screen 1: %.4f ; %.4f\n", info->player.x, info->player.y, projection_screen[0], projection_screen[1], projection_screen[2], projection_screen[3]);
@@ -200,7 +218,7 @@ void	raisewalls(t_info *info)
 		v[0] = (projection_screen[0] + director_vector[0] * i) - info->player.x;
 		v[1] = (projection_screen[1] + director_vector[1] * i) - info->player.y;
 		printf("search_vector: %.8f ; %.8f\n", v[0], v[1]);
-		init_search(info, v);
+		init_search(info, v, i);
 		i++;
 	}
 }
@@ -233,9 +251,9 @@ int main()
 	info.map[4][2] = '1';
 	info.map[4][3] = '1';
 	info.map[4][4] = '1';
-	info.player.angle =  M_PI / 2;
-	info.player.x = 1.5;
-	info.player.y = 1.5;
+	info.player.angle =  -M_PI / 2;
+	info.player.x = 2.5;
+	info.player.y = 2.5;
 	raisewalls(&info);
 	return (0);
 }
