@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 13:43:19 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/03 16:03:00 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,59 +27,64 @@ int	iswall(t_info *info, double y, double x)
 
 void	goforward(t_info *info)
 {
+	double	oldy;
+	double	oldx;
+
+	oldy = info->player.y;
+	oldx = info->player.x;
 	mlx_destroy_image(info->mlx, info->img.img);
-	if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * (STEP + 0.1)), info->player.x))
+	if (sin(info->player.angle) > 0)
 	{
-		if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * (STEP + 0.1)), info->player.x + cos((info->player.angle * (M_PI/180))) * (STEP + 0.1)))
-			info->player.y += (sin((info->player.angle * (M_PI/180))) * STEP);
+		if (!iswall(info, (info->player.y + (sin(info->player.angle) * (STEP)) + 0.1), info->player.x))
+			info->player.y += (sin(info->player.angle) * STEP);
 		else
-		{
-			if (sin((info->player.angle * (M_PI/180))) > 0)
-			{
-				info->player.y = ceil(info->player.y) - 0.1;
-			}
-			else if (sin((info->player.angle * (M_PI/180))) < 0)
-				info->player.y = floor(info->player.y) + 0.1;
-		}
+			info->player.y = ceil(info->player.y) - 0.1;
 	}
 	else
 	{
-		if (sin((info->player.angle * (M_PI/180))) > 0)
-			info->player.y = ceil(info->player.y) - 0.1;
-		else if (sin((info->player.angle * (M_PI/180))) < 0)
+		if (!iswall(info, (info->player.y + (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
+			info->player.y += (sin(info->player.angle) * STEP);
+		else
 			info->player.y = floor(info->player.y) + 0.1;
 	}
-	if (!iswall(info, info->player.y, info->player.x + cos((info->player.angle * (M_PI/180))) * (STEP + 0.1)))
-		info->player.x += (cos((info->player.angle * (M_PI/180))) * STEP);
+	if (cos(info->player.angle) > 0)
+	{
+		if (!iswall(info, oldy, (info->player.x + cos(info->player.angle) * (STEP) + 0.1)))
+			info->player.x += (cos(info->player.angle) * STEP);
+		else
+			info->player.x = ceil(info->player.x) - 0.1;
+	}
 	else
 	{
-		printf("iswallx\n");
-		if (cos((info->player.angle * (M_PI/180))) > 0)
-			info->player.x = ceil(info->player.x) - 0.1;
-		else if (cos((info->player.angle * (M_PI/180))) < 0)
+		if (!iswall(info, oldy, (info->player.x + cos(info->player.angle) * (STEP) - 0.1)))
+			info->player.x += (cos(info->player.angle) * STEP);
+		else
 			info->player.x = floor(info->player.x) + 0.1;
 	}
-	printf("%.4f|%.4f\n", info->player.x, info->player.y);
-	printf("%.4f|%.4f\n\n", (info->player.x + cos((info->player.angle * (M_PI/180))) * (STEP + 0.1)), (info->player.y + (sin((info->player.angle * (M_PI/180))) * (STEP + 0.1))));
+	if (iswall(info, info->player.y, info->player.x))
+	{
+		info->player.y = oldy;
+		info->player.x = oldx;
+	}
 	loop(info);
 }
 
 void	goback(t_info *info)
 {
 	mlx_destroy_image(info->mlx, info->img.img);
-	if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * -STEP), info->player.x))
-		info->player.y += (sin((info->player.angle * (M_PI/180))) * -STEP);
-	if (!iswall(info, info->player.y, info->player.x + cos((info->player.angle * (M_PI/180))) * -STEP))
-		info->player.x += (cos((info->player.angle * (M_PI/180))) * -STEP);
+	if (!iswall(info, info->player.y + (sin(info->player.angle) * -STEP), info->player.x))
+		info->player.y += (sin(info->player.angle) * -STEP);
+	if (!iswall(info, info->player.y, info->player.x + cos(info->player.angle) * -STEP))
+		info->player.x += (cos(info->player.angle) * -STEP);
 	loop(info);
 }
 
 void	goright(t_info *info)
 {
 	mlx_destroy_image(info->mlx, info->img.img);
-	info->player.angle += 5;
-	if (info->player.angle == 360)
-		info->player.angle = 0;
+	info->player.angle += ((5 * M_PI)/180);
+	if (info->player.angle == 0)
+		info->player.angle = 2 * M_PI;
 //	printf("%.4f\n", info->player.angle);
 	loop(info);
 }
@@ -87,9 +92,9 @@ void	goright(t_info *info)
 void	goleft(t_info *info)
 {
 	mlx_destroy_image(info->mlx, info->img.img);
-	info->player.angle -= 5;
-	if (info->player.angle == 360)
-		info->player.angle = 0;
+	info->player.angle -= ((5 * M_PI)/180);
+	if (info->player.angle == 0)
+		info->player.angle = 2 * M_PI;
 //	printf("%.4f\n", info->player.angle);
 	loop(info);
 }
@@ -175,8 +180,8 @@ void	putplayer(t_img *img, int x, int y, t_info *info, unsigned int color)
 		}
 		y++;
 	}
-	y = (info->player.y + (sin((info->player.angle * (M_PI/180))) * STEP)) * diff;
-	x = (info->player.x + (cos((info->player.angle * (M_PI/180))) * STEP)) * diff;
+	y = (info->player.y + (sin(info->player.angle) * STEP)) * diff;
+	x = (info->player.x + (cos(info->player.angle) * STEP)) * diff;
 	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
 	{
 		dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
