@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/02 10:36:24 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/03 12:31:36 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 # define CUB3D_H
 
 # define WIN_HEIGHT 1350
-# define WIN_WIDTH 2550
+# define WIN_WIDTH 8
+# define PROJ_PLANE_DIST 1
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
