@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/02 19:12:39 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/03 13:43:19 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	closewin(t_info *info)
 
 int	iswall(t_info *info, double y, double x)
 {
-//	printf("%.4f|%.4f|%d|%d\n", x, y, (int)floor(x), (int)floor(y));
 	if (info->map[(int)floor(y)][(int)floor(x)] == '1')
 		return (1);
 	return (0);
@@ -29,24 +28,39 @@ int	iswall(t_info *info, double y, double x)
 void	goforward(t_info *info)
 {
 	mlx_destroy_image(info->mlx, info->img.img);
-	if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * STEP), info->player.x))
-		info->player.y += (sin((info->player.angle * (M_PI/180))) * STEP);
+	if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * (STEP + 0.1)), info->player.x))
+	{
+		if (!iswall(info, info->player.y + (sin((info->player.angle * (M_PI/180))) * (STEP + 0.1)), info->player.x + cos((info->player.angle * (M_PI/180))) * (STEP + 0.1)))
+			info->player.y += (sin((info->player.angle * (M_PI/180))) * STEP);
+		else
+		{
+			if (sin((info->player.angle * (M_PI/180))) > 0)
+			{
+				info->player.y = ceil(info->player.y) - 0.1;
+			}
+			else if (sin((info->player.angle * (M_PI/180))) < 0)
+				info->player.y = floor(info->player.y) + 0.1;
+		}
+	}
 	else
 	{
 		if (sin((info->player.angle * (M_PI/180))) > 0)
-			info->player.y = ceil(info->player.y) - 0.0001;
-		else
-			info->player.y = floor(info->player.y) + 0.0001;
+			info->player.y = ceil(info->player.y) - 0.1;
+		else if (sin((info->player.angle * (M_PI/180))) < 0)
+			info->player.y = floor(info->player.y) + 0.1;
 	}
-	if (!iswall(info, info->player.y, info->player.x + cos((info->player.angle * (M_PI/180))) * STEP))
+	if (!iswall(info, info->player.y, info->player.x + cos((info->player.angle * (M_PI/180))) * (STEP + 0.1)))
 		info->player.x += (cos((info->player.angle * (M_PI/180))) * STEP);
 	else
 	{
+		printf("iswallx\n");
 		if (cos((info->player.angle * (M_PI/180))) > 0)
-			info->player.x = ceil(info->player.x) - 0.0001;
-		else
-			info->player.x = floor(info->player.x) + 0.0001;
+			info->player.x = ceil(info->player.x) - 0.1;
+		else if (cos((info->player.angle * (M_PI/180))) < 0)
+			info->player.x = floor(info->player.x) + 0.1;
 	}
+	printf("%.4f|%.4f\n", info->player.x, info->player.y);
+	printf("%.4f|%.4f\n\n", (info->player.x + cos((info->player.angle * (M_PI/180))) * (STEP + 0.1)), (info->player.y + (sin((info->player.angle * (M_PI/180))) * (STEP + 0.1))));
 	loop(info);
 }
 
