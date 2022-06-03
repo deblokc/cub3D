@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 16:13:30 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/03 17:11:39 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,6 @@ typedef struct s_map
 	struct s_map	*next;
 }	t_map;
 
-typedef struct s_texture
-{
-	void	*texture;
-	int		width;
-	int		height;
-	char	*path;
-} t_texture;
-
 typedef struct s_img
 {
 	void	*img;
@@ -51,6 +43,14 @@ typedef struct s_img
 	int		line_length;
 	int		endian;
 } t_img;
+
+typedef struct s_texture
+{
+	t_img	texture;
+	int		width;
+	int		height;
+	char	*path;
+} t_texture;
 
 typedef struct s_player
 {
@@ -90,5 +90,6 @@ int				mlx(t_info *info);
 void			freeallchunk(t_map *map);
 void			freeinfo(t_info *info);
 void			loop(t_info *info);
+void			raisewalls(t_info *info);
 
 #endif

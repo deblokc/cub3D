@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 20:41:10 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/03 17:12:34 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,10 +160,10 @@ t_info	getinfo(t_map *map)
 	info.lstmap = NULL;
 	info.dir = 0;
 	info.printerr = 0;
-	info.no.texture = NULL;
-	info.so.texture = NULL;
-	info.we.texture = NULL;
-	info.ea.texture = NULL;
+	info.no.texture.img = NULL;
+	info.so.texture.img = NULL;
+	info.we.texture.img = NULL;
+	info.ea.texture.img = NULL;
 	info.mlx = NULL;
 	info.win = NULL;
 	while (current)

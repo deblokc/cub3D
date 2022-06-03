@@ -6,20 +6,65 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/03 16:05:37 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/03 18:04:34 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height)
+void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, double cur[2])
 {
-	int	start_pixel;
-	int	end_pixel;
+	int				it;
+	char			*dst;
+	char			*origin;
+//	unsigned int	val;
+	double			percent_x;
+	double			percent_y;
+	t_texture		target;
+	int				start_pixel;
+	int				end_pixel;
 
-	start_pixel = (int)ceil((((double)WIN_HEIGHT - 1) / 2) - ((double)wall_height / 2));
-	end_pixel = (int)ceil((((double)WIN_HEIGHT - 1) / 2) + ((double)wall_height / 2));
-
+	if (hit == 1)
+	{
+		if (v[1] < 0)
+			target = info->no;
+		else
+			target = info->so;
+		percent_x = (cur[0] - floor(cur[0])) / 0.9999;
+		if (percent_x > 1)
+			percent_x = 1;
+		percent_x = round(percent_x * (double)(target.width - 1));
+	}
+	else
+	{
+		if (v[0] < 0)
+			target = info->we;
+		else
+			target = info->ea;
+		percent_x = (cur[1] - floor(cur[1])) / 0.9999;
+		if (percent_x > 1)
+			percent_x = 1;
+		percent_x = round(percent_x * (double)(target.width - 1));
+	}
+	start_pixel = (int)ceil((((double)HEIGHT - 1) / 2) - ((double)wall_height / 2));
+	end_pixel = (int)ceil((((double)HEIGHT - 1) / 2) + ((double)wall_height / 2));
+	it = start_pixel;
+	while (it < (end_pixel + 1))
+	{
+		if (it < 0 || it >= HEIGHT)
+		{
+			it++;
+			continue ;
+		}
+		dst = info->img.addr + (it * info->img.line_length + i * (info->img.bits_per_pixel / 8));
+		percent_y = (double)(it - start_pixel) / (double)(end_pixel - start_pixel);
+		if (percent_y > 1)
+			percent_y = 1;
+		percent_y = round(percent_y * (double)(target.height - 1));
+		origin = target.texture.addr + ((int)percent_y * target.texture.line_length + (int)percent_x * (target.texture.bits_per_pixel / 8));
+		*(unsigned int *)dst = *(unsigned *)origin;
+		it++;
+	}
 }
 
 int	draw_wall(t_info *info, double cur[2], int hit, double v[2], int i)
@@ -37,12 +82,12 @@ int	draw_wall(t_info *info, double cur[2], int hit, double v[2], int i)
 	else
 		distance1 = hypot(fabs(v[0]), fabs(v[1]));
 	wall_ratio = distance1 / distance0;
-	wall_height = (int)round(wall_ratio * ((double)WIN_WIDTH / 2));
-	printf("found intersection at %.4f; %.4f\n", cur[0], cur[1]);
-	printf("Hit on %c\n", hit==1?'y':'x');
-	printf("Ratio: %.8f\n", wall_ratio);
-	printf("Wall height: %d\n", wall_height);
-	draw_strip(info, hit, v, i, wall_height);
+	wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
+//	printf("found intersection at %.4f; %.4f\n", cur[0], cur[1]);
+//	printf("Hit on %c\n", hit==1?'y':'x');
+//	printf("Ratio: %.8f\n", wall_ratio);
+//	printf("Wall height: %d\n", wall_height);
+	draw_strip(info, hit, v, i, wall_height, cur);
 	return (hit);
 }
 
@@ -62,6 +107,9 @@ void	get_next_edge(double v[2], double delta[2], double cur[2], int fixed)
 		else
 			tmp[1] = ceil(cur[1]);
 		delta[1] = fabs(tmp[1] - cur[1]) / fabs(v[1]);
+		if (fabs((double)delta[1]) < 0.0001)
+			tmp[1] += 0.0001;
+		delta[1] = fabs(tmp[1] - cur[1]) / fabs(v[1]);
 	}
 	else
 	{
@@ -74,6 +122,9 @@ void	get_next_edge(double v[2], double delta[2], double cur[2], int fixed)
 			tmp[0] = floor(cur[0]) - 0.0001;
 		else
 			tmp[0] = ceil(cur[0]);
+		delta[0] = fabs(tmp[0] - cur[0]) / fabs(v[0]);
+		if (fabs((double)delta[0]) < 0.0001)
+			tmp[0] += 0.0001;
 		delta[0] = fabs(tmp[0] - cur[0]) / fabs(v[0]);
 	}
 	cur[0] = tmp[0];
@@ -109,7 +160,7 @@ int	straight_line(t_info *info, double cur[2], double v[2], int i)
 	return (0);
 }
 
-int	get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
+void get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 {
 	double	prev[2];
 	int		hit;
@@ -123,7 +174,8 @@ int	get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 			hit = straight_line(info, cur, v, i);
 		else
 		{
-			if (delta[0] < delta[1])
+
+			if (fabs(delta[0] - delta[1]) < 0.0001 || delta[0] < delta[1])
 			{
 				cur[1] = delta[0] * v[1] + prev[1];
 				if (info->map[(int)cur[1]][(int)cur[0]] == '1')
@@ -148,6 +200,7 @@ int	get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 				}
 			}
 		}
+
 	}
 }
 
@@ -193,8 +246,8 @@ void	get_projection_screen(t_info *info, double projection_screen[4])
 
 void get_director_vector(double projection_screen[4], double director_vector[2])
 {
-	director_vector[0] = (projection_screen[2] - projection_screen[0]) / (double)(WIN_WIDTH - 1);
-	director_vector[1] = (projection_screen[3] - projection_screen[1]) / (double)(WIN_WIDTH - 1);
+	director_vector[0] = (projection_screen[2] - projection_screen[0]) / (double)(WIDTH - 1);
+	director_vector[1] = (projection_screen[3] - projection_screen[1]) / (double)(WIDTH - 1);
 }
 
 void	raisewalls(t_info *info)
@@ -210,50 +263,16 @@ void	raisewalls(t_info *info)
 		info->player.angle = 2 * M_PI;
 	get_projection_screen(info, projection_screen);
 	get_director_vector(projection_screen, director_vector);
-	printf("Player position: %.4f ; %.4f\nProjection screen 0: %.4f ; %.4f\nProjection screen 1: %.4f ; %.4f\n", info->player.x, info->player.y, projection_screen[0], projection_screen[1], projection_screen[2], projection_screen[3]);
-	printf("director vector: %.8f ; %.8f\n", director_vector[0], director_vector[1]);
+	printf("Player position: %.4f ; %.4f\n", info->player.x, info->player.y);
+	//printf("Player position: %.4f ; %.4f\nProjection screen 0: %.4f ; %.4f\nProjection screen 1: %.4f ; %.4f\n", info->player.x, info->player.y, projection_screen[0], projection_screen[1], projection_screen[2], projection_screen[3]);
+//	printf("director vector: %.8f ; %.8f\n", director_vector[0], director_vector[1]);
 	i = 0;
-	while (i < WIN_WIDTH)
+	while (i < WIDTH)
 	{
 		v[0] = (projection_screen[0] + director_vector[0] * i) - info->player.x;
 		v[1] = (projection_screen[1] + director_vector[1] * i) - info->player.y;
-		printf("search_vector: %.8f ; %.8f\n", v[0], v[1]);
+//		printf("search_vector: %.8f ; %.8f\n", v[0], v[1]);
 		init_search(info, v, i);
 		i++;
 	}
-}
-
-int main()
-{
-	int		i;
-	t_info	info;
-
-	info.map = calloc(6, sizeof(char *));
-	i = 0;
-	while (i < 5)
-	{
-		info.map[i] = calloc(6, sizeof(char));
-		i++;
-	}
-	info.map[0][0] = '1';
-	info.map[0][1] = '1';
-	info.map[0][2] = '1';
-	info.map[0][3] = '1';
-	info.map[0][4] = '1';
-	info.map[1][0] = '1';
-	info.map[1][4] = '1';
-	info.map[2][0] = '1';
-	info.map[2][4] = '1';
-	info.map[3][0] = '1';
-	info.map[3][4] = '1';
-	info.map[4][0] = '1';
-	info.map[4][1] = '1';
-	info.map[4][2] = '1';
-	info.map[4][3] = '1';
-	info.map[4][4] = '1';
-	info.player.angle =  -M_PI / 2;
-	info.player.x = 2.5;
-	info.player.y = 2.5;
-	raisewalls(&info);
-	return (0);
 }
