@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/04 12:56:55 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/04 15:54:56 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	goforward(t_info *info)
 
 	oldy = info->player.y;
 	oldx = info->player.x;
-//	mlx_destroy_image(info->mlx, info->img.img);
 	if (sin(info->player.angle) > 0)
 	{
 		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
@@ -74,7 +73,6 @@ void	goforward(t_info *info)
 		info->player.y = oldy;
 		info->player.x = oldx;
 	}
-//	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
 	loop(info);
 }
 
@@ -85,7 +83,6 @@ void	goback(t_info *info)
 
 	oldy = info->player.y;
 	oldx = info->player.x;
-//	mlx_destroy_image(info->mlx, info->img.img);
 	if (sin(info->player.angle) < 0)
 	{
 		if (!iswall(info, (info->player.y + (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
@@ -119,27 +116,108 @@ void	goback(t_info *info)
 		info->player.y = oldy;
 		info->player.x = oldx;
 	}
-//	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
+	loop(info);
+}
+
+void	goleft(t_info *info)
+{
+	double	oldy;
+	double	oldx;
+
+	oldy = info->player.y;
+	oldx = info->player.x;
+	if (sin(info->player.angle + (M_PI / 2)) > 0)
+	{
+		if (!iswall(info, (info->player.y - (sin(info->player.angle + (M_PI / 2)) * (STEP)) - 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle + (M_PI / 2)) * STEP);
+		else
+			info->player.y = floor(info->player.y) + 0.1;
+	}
+	else
+	{
+		if (!iswall(info, (info->player.y - (sin(info->player.angle + (M_PI / 2)) * (STEP)) + 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle + (M_PI / 2)) * STEP);
+		else
+			info->player.y = ceil(info->player.y) - 0.1;
+	}
+	if (cos(info->player.angle + (M_PI / 2)) > 0)
+	{
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle + (M_PI / 2)) * (STEP)) + 0.1)))
+			info->player.x += (cos(info->player.angle + (M_PI / 2)) * STEP);
+		else
+			info->player.x = ceil(info->player.x) - 0.1;
+	}
+	else
+	{
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle + (M_PI / 2)) * (STEP)) - 0.1)))
+			info->player.x += (cos(info->player.angle + (M_PI / 2)) * STEP);
+		else
+			info->player.x = floor(info->player.x) + 0.1;
+	}
+	if (iswall(info, info->player.y, info->player.x))
+	{
+		info->player.y = oldy;
+		info->player.x = oldx;
+	}
+	loop(info);
+}
+
+void	goright(t_info *info)
+{
+	double	oldy;
+	double	oldx;
+
+	oldy = info->player.y;
+	oldx = info->player.x;
+	if (sin(info->player.angle - (M_PI / 2)) > 0)
+	{
+		if (!iswall(info, (info->player.y - (sin(info->player.angle - (M_PI / 2)) * (STEP)) - 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle - (M_PI / 2)) * STEP);
+		else
+			info->player.y = floor(info->player.y) + 0.1;
+	}
+	else
+	{
+		if (!iswall(info, (info->player.y - (sin(info->player.angle - (M_PI / 2)) * (STEP)) + 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle - (M_PI / 2)) * STEP);
+		else
+			info->player.y = ceil(info->player.y) - 0.1;
+	}
+	if (cos(info->player.angle - (M_PI / 2)) > 0)
+	{
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle - (M_PI / 2)) * (STEP)) + 0.1)))
+			info->player.x += (cos(info->player.angle - (M_PI / 2)) * STEP);
+		else
+			info->player.x = ceil(info->player.x) - 0.1;
+	}
+	else
+	{
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle - (M_PI / 2)) * (STEP)) - 0.1)))
+			info->player.x += (cos(info->player.angle - (M_PI / 2)) * STEP);
+		else
+			info->player.x = floor(info->player.x) + 0.1;
+	}
+	if (iswall(info, info->player.y, info->player.x))
+	{
+		info->player.y = oldy;
+		info->player.x = oldx;
+	}
 	loop(info);
 }
 
 void	turnright(t_info *info)
 {
-//	mlx_destroy_image(info->mlx, info->img.img);
 	info->player.angle -= ((5 * M_PI)/180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
-//	printf("%.4f\n", info->player.angle);
 	loop(info);
 }
 
 void	turnleft(t_info *info)
 {
-//	mlx_destroy_image(info->mlx, info->img.img);
 	info->player.angle += ((5 * M_PI)/180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
-//	printf("%.4f\n", info->player.angle);
 	loop(info);
 }
 
@@ -152,6 +230,10 @@ int	hook(int keycode, t_info *info)
 		goforward(info);
 	if (keycode == 115)
 		goback(info);
+	if (keycode == 97)
+		goleft(info);
+	if (keycode == 100)
+		goright(info);
 	if (keycode == 65363)
 		turnright(info);
 	if (keycode == 65361)
@@ -240,6 +322,20 @@ void	putplayer(t_img *img, int x, int y, t_info *info, unsigned int color)
 		dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 		*(unsigned int*)dest = color; 
 	}
+	y = (info->player.y + (-sin(info->player.angle + (M_PI/2)) * STEP)) * diff;
+	x = (info->player.x + (cos(info->player.angle + (M_PI/2)) * STEP)) * diff;
+	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+	{
+		dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+		*(unsigned int*)dest = color; 
+	}
+	y = (info->player.y + (-sin(info->player.angle - (M_PI/2)) * STEP)) * diff;
+	x = (info->player.x + (cos(info->player.angle - (M_PI/2)) * STEP)) * diff;
+	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+	{
+		dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+		*(unsigned int*)dest = color; 
+	}
 }
 
 void	putsquare(t_img *img, int x, int y, t_info *info, unsigned int color)
@@ -307,11 +403,13 @@ void	putmaptoimg(t_info *info, t_img *img)
 
 void	loop(t_info *info)
 {
-	//	putmaptoimg(info, &info->img);*/
 	info->current_img += 1;
 	if (info->current_img >= NB_IMG)
 		info->current_img = 0;
-	raisewalls(info);
+	printf("angle %.2f\nleft %.2f|%.2f\nright %.2f|%.2f\n", info->player.angle, -sin(info->player.angle + (M_PI/2)), cos(info->player.angle + (M_PI/2)), -sin(info->player.angle - (M_PI/2)), cos(info->player.angle - (M_PI/2)));
+	printf("coo %.2f|%.2f\n\n", info->player.x, info->player.y);
+//	raisewalls(info);
+	putmaptoimg(info, &info->img[info->current_img]);
 	mlx_put_image_to_window(info->mlx, info->win, info->img[info->current_img].img, 0, 0);
 }
 
