@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/04 12:50:45 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/04 12:56:55 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 
 int	closewin(t_info *info)
 {
+	int	i;
+
+	i = 0;
+	while (i < NB_IMG)
+	{
+		mlx_destroy_image(info->mlx, info->img[i].img);
+		i++;
+	}
 	freeinfo(info);
 	exit(0);
 }
@@ -32,7 +40,7 @@ void	goforward(t_info *info)
 
 	oldy = info->player.y;
 	oldx = info->player.x;
-	mlx_destroy_image(info->mlx, info->img.img);
+//	mlx_destroy_image(info->mlx, info->img.img);
 	if (sin(info->player.angle) > 0)
 	{
 		if (!iswall(info, (info->player.y - (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
@@ -66,7 +74,7 @@ void	goforward(t_info *info)
 		info->player.y = oldy;
 		info->player.x = oldx;
 	}
-	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
+//	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
 	loop(info);
 }
 
@@ -77,7 +85,7 @@ void	goback(t_info *info)
 
 	oldy = info->player.y;
 	oldx = info->player.x;
-	mlx_destroy_image(info->mlx, info->img.img);
+//	mlx_destroy_image(info->mlx, info->img.img);
 	if (sin(info->player.angle) < 0)
 	{
 		if (!iswall(info, (info->player.y + (sin(info->player.angle) * (STEP)) - 0.1), info->player.x))
@@ -111,13 +119,13 @@ void	goback(t_info *info)
 		info->player.y = oldy;
 		info->player.x = oldx;
 	}
-	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
+//	printf("Player position on vector: %.4f ; %.4f\n", info->player.x, info->player.y);
 	loop(info);
 }
 
 void	turnright(t_info *info)
 {
-	mlx_destroy_image(info->mlx, info->img.img);
+//	mlx_destroy_image(info->mlx, info->img.img);
 	info->player.angle -= ((5 * M_PI)/180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
@@ -127,7 +135,7 @@ void	turnright(t_info *info)
 
 void	turnleft(t_info *info)
 {
-	mlx_destroy_image(info->mlx, info->img.img);
+//	mlx_destroy_image(info->mlx, info->img.img);
 	info->player.angle += ((5 * M_PI)/180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
@@ -137,7 +145,7 @@ void	turnleft(t_info *info)
 
 int	hook(int keycode, t_info *info)
 {
-	printf("%d\n", keycode);
+//	printf("%d\n", keycode);
 	if (keycode == 65307)
 		closewin(info);
 	if (keycode == 119)
@@ -299,55 +307,34 @@ void	putmaptoimg(t_info *info, t_img *img)
 
 void	loop(t_info *info)
 {
-/*	int i = 0;
-	int j = 0;
-	char *dest;
-*/
-	info->img.img = mlx_new_image(info->mlx, WIDTH, HEIGHT);
-	info->img.addr = mlx_get_data_addr(info->img.img, &info->img.bits_per_pixel, &info->img.line_length, &info->img.endian);
-/*	while (j < HEIGHT / 2)
-	{
-		i = 0;
-		while (i < WIDTH)
-		{
-			dest = info->img.addr + (j * info->img.line_length + i * (info->img.bits_per_pixel / 8));
-			*(unsigned int*)dest = info->c; 
-			i++;
-		}
-		j++;
-	}
-	while (j < HEIGHT)
-	{
-		i = 0;
-		while (i < WIDTH)
-		{
-			dest = info->img.addr + (j * info->img.line_length + i * (info->img.bits_per_pixel / 8));
-			*(unsigned int*)dest = info->f; 
-			i++;
-		}
-		j++;
-	}
+	//	putmaptoimg(info, &info->img);*/
+	info->current_img += 1;
+	if (info->current_img >= NB_IMG)
+		info->current_img = 0;
 	raisewalls(info);
-*/	putmaptoimg(info, &info->img);
-	mlx_put_image_to_window(info->mlx, info->win, info->img.img, 0, 0);
-	mlx_hook(info->win, 17, 0, closewin, info);
-	mlx_hook(info->win, 2, 1L << 0, hook, info);
-	mlx_loop(info->mlx);
+	mlx_put_image_to_window(info->mlx, info->win, info->img[info->current_img].img, 0, 0);
 }
 
 int	mlx(t_info *info)
 {
-	int decalage;
-	double	factor;
+	int i;
 
-	factor = 20;
-
-	decalage = 0;
 	info->mlx = mlx_init();
 	if (gettexture(info))
 		return (1);
 	info->win = mlx_new_window(info->mlx, WIDTH, HEIGHT, "cub3D");
+	i = 0;
+	while (i < NB_IMG)
+	{
+		info->img[i].img = mlx_new_image(info->mlx, WIDTH, HEIGHT);
+		info->img[i].addr = mlx_get_data_addr(info->img[i].img, &info->img[i].bits_per_pixel, &info->img[i].line_length, &info->img[i].endian);
+		i++;
+	}
+	info->current_img = i;
 	loop(info);
+	mlx_hook(info->win, 17, 0, closewin, info);
+	mlx_hook(info->win, 2, 1L << 0, hook, info);
+	mlx_loop(info->mlx);
 	return (0);
 }
 
