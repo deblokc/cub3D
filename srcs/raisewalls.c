@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/04 12:41:58 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/04 14:54:46 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	char			*origin;
 	double			percent_x;
 	double			percent_y;
-	double			tot_size;
+	int				tot_size;
 	t_texture		target;
 	int				start_pixel;
 	int				end_pixel;
@@ -27,28 +27,83 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	if (hit == 1)
 	{
 		if (v[1] < 0)
-			target = info->no;
+		{
+			if (info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
+				hit = 2;
+		}
 		else
-			target = info->so;
-		percent_x = (cur[0] - floor(cur[0])) / 0.9999;
-		if (percent_x > 1)
-			percent_x = 1;
-		percent_x = round(percent_x * (double)(target.width - 1));
+		{
+			if (info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
+				hit = 2;
+		}
 	}
 	else
 	{
 		if (v[0] < 0)
-			target = info->we;
+		{
+			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1')
+			{
+				hit = 1;
+/*				if ((ceil(cur[0]) - cur[0]) < 0.0001 && (ceil(cur[1]) - cur[1]) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
+					cur[0] = ceil(cur[0]);
+				else if ((ceil(cur[0]) - cur[0]) < 0.0001 && (cur[1] - floor(cur[1])) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
+					cur[0] = ceil(cur[0]);*/
+			}
+		}
 		else
-			target = info->ea;
-		percent_x = (cur[1] - floor(cur[1])) / 0.9999;
-		if (percent_x > 1)
-			percent_x = 1;
-		percent_x = round(percent_x * (double)(target.width - 1));
+		{
+			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1')
+			{
+				hit = 1;
+/*				if ((cur[0] - floor(cur[0])) < 0.0001 && (ceil(cur[1]) - cur[1]) < 0.0001 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
+					cur[0] = floor(cur[0]) - 0.0001;
+				else if ((cur[0] - floor(cur[0])) < 0.0001 && (cur[1] - floor(cur[1])) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
+					cur[0] = floor(cur[0]) - 0.0001;*/
+			}
+		}
+
 	}
-	start_pixel = (int)ceil((((double)HEIGHT - 1) / 2) - ((double)wall_height / 2));
-	end_pixel = (int)ceil((((double)HEIGHT - 1) / 2) + ((double)wall_height / 2));
-	tot_size = (double)(end_pixel - start_pixel);
+	if (hit == 1)
+	{
+		if (v[1] < 0)
+		{
+			target = info->no;
+			percent_x = (cur[0] - floor(cur[0])) / 1;
+			if (percent_x >= 1)
+				percent_x = 0.9999;
+			percent_x = floor(percent_x * (double)target.width);
+		}
+		else
+		{
+			target = info->so;
+			percent_x = 1 - (cur[0] - floor(cur[0])) / 1;
+			if (percent_x >= 1)
+				percent_x = 0.9999;
+			percent_x = floor(percent_x * (double)target.width);
+		}
+	}
+	else
+	{
+		if (v[0] < 0)
+		{
+			target = info->we;
+			percent_x = 1 - (cur[1] - floor(cur[1])) / 1;
+			if (percent_x >= 1)
+				percent_x = 0.9999;
+			percent_x = floor(percent_x * (double)target.width);
+		}
+		else
+		{
+			target = info->ea;
+			percent_x = (cur[1] - floor(cur[1])) / 1;
+			if (percent_x >= 1)
+				percent_x = 0.9999;
+			percent_x = floor(percent_x * (double)target.width);
+		}
+	}
+	start_pixel = (int)floor((((double)HEIGHT - 1) / 2) - ((double)wall_height / 2));
+	end_pixel = start_pixel + wall_height - 1;
+	tot_size = end_pixel - start_pixel;
 	dst = info->img[info->current_img].addr + i * (info->img[info->current_img].bits_per_pixel / 8) - info->img[info->current_img].line_length;
 	origin = target.texture.addr +(int)percent_x * (target.texture.bits_per_pixel / 8);
 	it = 0;
@@ -61,7 +116,7 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 			*(unsigned int *)dst = info->f;
 		else
 		{
-			percent_y = round(((double)(it - start_pixel) / tot_size) * (double)(target.height - 1));
+			percent_y = round(((double)(it - start_pixel) / (double)tot_size) * (double)(target.height - 1));
 			*(unsigned int *)dst = *(unsigned int *)(origin + (int)percent_y * target.texture.line_length);
 		}
 		it++;

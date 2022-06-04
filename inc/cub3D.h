@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/04 12:28:59 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/04 14:06:15 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include <fcntl.h>
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 2500
+# define HEIGHT 1300
 # define NB_IMG 16
 # define STEP 0.25
 
