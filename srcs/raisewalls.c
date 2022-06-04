@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/03 19:58:49 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/04 12:41:58 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	int				it;
 	char			*dst;
 	char			*origin;
-//	unsigned int	val;
 	double			percent_x;
 	double			percent_y;
+	double			tot_size;
 	t_texture		target;
 	int				start_pixel;
 	int				end_pixel;
@@ -48,21 +48,22 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	}
 	start_pixel = (int)ceil((((double)HEIGHT - 1) / 2) - ((double)wall_height / 2));
 	end_pixel = (int)ceil((((double)HEIGHT - 1) / 2) + ((double)wall_height / 2));
-	it = start_pixel;
-	while (it < (end_pixel + 1))
+	tot_size = (double)(end_pixel - start_pixel);
+	dst = info->img[info->current_img].addr + i * (info->img[info->current_img].bits_per_pixel / 8) - info->img[info->current_img].line_length;
+	origin = target.texture.addr +(int)percent_x * (target.texture.bits_per_pixel / 8);
+	it = 0;
+	while (it < HEIGHT)
 	{
-		if (it < 0 || it >= HEIGHT)
+		dst += info->img[info->current_img].line_length;
+		if (it < start_pixel)
+			*(unsigned int *)dst = info->c;
+		else if (it > end_pixel)
+			*(unsigned int *)dst = info->f;
+		else
 		{
-			it++;
-			continue ;
+			percent_y = round(((double)(it - start_pixel) / tot_size) * (double)(target.height - 1));
+			*(unsigned int *)dst = *(unsigned int *)(origin + (int)percent_y * target.texture.line_length);
 		}
-		dst = info->img.addr + (it * info->img.line_length + i * (info->img.bits_per_pixel / 8));
-		percent_y = (double)(it - start_pixel) / (double)(end_pixel - start_pixel);
-		if (percent_y > 1)
-			percent_y = 1;
-		percent_y = round(percent_y * (double)(target.height - 1));
-		origin = target.texture.addr + ((int)percent_y * target.texture.line_length + (int)percent_x * (target.texture.bits_per_pixel / 8));
-		*(unsigned int *)dst = *(unsigned *)origin;
 		it++;
 	}
 }
@@ -264,15 +265,11 @@ void	raisewalls(t_info *info)
 		info->player.angle = 2 * M_PI;
 	get_projection_screen(info, projection_screen);
 	get_director_vector(projection_screen, director_vector);
-//	printf("Player position: %.4f ; %.4f\n", info->player.x, info->player.y);
-	//printf("Player position: %.4f ; %.4f\nProjection screen 0: %.4f ; %.4f\nProjection screen 1: %.4f ; %.4f\n", info->player.x, info->player.y, projection_screen[0], projection_screen[1], projection_screen[2], projection_screen[3]);
-//	printf("director vector: %.8f ; %.8f\n", director_vector[0], director_vector[1]);
 	i = 0;
 	while (i < WIDTH)
 	{
 		v[0] = (projection_screen[0] + director_vector[0] * i) - info->player.x;
 		v[1] = (projection_screen[1] + director_vector[1] * i) - info->player.y;
-//		printf("search_vector: %.8f ; %.8f\n", v[0], v[1]);
 		init_search(info, v, i);
 		i++;
 	}

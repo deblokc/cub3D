@@ -6,15 +6,13 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 17:11:39 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/04 12:28:59 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# define WIN_HEIGHT 1350
-# define WIN_WIDTH 2550
 # define PROJ_PLANE_DIST 1
 # include <stdio.h>
 # include <stdlib.h>
@@ -27,6 +25,7 @@
 # include "../minilibx/mlx.h"
 # define WIDTH 1920
 # define HEIGHT 1080
+# define NB_IMG 16
 # define STEP 0.25
 
 typedef struct s_map
@@ -63,7 +62,8 @@ typedef struct s_info
 {
 	void			*mlx;
 	void			*win;
-	t_img			img;
+	t_img			img[NB_IMG];
+	int				current_img;
 	int				printerr;
 	t_texture		no;
 	t_texture		so;
