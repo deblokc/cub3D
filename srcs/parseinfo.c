@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 17:12:34 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/04 12:02:55 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ char	*getlaststr(char *ligne)
 
 unsigned int	getlist(char *str)
 {
-	int				i;
-	int				j;
+	unsigned int	i;
+	unsigned int	j;
 	unsigned char	*lst;
 
 	if (!str || !*str)
@@ -112,9 +112,8 @@ unsigned int	getlist(char *str)
 		return (free(lst), free(str), 0);
 	lst[2] = j;
 	i++;
-	j = i;
-	free(str);
-	return (((lst[0]&0x0ff) << 16) | ((lst[1]&0x0ff) << 8) | (lst[2]&0x0ff));
+	j = (((lst[0]&0x0ff) << 16) | ((lst[1]&0x0ff) << 8) | (lst[2]&0x0ff));
+	return (free(str), free(lst), j);
 }
 
 void	puterr(char *str, t_info *info)
