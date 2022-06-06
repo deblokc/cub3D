@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 12:33:10 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/06 16:26:32 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_img
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-} t_img;
+}	t_img;
 
 typedef struct s_texture
 {
@@ -49,14 +49,14 @@ typedef struct s_texture
 	int		width;
 	int		height;
 	char	*path;
-} t_texture;
+}	t_texture;
 
 typedef struct s_player
 {
 	double	x;
 	double	y;
 	double	angle;
-} t_player;
+}	t_player;
 
 typedef struct s_info
 {
@@ -69,42 +69,64 @@ typedef struct s_info
 	t_texture		so;
 	t_texture		we;
 	t_texture		ea;
-	unsigned int	f;
-	unsigned int	c;
+	int				f;
+	int				c;
+	int				isvalid;
 	t_map			*lstmap;
 	char			**map;
 	char			dir;
 	t_player		player;
 }	t_info;
 
-int				charinstr(char *str, char c);
-int				substrinstr(char *str, char *substr);
-char			*getlaststr(char *ligne);
-t_info			getinfo(t_map *map);
-unsigned int	getlist(char *str);
-char			**parsemap(t_map *lstmap);
-void			freecharchar(char **lst);
-void			puterr(char *str, t_info *info);
-void			freelstmap(t_map *map);
-int				mlx(t_info *info);
-void			freeallchunk(t_map *map);
-void			freeinfo(t_info *info);
-void			loop(t_info *info);
-void			raisewalls(t_info *info);
-int				closewin(t_info *info);
-int				iswall(t_info *info, double y, double x);
-void			goforwardy(t_info *info);
-void			goforwardx(t_info *info, double oldy);
-void			goforward(t_info *info);
-void			gobacky(t_info *info);
-void			gobackx(t_info *info, double oldy);
-void			goback(t_info *info);
-void			golefty(t_info *info);
-void			goleftx(t_info *info, double oldy);
+int		charinstr(char *str, char c);
+int		substrinstr(char *str, char *substr);
+char	*getlaststr(char *ligne);
+t_info	getinfo(t_map *map);
+int		getlist(char *str);
+char	**parsemap(t_map *lstmap);
+void	freecharchar(char **lst);
+void	puterr(char *str, t_info *info);
+void	freelstmap(t_map *map);
+int		mlx(t_info *info);
+void	freeallchunk(t_map *map);
+void	freeinfo(t_info *info);
+void	loop(t_info *info);
+void	raisewalls(t_info *info);
+int		closewin(t_info *info);
+int		iswall(t_info *info, double y, double x);
+void	goforwardy(t_info *info);
+void	goforwardx(t_info *info, double oldy);
+void	goforward(t_info *info);
+void	gobacky(t_info *info);
+void	gobackx(t_info *info, double oldy);
+void	goback(t_info *info);
+void	golefty(t_info *info);
+void	goleftx(t_info *info, double oldy);
 void	goleft(t_info *info);
 void	gorighty(t_info *info);
 void	gorightx(t_info *info, double oldy);
 void	goright(t_info *info);
 void	turnright(t_info *info);
+void	turnleft(t_info *info);
+int		charinstr(char *str, char c);
+int		substrinstr(char *str, char *substr);
+char	*getlaststr(char *ligne);
+int		getlist(char *str);
+void	puterr(char *str, t_info *info);
+void	freeallchunk(t_map *map);
+void	freecharchar(char **lst);
+void	freetexture(t_info *info);
+void	freeinfo(t_info *info);
+void	freelstmap(t_map *map);
+int		checkcub(char **map, int i, int j);
+void	infodir(t_info *info, char c, int i, int j);
+void	dirmap(char **map, int i, int j, t_info *info);
+void	checkcharmap(char **map, int i, int j, t_info *info);
+int		isvalid(char **map, t_info *info);
+int		ischr(char c);
+void	printerrcoo(char *str, int i, int j, t_info *info);
+void	initinfo(t_info *info);
+int		lenof(t_map *lstmap);
+int		ft_strlen_map(char *str);
 
 #endif
