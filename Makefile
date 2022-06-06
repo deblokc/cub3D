@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/30 11:59:08 by tnaton            #+#    #+#              #
-#    Updated: 2022/06/03 16:42:11 by bdetune          ###   ########.fr        #
+#    Updated: 2022/06/06 12:30:55 by tnaton           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ MLX = minilibx/libmlx_Linux.a
 
 OBJDIR := objs
 
-SRC = main.c parseinfo.c parsemap.c mlx.c raisewalls.c
+SRC = main.c parseinfo.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c raisewalls.c
 
 source = $(addprefix srcs/,$(SRC))
 

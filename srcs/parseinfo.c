@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/04 12:02:55 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/06 13:34:16 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,39 +80,28 @@ unsigned int	getlist(char *str)
 {
 	unsigned int	i;
 	unsigned int	j;
+	int				k;
 	unsigned char	*lst;
 
-	if (!str || !*str)
-		return (free(str), 0);
+	k = 0;
 	lst = malloc(sizeof(unsigned char) * 3);
-	if (!lst)
-		return (free(str), 0);
+	if (!lst || !str || !*str)
+		return (free(lst), free(str), 0);
 	i = 0;
 	j = 0;
-	while (str[i] && str[i] != ',')
+	while (k < 3)
+	{
+		j = i;
+		while (str[i] && str[i] != ',')
+			i++;
+		j = ft_atoi_free(ft_substr(str, j, i - j));
+		if (j < 0 || j > 255)
+			return (free(lst), free(str), 0);
+		lst[k] = j;
 		i++;
-	j = ft_atoi_free(ft_substr(str, j, i - j));
-	if (j < 0 || j > 255)
-		return (free(lst), free(str), 0);
-	lst[0] = j;
-	i++;
-	j = i;
-	while (str[i] && str[i] != ',')
-		i++;
-	j = ft_atoi_free(ft_substr(str, j, i - j));
-	if (j < 0 || j > 255)
-		return (free(lst), free(str), 0);
-	lst[1] = j;
-	i++;
-	j = i;
-	while (str[i] && str[i] != ',')
-		i++;
-	j = ft_atoi_free(ft_substr(str, j, i - j));
-	if (j < 0 || j > 255)
-		return (free(lst), free(str), 0);
-	lst[2] = j;
-	i++;
-	j = (((lst[0]&0x0ff) << 16) | ((lst[1]&0x0ff) << 8) | (lst[2]&0x0ff));
+		k++;
+	}
+	j = (((lst[0] & 0x0ff) << 16) | ((lst[1] & 0x0ff) << 8) | (lst[2] & 0x0ff));
 	return (free(str), free(lst), j);
 }
 
@@ -142,6 +131,45 @@ void	printerr(t_info *info)
 		puterr("Erreur sur la ligne C\n", info);
 }
 
+void	initinfo(t_info *info)
+{
+	info->no.path = NULL;
+	info->so.path = NULL;
+	info->we.path = NULL;
+	info->ea.path = NULL;
+	info->f = 0;
+	info->c = 0;
+	info->map = NULL;
+	info->lstmap = NULL;
+	info->dir = 0;
+	info->printerr = 0;
+	info->no.texture.img = NULL;
+	info->so.texture.img = NULL;
+	info->we.texture.img = NULL;
+	info->ea.texture.img = NULL;
+	info->mlx = NULL;
+	info->win = NULL;
+}
+
+int	getlineinfo(t_map *current, t_info *info)
+{
+	if (substrinstr(current->ligne, "NO") && !info->no.path)
+		info->no.path = getlaststr(current->ligne);
+	else if (substrinstr(current->ligne, "SO") && !info->so.path)
+		info->so.path = getlaststr(current->ligne);
+	else if (substrinstr(current->ligne, "WE") && !info->we.path)
+		info->we.path = getlaststr(current->ligne);
+	else if (substrinstr(current->ligne, "EA") && !info->ea.path)
+		info->ea.path = getlaststr(current->ligne);
+	else if (charinstr(current->ligne, 'F') && !info->f)
+		info->f = getlist(getlaststr(current->ligne));
+	else if (charinstr(current->ligne, 'C') && !info->c)
+		info->c = getlist(getlaststr(current->ligne));
+	else
+		return (0);
+	return (1);
+}
+
 t_info	getinfo(t_map *map)
 {
 	t_info	info;
@@ -149,38 +177,19 @@ t_info	getinfo(t_map *map)
 	t_map	*tmp;
 
 	current = map;
-	info.no.path = NULL;
-	info.so.path = NULL;
-	info.we.path = NULL;
-	info.ea.path = NULL;
-	info.f = 0;
-	info.c = 0;
-	info.map = NULL;
-	info.lstmap = NULL;
-	info.dir = 0;
-	info.printerr = 0;
-	info.no.texture.img = NULL;
-	info.so.texture.img = NULL;
-	info.we.texture.img = NULL;
-	info.ea.texture.img = NULL;
-	info.mlx = NULL;
-	info.win = NULL;
+	initinfo(&info);
 	while (current)
 	{
-		if (substrinstr(current->ligne, "NO") && !info.no.path)
-			info.no.path = getlaststr(current->ligne);
-		else if (substrinstr(current->ligne, "SO") && !info.so.path)
-			info.so.path = getlaststr(current->ligne);
-		else if (substrinstr(current->ligne, "WE") && !info.we.path)
-			info.we.path = getlaststr(current->ligne);
-		else if (substrinstr(current->ligne, "EA") && !info.ea.path)
-			info.ea.path = getlaststr(current->ligne);
-		else if (charinstr(current->ligne, 'F') && !info.f)
-			info.f = getlist(getlaststr(current->ligne));
-		else if (charinstr(current->ligne, 'C') && !info.c)
-			info.c = getlist(getlaststr(current->ligne));
-		else if (substrinstr(current->ligne, "NO") || substrinstr(current->ligne, "SO") || substrinstr(current->ligne, "WE") || substrinstr(current->ligne, "EA") || charinstr(current->ligne, 'F') || charinstr(current->ligne, 'C'))
-			return (puterr("Cette ligne est en trop : ", &info), ft_putstr_fd(current->ligne, 2) ,\
+		if (getlineinfo(current, &info))
+			printf("lol\n");
+		else if (substrinstr(current->ligne, "NO") || \
+				substrinstr(current->ligne, "SO") || \
+				substrinstr(current->ligne, "WE") || \
+				substrinstr(current->ligne, "EA") || \
+				charinstr(current->ligne, 'F') || \
+				charinstr(current->ligne, 'C'))
+			return (puterr("Cette ligne est en trop : ", &info), \
+					ft_putstr_fd(current->ligne, 2), \
 					freelstmap(current), freeallchunk(current), info);
 		else if (ft_strcmp_free(ft_strtrim(current->ligne, " "), "\n"))
 		{

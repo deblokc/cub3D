@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:09:49 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/01 16:25:09 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/06 12:54:05 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ char	**parsemap(t_map *lstmap)
 		map[i] = NULL;
 		map[i] = getligne(lstmap->ligne, maxlen);
 		if (!map[i])
-			return (freecharchar(map), ft_putstr_fd("Error\nLe malloc est KC !\n", 2), NULL);
-	//	printf("%s\n", map[i]);
+			return (freecharchar(map), \
+					ft_putstr_fd("Error\nLe malloc est KC !\n", 2), NULL);
 		i++;
 		lstmap = lstmap->next;
 	}
@@ -116,7 +116,8 @@ char	**parsemap(t_map *lstmap)
 	while (lstmap)
 	{
 		if (ft_strcmp_free(ft_strtrim(lstmap->ligne, " \n"), ""))
-			return (freecharchar(map), freelstmap(lstmap), ft_putstr_fd("Error\nLigne non-vide apres la map\n", 2), NULL);
+			return (freecharchar(map), freelstmap(lstmap), ft_putstr_fd(\
+						"Error\nLigne non-vide apres la map\n", 2), NULL);
 		free(lstmap->ligne);
 		lstmap = lstmap->next;
 	}

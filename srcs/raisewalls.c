@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/04 14:54:46 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/06 13:16:23 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 					cur[0] = floor(cur[0]) - 0.0001;*/
 			}
 		}
-
 	}
 	if (hit == 1)
 	{
@@ -217,7 +216,7 @@ int	straight_line(t_info *info, double cur[2], double v[2], int i)
 	return (0);
 }
 
-void get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
+void	get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 {
 	double	prev[2];
 	int		hit;
@@ -231,7 +230,6 @@ void get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 			hit = straight_line(info, cur, v, i);
 		else
 		{
-
 			if (fabs(delta[0] - delta[1]) < 0.0001 || delta[0] < delta[1])
 			{
 				cur[1] = delta[0] * v[1] + prev[1];
@@ -257,7 +255,6 @@ void get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
 				}
 			}
 		}
-
 	}
 }
 
@@ -301,7 +298,7 @@ void	get_projection_screen(t_info *info, double projection_screen[4])
 	projection_screen[2] = cos(projection_screen[2]) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.x;
 }
 
-void get_director_vector(double projection_screen[4], double director_vector[2])
+void	get_director_vector(double projection_screen[4], double director_vector[2])
 {
 	director_vector[0] = (projection_screen[2] - projection_screen[0]) / (double)(WIDTH - 1);
 	director_vector[1] = (projection_screen[3] - projection_screen[1]) / (double)(WIDTH - 1);

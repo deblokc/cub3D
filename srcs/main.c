@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/03 18:07:09 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/06 13:02:53 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,21 @@ void	printerrcoo(char *str, int i, int j, t_info *info)
 	ft_putstr_fd(" !\n", 2);
 }
 
+void	infodir(t_info *info, char c, int i, int j)
+{
+	info->dir = c;
+	if (c == 'N')
+		info->player.angle = M_PI / 2;
+	if (c == 'W')
+		info->player.angle = M_PI;
+	if (c == 'S')
+		info->player.angle = (3 * M_PI) / 2;
+	if (c == 'E')
+		info->player.angle = 2 * M_PI;
+	info->player.x = j + 0.5;
+	info->player.y = i + 0.5;
+}
+
 int	isvalid(char **map, t_info *info)
 {
 	int	i;
@@ -147,28 +162,19 @@ int	isvalid(char **map, t_info *info)
 			}
 			if (map[i][j] == '0' || map[i][j] == 'E' || map[i][j] == 'W' \
 					|| map[i][j] == 'N' || map[i][j] == 'S')
+			{
 				if (!checkcub(map, i, j))
 				{
-					printerrcoo("Il manque des murs pour le chemin en ", i, j, info);
+					printerrcoo("Il manque des murs pour le chemin en ", \
+							i, j, info);
 					isvalid = 0;
 				}
+			}
 			if (map[i][j] == 'E' || map[i][j] == 'W' || map[i][j] == 'N' \
 					|| map[i][j] == 'S')
 			{
 				if (!info->dir)
-				{
-					info->dir = map[i][j];
-					if (map[i][j] == 'N')
-						info->player.angle = M_PI/2;
-					if (map[i][j] == 'W')
-						info->player.angle = M_PI;
-					if (map[i][j] == 'S')
-						info->player.angle = (3 * M_PI) / 2;
-					if (map[i][j] == 'E')
-						info->player.angle = 2 * M_PI;
-					info->player.x = j + 0.5;
-					info->player.y = i + 0.5;
-				}
+					infodir(info, map[i][j], i, j);
 				else
 				{
 					printerrcoo("Point de spawn excedant en ", i, j, info);
@@ -218,7 +224,8 @@ int	main(int ac, char **av)
 	{
 		current->next = newchunk(get_next_line(fd));
 		if (!current->next)
-			return (freeallchunk(map), ft_putstr_fd("Error\nLe malloc est KC !\n",2), 1);
+			return (freeallchunk(map), \
+					ft_putstr_fd("Error\nLe malloc est KC !\n", 2), 1);
 		current = current->next;
 	}
 	info = getinfo(map);

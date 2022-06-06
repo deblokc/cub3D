@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/04 14:06:15 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/06 12:33:10 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,20 @@ void			freeallchunk(t_map *map);
 void			freeinfo(t_info *info);
 void			loop(t_info *info);
 void			raisewalls(t_info *info);
+int				closewin(t_info *info);
+int				iswall(t_info *info, double y, double x);
+void			goforwardy(t_info *info);
+void			goforwardx(t_info *info, double oldy);
+void			goforward(t_info *info);
+void			gobacky(t_info *info);
+void			gobackx(t_info *info, double oldy);
+void			goback(t_info *info);
+void			golefty(t_info *info);
+void			goleftx(t_info *info, double oldy);
+void	goleft(t_info *info);
+void	gorighty(t_info *info);
+void	gorightx(t_info *info, double oldy);
+void	goright(t_info *info);
+void	turnright(t_info *info);
 
 #endif
