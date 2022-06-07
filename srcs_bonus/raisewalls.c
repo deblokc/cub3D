@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/06 13:16:23 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/07 14:49:06 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, double cur[2])
 {
 	int				it;
+	double			step;
+	double			current;
 	char			*dst;
 	char			*origin;
 	double			percent_x;
-	double			percent_y;
+	int				percent_y;
 	int				tot_size;
 	t_texture		target;
 	int				start_pixel;
@@ -29,12 +31,34 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 		if (v[1] < 0)
 		{
 			if (info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
+			{
 				hit = 2;
+				if ((v[0] <= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1') || (v[0] >= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
+				{
+					hit = 1;
+					if (v[0] <= 0)
+						cur[0] = 0;
+					else
+						cur[0] = 0.9999;
+					cur[1] = 0.9999;
+				}
+			}
 		}
 		else
 		{
 			if (info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
+			{
 				hit = 2;
+				if ((v[0] <= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1') || (v[0] >= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
+				{
+					hit = 1;
+					if (v[0] <= 0)
+						cur[0] = 0;
+					else
+						cur[0] = 0.9999;
+					cur[1] = 0;
+				}
+			}
 		}
 	}
 	else
@@ -44,10 +68,15 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1')
 			{
 				hit = 1;
-/*				if ((ceil(cur[0]) - cur[0]) < 0.0001 && (ceil(cur[1]) - cur[1]) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
-					cur[0] = ceil(cur[0]);
-				else if ((ceil(cur[0]) - cur[0]) < 0.0001 && (cur[1] - floor(cur[1])) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
-					cur[0] = ceil(cur[0]);*/
+				if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
+				{
+					hit = 2;
+					if (v[1] <= 0)
+						cur[1] = 0;
+					else
+						cur[1] = 0.9999;
+					cur[0] = 0.9999;
+				}
 			}
 		}
 		else
@@ -55,10 +84,15 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1')
 			{
 				hit = 1;
-/*				if ((cur[0] - floor(cur[0])) < 0.0001 && (ceil(cur[1]) - cur[1]) < 0.0001 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
-					cur[0] = floor(cur[0]) - 0.0001;
-				else if ((cur[0] - floor(cur[0])) < 0.0001 && (cur[1] - floor(cur[1])) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
-					cur[0] = floor(cur[0]) - 0.0001;*/
+				if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
+				{
+					hit = 2;
+					if (v[1] <= 0)
+						cur[1] = 0;
+					else
+						cur[1] = 0.9999;
+					cur[0] = 0;
+				}
 			}
 		}
 	}
@@ -103,21 +137,31 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	start_pixel = (int)floor((((double)HEIGHT - 1) / 2) - ((double)wall_height / 2));
 	end_pixel = start_pixel + wall_height - 1;
 	tot_size = end_pixel - start_pixel;
-	dst = info->img[info->current_img].addr + i * (info->img[info->current_img].bits_per_pixel / 8) - info->img[info->current_img].line_length;
+	dst = info->img[info->current_img].addr + i * (info->img[info->current_img].bits_per_pixel / 8);
 	origin = target.texture.addr +(int)percent_x * (target.texture.bits_per_pixel / 8);
 	it = 0;
+	while (it < HEIGHT && it < start_pixel)
+	{
+		*(unsigned int *)dst = info->c;
+		dst += info->img[info->current_img].line_length;
+		it++;
+	}
+	step = ((double)(1) / (double)tot_size) * (double)(target.height);
+	current = (double)(it - start_pixel) * step;
+	while (it < HEIGHT && it <= end_pixel)
+	{
+		percent_y = (int)current;
+		if (percent_y == target.height)
+			percent_y = target.height - 1;
+		*(unsigned int *)dst = *(unsigned int *)(origin + (int)percent_y * target.texture.line_length);
+		dst += info->img[info->current_img].line_length;
+		current += step;
+		it++;
+	}
 	while (it < HEIGHT)
 	{
+		*(unsigned int *)dst = info->f;
 		dst += info->img[info->current_img].line_length;
-		if (it < start_pixel)
-			*(unsigned int *)dst = info->c;
-		else if (it > end_pixel)
-			*(unsigned int *)dst = info->f;
-		else
-		{
-			percent_y = round(((double)(it - start_pixel) / (double)tot_size) * (double)(target.height - 1));
-			*(unsigned int *)dst = *(unsigned int *)(origin + (int)percent_y * target.texture.line_length);
-		}
 		it++;
 	}
 }

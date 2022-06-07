@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/25 18:31:36 by tnaton            #+#    #+#              #
-#    Updated: 2022/05/31 12:25:19 by tnaton           ###   ########.fr        #
+#    Updated: 2022/06/07 14:12:27 by tnaton           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,16 +21,12 @@ ft_toupper.c ft_calloc.c ft_memchr.c ft_putstr_fd.c ft_strmapi.c ft_isalnum.c\
 ft_memcmp.c ft_split.c ft_strncmp.c ft_isalpha.c ft_memcpy.c ft_strchr.c\
 ft_strnstr.c ft_isascii.c ft_memmove.c ft_strdup.c ft_strrchr.c ft_striteri.c\
 get_next_line.c get_next_line_utils.c ft_atoi_base.c ft_power.c\
-ft_strjoin_free.c ft_strcmp.c ft_strtrim_free.c ft_atoi_free.c ft_strcmp_free.c
-
-BONUS = ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c\
-		ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c
+ft_strjoin_free.c ft_strcmp.c ft_strtrim_free.c ft_strcmp_free.c ft_atoi_free.c
 
 OBJS = $(SRCS:.c=.o)
 
-OBJSBONUS = $(BONUS:.c=.o)
-
 CC		= clang
+
 RM		= rm -f
 
 ifeq (libft,$(DIR))
@@ -47,7 +43,7 @@ all:	${NAME}
 
 .PHONY: clean
 clean:
-		${RM} ${OBJS} ${OBJSBONUS}
+		${RM} ${OBJS}
 
 .PHONY: fclean
 fclean:	clean
@@ -56,16 +52,11 @@ fclean:	clean
 .PHONY: re
 re: fclean all
 
-.PHONY: bonus
-bonus:	${OBJS} ${OBJSBONUS} ${HEADER}
-		ar rcs ${NAME} $?
-
 endif
 
 .c.o:	
 		${CC} ${CFLAGS} -g -c $< -o ${<:.c=.o}
+
 $(OBJS) : libft.h
 
-$(OBJSBONUS) : libft.h
-
-.SECONDARY: $(OBJS) $(OBJSBONUS)
+.SECONDARY: $(OBJS)
