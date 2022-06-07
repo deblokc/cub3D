@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/07 14:34:19 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/07 14:49:06 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, double cur[2])
 {
 	int				it;
+	double			step;
+	double			current;
 	char			*dst;
 	char			*origin;
 	double			percent_x;
-	double			percent_y;
+	int				percent_y;
 	int				tot_size;
 	t_texture		target;
 	int				start_pixel;
@@ -144,13 +146,16 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 		dst += info->img[info->current_img].line_length;
 		it++;
 	}
+	step = ((double)(1) / (double)tot_size) * (double)(target.height);
+	current = (double)(it - start_pixel) * step;
 	while (it < HEIGHT && it <= end_pixel)
 	{
-		percent_y = round(((double)(it - start_pixel) / (double)tot_size) * (double)(target.height));
+		percent_y = (int)current;
 		if (percent_y == target.height)
 			percent_y = target.height - 1;
 		*(unsigned int *)dst = *(unsigned int *)(origin + (int)percent_y * target.texture.line_length);
 		dst += info->img[info->current_img].line_length;
+		current += step;
 		it++;
 	}
 	while (it < HEIGHT)
