@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/07 13:13:39 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/07 14:34:19 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 				{
 					hit = 1;
 					if (v[0] <= 0)
-						cur[0] = 0.9999;
-					else
 						cur[0] = 0;
+					else
+						cur[0] = 0.9999;
 					cur[1] = 0;
 				}
 			}
@@ -69,10 +69,10 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 				if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
 				{
 					hit = 2;
-					if (v[1] < 0)
-						cur[1] = 0.9999;
-					else
+					if (v[1] <= 0)
 						cur[1] = 0;
+					else
+						cur[1] = 0.9999;
 					cur[0] = 0.9999;
 				}
 			}
@@ -135,21 +135,28 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	start_pixel = (int)floor((((double)HEIGHT - 1) / 2) - ((double)wall_height / 2));
 	end_pixel = start_pixel + wall_height - 1;
 	tot_size = end_pixel - start_pixel;
-	dst = info->img[info->current_img].addr + i * (info->img[info->current_img].bits_per_pixel / 8) - info->img[info->current_img].line_length;
+	dst = info->img[info->current_img].addr + i * (info->img[info->current_img].bits_per_pixel / 8);
 	origin = target.texture.addr +(int)percent_x * (target.texture.bits_per_pixel / 8);
 	it = 0;
+	while (it < HEIGHT && it < start_pixel)
+	{
+		*(unsigned int *)dst = info->c;
+		dst += info->img[info->current_img].line_length;
+		it++;
+	}
+	while (it < HEIGHT && it <= end_pixel)
+	{
+		percent_y = round(((double)(it - start_pixel) / (double)tot_size) * (double)(target.height));
+		if (percent_y == target.height)
+			percent_y = target.height - 1;
+		*(unsigned int *)dst = *(unsigned int *)(origin + (int)percent_y * target.texture.line_length);
+		dst += info->img[info->current_img].line_length;
+		it++;
+	}
 	while (it < HEIGHT)
 	{
+		*(unsigned int *)dst = info->f;
 		dst += info->img[info->current_img].line_length;
-		if (it < start_pixel)
-			*(unsigned int *)dst = info->c;
-		else if (it > end_pixel)
-			*(unsigned int *)dst = info->f;
-		else
-		{
-			percent_y = round(((double)(it - start_pixel) / (double)tot_size) * (double)(target.height - 1));
-			*(unsigned int *)dst = *(unsigned int *)(origin + (int)percent_y * target.texture.line_length);
-		}
 		it++;
 	}
 }
