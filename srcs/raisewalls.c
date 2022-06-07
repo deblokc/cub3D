@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/06 13:16:23 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/07 13:13:39 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,34 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 		if (v[1] < 0)
 		{
 			if (info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
+			{
 				hit = 2;
+				if ((v[0] <= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1') || (v[0] >= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
+				{
+					hit = 1;
+					if (v[0] <= 0)
+						cur[0] = 0;
+					else
+						cur[0] = 0.9999;
+					cur[1] = 0.9999;
+				}
+			}
 		}
 		else
 		{
 			if (info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
+			{
 				hit = 2;
+				if ((v[0] <= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1') || (v[0] >= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
+				{
+					hit = 1;
+					if (v[0] <= 0)
+						cur[0] = 0.9999;
+					else
+						cur[0] = 0;
+					cur[1] = 0;
+				}
+			}
 		}
 	}
 	else
@@ -44,10 +66,15 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1')
 			{
 				hit = 1;
-/*				if ((ceil(cur[0]) - cur[0]) < 0.0001 && (ceil(cur[1]) - cur[1]) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
-					cur[0] = ceil(cur[0]);
-				else if ((ceil(cur[0]) - cur[0]) < 0.0001 && (cur[1] - floor(cur[1])) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
-					cur[0] = ceil(cur[0]);*/
+				if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
+				{
+					hit = 2;
+					if (v[1] < 0)
+						cur[1] = 0.9999;
+					else
+						cur[1] = 0;
+					cur[0] = 0.9999;
+				}
 			}
 		}
 		else
@@ -55,10 +82,15 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1')
 			{
 				hit = 1;
-/*				if ((cur[0] - floor(cur[0])) < 0.0001 && (ceil(cur[1]) - cur[1]) < 0.0001 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
-					cur[0] = floor(cur[0]) - 0.0001;
-				else if ((cur[0] - floor(cur[0])) < 0.0001 && (cur[1] - floor(cur[1])) < 0.0001 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
-					cur[0] = floor(cur[0]) - 0.0001;*/
+				if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
+				{
+					hit = 2;
+					if (v[1] <= 0)
+						cur[1] = 0;
+					else
+						cur[1] = 0.9999;
+					cur[0] = 0;
+				}
 			}
 		}
 	}
