@@ -6,11 +6,125 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 16:23:54 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/07 19:58:50 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+int	getdiff(t_info *info)
+{
+	int	x;
+	int	y;
+	int	max;
+
+	y = 0;
+	x = 0;
+	max = WIDTH;
+	if (max > HEIGHT)
+		max = HEIGHT;
+	while (info->map[y])
+		y++;
+	while (info->map[0][x])
+		x++;
+	if (max/(x + 10) > max/(y + 10))
+		return (max/(y + 10));
+	return (max/(x + 10));
+}
+
+void	putplayer(t_img *img, int x, int y, t_info *info, unsigned int color)
+{
+	int	diff;
+	int	nexty;
+	int	nextx;
+	int	rety;
+	int	retx;
+	char *dest;
+
+	diff = getdiff(info);
+	retx = x - 3;
+	rety = y;
+	nexty = y + 3;
+	nextx = x + 3;
+	y -= 3;
+	while (y < nexty)
+	{
+		x = retx;
+		while (x < nextx)
+		{
+			if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+			{
+				dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+				*(unsigned int*)dest = color; 
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+void	putsquare(t_img *img, int x, int y, t_info *info, unsigned int color)
+{
+	int	diff;
+	int	nexty;
+	int	nextx;
+	int	retx;
+	int	rety;
+	char *dest;
+
+	diff = getdiff(info);
+	retx = x;
+	rety = y;
+	nexty = y + diff;
+	nextx = x + diff;
+	while (y < nexty)
+	{
+		x = retx;
+		while (x < nextx)
+		{
+			if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+			{
+				dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+				*(unsigned int*)dest = color; 
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+void	putmaptoimg(t_info *info, t_img *img)
+{
+	int	xmap;
+	int	ymap;
+	int	ximg;
+	int	yimg;
+	int	diff;
+
+	diff = getdiff(info);
+	ymap = 0;
+	ximg = 0;
+	yimg = 0;
+	while (info->map[ymap])
+	{
+		xmap = 0;
+		ximg = 0;
+		while (info->map[ymap][xmap])
+		{
+			if (info->map[ymap][xmap] == '1')
+				putsquare(img, ximg, yimg, info, 0xFFFFFFFF);
+			if (info->map[ymap][xmap] == '0')
+				putsquare(img, ximg, yimg, info, 0x000000FF);
+			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' || info->map[ymap][xmap] == 'E' || info->map[ymap][xmap] == 'S')
+				putsquare(img, ximg, yimg, info, 0x0000FF00);
+			ximg += diff;
+			xmap++;
+		}
+		yimg += diff;
+		ymap++;
+	}
+	putplayer(img, diff * info->player.x, diff * info->player.y, info, 0xFF0000);
+}
 
 int	hook(int keycode, t_info *info)
 {
@@ -28,6 +142,11 @@ int	hook(int keycode, t_info *info)
 		turnright(info);
 	if (keycode == 65361)
 		turnleft(info);
+	if (keycode == 65289)
+	{
+		info->tabmap = !info->tabmap;
+		loop(info);
+	}
 	return (0);
 }
 
@@ -58,6 +177,8 @@ void	loop(t_info *info)
 	if (info->current_img >= NB_IMG)
 		info->current_img = 0;
 	raisewalls(info);
+	if (info->tabmap)
+		putmaptoimg(info, &info->img[info->current_img]);
 	mlx_put_image_to_window(info->mlx, info->win, \
 			info->img[info->current_img].img, 0, 0);
 }
@@ -67,6 +188,7 @@ int	mlx(t_info *info)
 	int	i;
 
 	info->mlx = mlx_init();
+	info->tabmap = 0;
 	if (gettexture(info))
 		return (1);
 	info->win = mlx_new_window(info->mlx, WIDTH, HEIGHT, "cub3D");

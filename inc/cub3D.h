@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/07 15:59:38 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/07 19:29:27 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <math.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <sys/time.h>
+# include <time.h>
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
 # define WIDTH 2500
@@ -71,6 +73,7 @@ typedef struct s_proj
 
 typedef struct s_info
 {
+	int				tabmap;
 	void			*mlx;
 	void			*win;
 	t_img			img[NB_IMG];
