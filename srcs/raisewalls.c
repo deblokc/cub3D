@@ -30,76 +30,6 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	{
 		if (v[1] < 0)
 		{
-			if (info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
-			{
-				hit = 2;
-				if ((v[0] <= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1') || (v[0] >= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
-				{
-					hit = 1;
-					if (v[0] <= 0)
-						cur[0] = 0;
-					else
-						cur[0] = 0.9999;
-					cur[1] = 0.9999;
-				}
-			}
-		}
-		else
-		{
-			if (info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
-			{
-				hit = 2;
-				if ((v[0] <= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1') || (v[0] >= 0 && info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
-				{
-					hit = 1;
-					if (v[0] <= 0)
-						cur[0] = 0;
-					else
-						cur[0] = 0.9999;
-					cur[1] = 0;
-				}
-			}
-		}
-	}
-	else
-	{
-		if (v[0] < 0)
-		{
-			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1')
-			{
-				hit = 1;
-				if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
-				{
-					hit = 2;
-					if (v[1] <= 0)
-						cur[1] = 0;
-					else
-						cur[1] = 0.9999;
-					cur[0] = 0.9999;
-				}
-			}
-		}
-		else
-		{
-			if (info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1')
-			{
-				hit = 1;
-				if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
-				{
-					hit = 2;
-					if (v[1] <= 0)
-						cur[1] = 0;
-					else
-						cur[1] = 0.9999;
-					cur[0] = 0;
-				}
-			}
-		}
-	}
-	if (hit == 1)
-	{
-		if (v[1] < 0)
-		{
 			target = info->no;
 			percent_x = (cur[0] - floor(cur[0])) / 1;
 			if (percent_x >= 1)
@@ -166,95 +96,80 @@ void	draw_strip(t_info *info, int hit, double v[2], int i, int wall_height, doub
 	}
 }
 
-int	draw_wall(t_info *info, double cur[2], int hit, double v[2], int i)
+int	draw_wall(t_info *info, t_proj *proj, int hit)
 {
 	double	distance0;
 	double	distance1;
 	double	wall_ratio;
-	int		wall_height;
 
-	if (fabs(cur[0] - info->player.x) < 0.0001)
-		distance0 = fabs(cur[1] - info->player.y);
-	else if (fabs(cur[1] - info->player.y) < 0.0001)
-		distance0 = fabs(cur[0] - info->player.x);
+	if (fabs(proj->cur[0] - info->player.x) < 0.0001)
+		distance0 = fabs(proj->cur[1] - info->player.y);
+	else if (fabs(proj->cur[1] - info->player.y) < 0.0001)
+		distance0 = fabs(proj->cur[0] - info->player.x);
 	else
-		distance0 = hypot(fabs(cur[0] - info->player.x), fabs(cur[1] - info->player.y));
-	if (fabs(v[0]) < 0.0001)
-		distance1 = fabs(v[1]);
-	else if (fabs(v[1]) < 0.0001)
-		distance1 = fabs(v[0]);
+		distance0 = hypot(fabs(proj->cur[0] - info->player.x), \
+				fabs(proj->cur[1] - info->player.y));
+	if (fabs(proj->v[0]) < 0.0001)
+		distance1 = fabs(proj->v[1]);
+	else if (fabs(proj->v[1]) < 0.0001)
+		distance1 = fabs(proj->v[0]);
 	else
-		distance1 = hypot(fabs(v[0]), fabs(v[1]));
+		distance1 = hypot(fabs(proj->v[0]), fabs(proj->v[1]));
 	wall_ratio = distance1 / distance0;
-	wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
-	draw_strip(info, hit, v, i, wall_height, cur);
+	proj->wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
+	hit = check_view_integrity(info, proj->cur, proj->v, hit);
+	draw_strip(info, hit, proj->v, proj->x, proj->wall_height, proj->cur);
 	return (hit);
 }
 
-void	get_next_edge(double v[2], double delta[2], double cur[2], int fixed)
+void	get_next_edge(t_proj *proj, int fixed)
 {
 	double	tmp[2];
+	int		pendant;
 
-	if (fixed == 0)
-	{
-		if (v[0] < 0)
-			tmp[0] = cur[0] - 1;
-		else
-			tmp[0] = cur[0] + 1;
-		delta[0] = fabs(tmp[0] - cur[0]) / fabs(v[0]);
-		if (v[1] < 0)
-			tmp[1] = floor(cur[1]) - 0.0001;
-		else
-			tmp[1] = ceil(cur[1]);
-		delta[1] = fabs(tmp[1] - cur[1]) / fabs(v[1]);
-		if (fabs((double)delta[1]) < 0.0001)
-			tmp[1] += 0.0001;
-		delta[1] = fabs(tmp[1] - cur[1]) / fabs(v[1]);
-	}
+	pendant = fixed ^ 1;
+	if (proj->v[fixed] < 0)
+		tmp[fixed] = proj->cur[fixed] - 1;
 	else
-	{
-		if (v[1] < 0)
-			tmp[1] = cur[1] - 1;
-		else
-			tmp[1] = cur[1] + 1;
-		delta[1] = fabs(tmp[1] - cur[1]) / fabs(v[1]);
-		if (v[0] < 0)
-			tmp[0] = floor(cur[0]) - 0.0001;
-		else
-			tmp[0] = ceil(cur[0]);
-		delta[0] = fabs(tmp[0] - cur[0]) / fabs(v[0]);
-		if (fabs((double)delta[0]) < 0.0001)
-			tmp[0] += 0.0001;
-		delta[0] = fabs(tmp[0] - cur[0]) / fabs(v[0]);
-	}
-	cur[0] = tmp[0];
-	cur[1] = tmp[1];
+		tmp[fixed] = proj->cur[fixed] + 1;
+	proj->delta[fixed] = fabs(tmp[fixed] - proj->cur[fixed]) \
+						/ fabs(proj->v[fixed]);
+	if (proj->v[pendant] < 0)
+		tmp[pendant] = floor(proj->cur[pendant]) - 0.0001;
+	else
+		tmp[pendant] = ceil(proj->cur[pendant]);
+	proj->delta[pendant] = fabs(tmp[pendant] - proj->cur[pendant]) \
+							/ fabs(proj->v[pendant]);
+	if (fabs((double)proj->delta[pendant]) < 0.0001)
+		tmp[pendant] += 0.0001;
+	proj->delta[pendant] = fabs(tmp[pendant] - proj->cur[pendant]) \
+							/ fabs(proj->v[pendant]);
+	proj->cur[0] = tmp[0];
+	proj->cur[1] = tmp[1];
 }
 
-int	straight_line(t_info *info, double cur[2], double v[2], int i)
+int	straight_line(t_info *info, t_proj *proj)
 {
-	if (fabs(v[0]) < 0.0001)
+	if (fabs(proj->v[0]) < 0.0001)
 	{
-		if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-			return (draw_wall(info, cur, 1, v, i));
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+			return (draw_wall(info, proj, 1));
 		else
 		{
-			if (v[1] < 0)
-				cur[1] -= 1;
-			else
-				cur[1] += 1;
+			proj->cur[1] += 1;
+			if (proj->v[1] < 0)
+				proj->cur[1] -= 2;
 		}
 	}
 	else
 	{
-		if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-			return (draw_wall(info, cur, 2, v, i));
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+			return (draw_wall(info, proj, 2));
 		else
 		{
-			if (v[0] < 0)
-				cur[0] -= 1;
-			else
-				cur[0] += 1;
+			proj->cur[0] += 1;
+			if (proj->v[0] < 0)
+				proj->cur[0] -= 2;
 		}
 	}
 	return (0);
@@ -262,24 +177,23 @@ int	straight_line(t_info *info, double cur[2], double v[2], int i)
 
 int	angled_view(t_info *info, t_proj *proj, int side)
 {
-	if (side == 2)
+	if (!side)
 	{
 		proj->cur[1] = proj->delta[0] * proj->v[1] + proj->prev[1];
 		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
-			return (draw_wall(info, proj->cur, 2, proj->v, proj->x));
-		get_next_edge(proj->v, proj->delta, proj->cur, 0);
+			return (draw_wall(info, proj, 2));
 	}
 	else
 	{
 		proj->cur[0] = proj->delta[1] * proj->v[0] + proj->prev[0];
 		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
-			return (draw_wall(info, proj->cur, 1, proj->v, proj->x));
-		else
-			get_next_edge(proj->v, proj->delta, proj->cur, 1);
+			return (draw_wall(info, proj, 1));
 	}
 	proj->prev[0] = proj->cur[0];
 	proj->prev[1] = proj->cur[1];
+	get_next_edge(proj, side);
 	return (0);
+
 }
 
 void	get_walls(t_info *info, t_proj *proj)
@@ -292,34 +206,14 @@ void	get_walls(t_info *info, t_proj *proj)
 	while (!hit)
 	{
 		if (fabs(proj->v[0]) < 0.0001 || fabs(proj->v[1]) < 0.0001)
-			hit = straight_line(info, proj->cur, proj->v, proj->x);
+			hit = straight_line(info, proj);
 		else
 		{
 			if (fabs(proj->delta[0] - proj->delta[1]) < 0.0001
 					|| proj->delta[0] < proj->delta[1])
-			{
-				proj->cur[1] = proj->delta[0] * proj->v[1] + proj->prev[1];
-				if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
-					hit = draw_wall(info, proj->cur, 2, proj->v, proj->x);
-				else
-				{
-					proj->prev[0] = proj->cur[0];
-					proj->prev[1] = proj->cur[1];
-					get_next_edge(proj->v, proj->delta, proj->cur, 0);
-				}
-			}
+				hit = angled_view(info, proj, 0);
 			else
-			{
-				proj->cur[0] = proj->delta[1] * proj->v[0] + proj->prev[0];
-				if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
-					hit = draw_wall(info, proj->cur, 1, proj->v, proj->x);
-				else
-				{
-					proj->prev[0] = proj->cur[0];
-					proj->prev[1] = proj->cur[1];
-					get_next_edge(proj->v, proj->delta, proj->cur, 1);
-				}
-			}
+				hit = angled_view(info, proj, 1);
 		}
 	}
 }

@@ -26,9 +26,9 @@ OBJDIR := objs
 
 OBJDIR_BONUS := objs_bonus
 
-SRC = main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c
+SRC = main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c
 
-SRC_BONUS =  main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c
+SRC_BONUS =  main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c
 
 source = $(addprefix srcs/,$(SRC))
 

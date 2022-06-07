@@ -63,6 +63,7 @@ typedef struct s_player
 typedef struct s_proj
 {
 	int		x;
+	int		wall_height;
 	double	proj_screen[4];
 	double	dir_v[2];
 	double	v[2];
@@ -142,5 +143,6 @@ void	printerrcoo(char *str, int i, int j, t_info *info);
 void	initinfo(t_info *info);
 int		lenof(t_map *lstmap);
 int		ft_strlen_map(char *str);
+int		check_view_integrity(t_info *info, double cur[2], double v[2], int hit);
 
 #endif
