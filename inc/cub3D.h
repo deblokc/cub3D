@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 16:26:32 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/07 15:59:38 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,17 @@ typedef struct s_player
 	double	y;
 	double	angle;
 }	t_player;
+
+typedef struct s_proj
+{
+	int		x;
+	double	proj_screen[4];
+	double	dir_v[2];
+	double	v[2];
+	double	cur[2];
+	double	prev[2];
+	double	delta[2];
+}	t_proj;
 
 typedef struct s_info
 {

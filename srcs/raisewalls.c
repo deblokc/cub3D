@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/07 14:49:06 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/07 16:24:37 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,113 +260,137 @@ int	straight_line(t_info *info, double cur[2], double v[2], int i)
 	return (0);
 }
 
-void	get_walls(t_info *info, double v[2], double delta[2], double cur[2], int i)
+int	angled_view(t_info *info, t_proj *proj, int side)
 {
-	double	prev[2];
+	if (side == 2)
+	{
+		proj->cur[1] = proj->delta[0] * proj->v[1] + proj->prev[1];
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+			return (draw_wall(info, proj->cur, 2, proj->v, proj->x));
+		get_next_edge(proj->v, proj->delta, proj->cur, 0);
+	}
+	else
+	{
+		proj->cur[0] = proj->delta[1] * proj->v[0] + proj->prev[0];
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+			return (draw_wall(info, proj->cur, 1, proj->v, proj->x));
+		else
+			get_next_edge(proj->v, proj->delta, proj->cur, 1);
+	}
+	proj->prev[0] = proj->cur[0];
+	proj->prev[1] = proj->cur[1];
+	return (0);
+}
+
+void	get_walls(t_info *info, t_proj *proj)
+{
 	int		hit;
 
 	hit = 0;
-	prev[0] = info->player.x;
-	prev[1] = info->player.y;
+	proj->prev[0] = info->player.x;
+	proj->prev[1] = info->player.y;
 	while (!hit)
 	{
-		if (fabs(v[0]) < 0.0001 || fabs(v[1]) < 0.0001)
-			hit = straight_line(info, cur, v, i);
+		if (fabs(proj->v[0]) < 0.0001 || fabs(proj->v[1]) < 0.0001)
+			hit = straight_line(info, proj->cur, proj->v, proj->x);
 		else
 		{
-			if (fabs(delta[0] - delta[1]) < 0.0001 || delta[0] < delta[1])
+			if (fabs(proj->delta[0] - proj->delta[1]) < 0.0001
+					|| proj->delta[0] < proj->delta[1])
 			{
-				cur[1] = delta[0] * v[1] + prev[1];
-				if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-					hit = draw_wall(info, cur, 2, v, i);
+				proj->cur[1] = proj->delta[0] * proj->v[1] + proj->prev[1];
+				if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+					hit = draw_wall(info, proj->cur, 2, proj->v, proj->x);
 				else
 				{
-					prev[0] = cur[0];
-					prev[1] = cur[1];
-					get_next_edge(v, delta, cur, 0);
+					proj->prev[0] = proj->cur[0];
+					proj->prev[1] = proj->cur[1];
+					get_next_edge(proj->v, proj->delta, proj->cur, 0);
 				}
 			}
 			else
 			{
-				cur[0] = delta[1] * v[0] + prev[0];
-				if (info->map[(int)cur[1]][(int)cur[0]] == '1')
-					hit = draw_wall(info, cur, 1, v, i);
+				proj->cur[0] = proj->delta[1] * proj->v[0] + proj->prev[0];
+				if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+					hit = draw_wall(info, proj->cur, 1, proj->v, proj->x);
 				else
 				{
-					prev[0] = cur[0];
-					prev[1] = cur[1];
-					get_next_edge(v, delta, cur, 1);
+					proj->prev[0] = proj->cur[0];
+					proj->prev[1] = proj->cur[1];
+					get_next_edge(proj->v, proj->delta, proj->cur, 1);
 				}
 			}
 		}
 	}
 }
 
-void	init_search(t_info *info, double v[2], int i)
+void	init_search(t_info *info, t_proj *proj)
 {
-	double	cur[2];
-	double	delta[2];
-
-	cur[0] = info->player.x;
-	if (v[0] < -0.0001)
+	proj->cur[0] = info->player.x;
+	if (proj->v[0] < -0.0001 || proj->v[0] > 0.0001)
 	{
-		cur[0] = floor(info->player.x) - 0.0001;
-		delta[0] = fabs(info->player.x - cur[0]) / fabs(v[0]);
+		if (proj->v[0] < -0.0001)
+			proj->cur[0] = floor(info->player.x) - 0.0001;
+		else
+			proj->cur[0] = ceil(info->player.x);
+		proj->delta[0] = fabs(proj->cur[0] - info->player.x) / fabs(proj->v[0]);
 	}
-	else if (v[0] > 0.0001)
+	proj->cur[1] = info->player.y;
+	if (proj->v[1] < -0.0001 || proj->v[1] > 0.0001)
 	{
-		cur[0] = ceil(info->player.x);
-		delta[0] = fabs(cur[0] - info->player.x) / fabs(v[0]);
+		if (proj->v[1] < -0.0001)
+			proj->cur[1] = floor(info->player.y) - 0.0001;
+		else
+			proj->cur[1] = ceil(info->player.y);
+		proj->delta[1] = fabs(proj->cur[1] - info->player.y) / fabs(proj->v[1]);
 	}
-	cur[1] = info->player.y;
-	if (v[1] < -0.0001)
-	{
-		cur[1] = floor(info->player.y) - 0.0001;
-		delta[1] = fabs(info->player.y - cur[1]) / fabs(v[1]);
-	}
-	else if (v[1] > 0.0001)
-	{
-		cur[1] = ceil(info->player.y);
-		delta[1] = fabs(cur[1] - info->player.y) / fabs(v[1]);
-	}
-	get_walls(info, v, delta, cur, i);
+	get_walls(info, proj);
 }
 
-void	get_projection_screen(t_info *info, double projection_screen[4])
+void	get_proj_screen(t_info *info, t_proj *proj)
 {
-	projection_screen[0] = info->player.angle + (M_PI / 4);
-	projection_screen[1] = (-sin(projection_screen[0])) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.y;
-	projection_screen[0] = cos(projection_screen[0]) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.x;
-	projection_screen[2] = info->player.angle - (M_PI / 4);
-	projection_screen[3] = (-sin(projection_screen[2])) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.y;
-	projection_screen[2] = cos(projection_screen[2]) * ((double)PROJ_PLANE_DIST / cos(M_PI / 4)) + info->player.x;
+	proj->proj_screen[0] = info->player.angle + (M_PI / 4);
+	proj->proj_screen[1] = (-sin(proj->proj_screen[0])) \
+								*((double)PROJ_PLANE_DIST \
+								/ cos(M_PI / 4)) + info->player.y;
+	proj->proj_screen[0] = cos(proj->proj_screen[0]) \
+								*((double)PROJ_PLANE_DIST \
+								/ cos(M_PI / 4)) + info->player.x;
+	proj->proj_screen[2] = info->player.angle - (M_PI / 4);
+	proj->proj_screen[3] = (-sin(proj->proj_screen[2])) \
+								*((double)PROJ_PLANE_DIST \
+								/ cos(M_PI / 4)) + info->player.y;
+	proj->proj_screen[2] = cos(proj->proj_screen[2]) \
+								*((double)PROJ_PLANE_DIST \
+								/ cos(M_PI / 4)) + info->player.x;
 }
 
-void	get_director_vector(double projection_screen[4], double director_vector[2])
+void	get_dir_v(t_proj *proj)
 {
-	director_vector[0] = (projection_screen[2] - projection_screen[0]) / (double)(WIDTH - 1);
-	director_vector[1] = (projection_screen[3] - projection_screen[1]) / (double)(WIDTH - 1);
+	proj->dir_v[0] = (proj->proj_screen[2] - proj->proj_screen[0]) \
+					/ (double)(WIDTH - 1);
+	proj->dir_v[1] = (proj->proj_screen[3] - proj->proj_screen[1]) \
+					/ (double)(WIDTH - 1);
 }
 
 void	raisewalls(t_info *info)
 {
-	double	projection_screen[4];
-	double	v[2];
-	int		i;
-	double	director_vector[2];
+	t_proj	proj;
 
 	if (fabs(info->player.angle + M_PI / 2) < 0.0001)
 		info->player.angle = 3 * M_PI * 2;
 	else if (fabs(info->player.angle) < 0.0001)
 		info->player.angle = 2 * M_PI;
-	get_projection_screen(info, projection_screen);
-	get_director_vector(projection_screen, director_vector);
-	i = 0;
-	while (i < WIDTH)
+	get_proj_screen(info, &proj);
+	get_dir_v(&proj);
+	proj.x = 0;
+	while (proj.x < WIDTH)
 	{
-		v[0] = (projection_screen[0] + director_vector[0] * i) - info->player.x;
-		v[1] = (projection_screen[1] + director_vector[1] * i) - info->player.y;
-		init_search(info, v, i);
-		i++;
+		proj.v[0] = (proj.proj_screen[0] + proj.dir_v[0] * proj.x) \
+					- info->player.x;
+		proj.v[1] = (proj.proj_screen[1] + proj.dir_v[1] * proj.x) \
+					- info->player.y;
+		init_search(info, &proj);
+		proj.x += 1;
 	}
 }
