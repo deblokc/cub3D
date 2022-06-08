@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 19:07:36 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 20:47:24 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,18 @@ int	getdiff(t_info *info)
 	max = WIDTH;
 	if (max > HEIGHT)
 		max = HEIGHT;
-	if (max/(info->xmax) > max/(info->ymax))
-		return (max/(info->ymax));
-	return (max/(info->xmax));
+	if (max / (info->xmax) > max / (info->ymax))
+		return (max / (info->ymax));
+	return (max / (info->xmax));
 }
 
 void	putplayer(t_img *img, int x, int y, unsigned int color)
 {
-	int	nexty;
-	int	nextx;
-	int	rety;
-	int	retx;
-	char *dest;
+	int		nexty;
+	int		nextx;
+	int		rety;
+	int		retx;
+	char	*dest;
 
 	retx = x - 3;
 	rety = y;
@@ -48,8 +48,9 @@ void	putplayer(t_img *img, int x, int y, unsigned int color)
 		{
 			if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
 			{
-				dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-				*(unsigned int*)dest = color; 
+				dest = img->addr + (y * img->line_length + x * \
+						(img->bits_per_pixel / 8));
+				*(unsigned int *)dest = color;
 			}
 			x++;
 		}
@@ -59,11 +60,11 @@ void	putplayer(t_img *img, int x, int y, unsigned int color)
 
 void	putsquare(t_img *img, int x, int y, unsigned int color, int diff)
 {
-	int	nexty;
-	int	nextx;
-	int	retx;
-	int	rety;
-	char *dest;
+	int		nexty;
+	int		nextx;
+	int		retx;
+	int		rety;
+	char	*dest;
 
 	retx = x;
 	rety = y;
@@ -76,8 +77,9 @@ void	putsquare(t_img *img, int x, int y, unsigned int color, int diff)
 		{
 			if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 			{
-				dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-				*(unsigned int*)dest = color; 
+				dest = img->addr + (y * img->line_length + x * \
+						(img->bits_per_pixel / 8));
+				*(unsigned int *)dest = color;
 			}
 			x++;
 		}
@@ -107,7 +109,9 @@ void	putmaptoimg(t_info *info, t_img *img)
 				putsquare(img, ximg, yimg, 0x00FFFFFF, diff);
 			if (info->map[ymap][xmap] == '0')
 				putsquare(img, ximg, yimg, 0x990000FF, diff);
-			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' || info->map[ymap][xmap] == 'E' || info->map[ymap][xmap] == 'S')
+			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' \
+					|| info->map[ymap][xmap] == 'E' \
+					|| info->map[ymap][xmap] == 'S')
 				putsquare(img, ximg, yimg, 0x0000FF00, diff);
 			ximg += diff;
 			xmap++;
@@ -139,7 +143,9 @@ void	putminimap(t_info *info, t_img *img)
 					putsquare(img, ximg, yimg, 0xFFFFFF, 25);
 				if (info->map[y][x] == '0')
 					putsquare(img, ximg, yimg, 0x0000FF, 25);
-				if (info->map[y][x] == 'N' || info->map[y][x] == 'W' || info->map[y][x] == 'E' || info->map[y][x] == 'S')
+				if (info->map[y][x] == 'N' || info->map[y][x] == 'W' \
+						|| info->map[y][x] == 'E' \
+						|| info->map[y][x] == 'S')
 					putsquare(img, ximg, yimg, 0x00FF00, 25);
 			}
 			ximg += 25;
@@ -148,7 +154,8 @@ void	putminimap(t_info *info, t_img *img)
 		yimg += 25;
 		y++;
 	}
-	putplayer(img, 50 + (25 * (info->player.x - floor(info->player.x))), 50 + (25 * (info->player.y - floor(info->player.y))), 0xFF0000);
+	putplayer(img, 50 + (25 * (info->player.x - floor(info->player.x))), \
+			50 + (25 * (info->player.y - floor(info->player.y))), 0xFF0000);
 }
 
 int	hook(int keycode, t_info *info)
@@ -236,6 +243,7 @@ int	loop(t_info *info)
 		putmaptoimg(info, &info->img[info->current_img]);
 	else
 		putminimap(info, &info->img[info->current_img]);
+	mlx_do_sync(info->mlx);
 	mlx_put_image_to_window(info->mlx, info->win, \
 			info->img[info->current_img].img, 0, 0);
 	return (0);
@@ -246,6 +254,7 @@ int	mlx(t_info *info)
 	int	i;
 
 	info->movement = 0;
+	info->tabmap = 0;
 	info->mlx = mlx_init();
 	if (gettexture(info))
 		return (1);

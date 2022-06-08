@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 12:20:58 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 16:48:56 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/08 20:44:15 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,4 @@ void	goforward(t_info *info)
 		info->player.y = oldy;
 		info->player.x = oldx;
 	}
-//loop(info);
 }

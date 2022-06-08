@@ -1,7 +1,7 @@
-NO ./path_to_the_north_texture
-SO ./path_to_the_south_texture
-WE ./path_to_the_west_texture
-EA ./path_to_the_east_texture
+NO ./textures/iench.xpm
+SO ./textures/iench.xpm
+EA ./textures/iench.xpm
+WE ./textures/iench.xpm
 F 74, 65, 42
 C 74, 65, 42
 

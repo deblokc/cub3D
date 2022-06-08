@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 16:30:52 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/08 20:44:40 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	turnleft(t_info *info)
 	info->player.angle += ((5 * M_PI) / 180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
-//	loop(info);
 }
 
 void	initinfo(t_info *info)
