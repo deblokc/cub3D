@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/07 19:29:27 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 12:10:15 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ typedef struct s_info
 	char			**map;
 	char			dir;
 	t_player		player;
+	struct timeval	begintab;
+	int				repeat;
 }	t_info;
 
 int		charinstr(char *str, char c);

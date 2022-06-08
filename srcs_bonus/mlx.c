@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/07 19:58:50 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 12:40:55 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,9 @@ void	putmaptoimg(t_info *info, t_img *img)
 		while (info->map[ymap][xmap])
 		{
 			if (info->map[ymap][xmap] == '1')
-				putsquare(img, ximg, yimg, info, 0xFFFFFFFF);
+				putsquare(img, ximg, yimg, info, 0x00FFFFFF);
 			if (info->map[ymap][xmap] == '0')
-				putsquare(img, ximg, yimg, info, 0x000000FF);
+				putsquare(img, ximg, yimg, info, 0x990000FF);
 			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' || info->map[ymap][xmap] == 'E' || info->map[ymap][xmap] == 'S')
 				putsquare(img, ximg, yimg, info, 0x0000FF00);
 			ximg += diff;

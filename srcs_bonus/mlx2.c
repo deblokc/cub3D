@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 12:20:58 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 12:35:23 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 12:12:51 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	closewin(t_info *info)
 		mlx_destroy_image(info->mlx, info->img[i].img);
 		i++;
 	}
+	if (!info->repeat)
+		mlx_do_key_autorepeaton(info->mlx);
 	freeinfo(info);
 	exit(0);
 }
