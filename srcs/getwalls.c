@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/08 09:43:23 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/08 12:25:42 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,18 +65,49 @@ static int	straight_line(t_info *info, t_proj *proj)
 	return (0);
 }
 
+static int	is_in_corner(t_info *info, double cur[2], double v[2], int hit)
+{
+	int	c[2];
+
+	c[0] = (int)cur[0];
+	c[1] = (int)cur[1];
+	if (hit == 1)
+	{
+		if (v[1] < 0 && info->map[(c[1] + 1)][c[0]] == '1'
+			&& ((v[0] <= 0 && info->map[c[1]][(c[0] + 1)] == '1')
+				|| (v[0] >= 0 && info->map[c[1]][(c[0] - 1)] == '1')))
+			return (1);
+		else if (v[1] > 0 && info->map[(c[1] - 1)][c[0]] == '1'
+			&& ((v[0] <= 0 && info->map[c[1]][(c[0] + 1)] == '1')
+				|| (v[0] >= 0 && info->map[c[1]][(c[0] - 1)] == '1')))
+			return (1);
+		return (0);
+	}
+	if (v[0] < 0 && info->map[c[1]][(c[0] + 1)] == '1'
+		&& ((v[1] <= 0 && info->map[(c[1] + 1)][c[0]] == '1')
+			|| (v[1] >= 0 && info->map[(c[1] - 1)][c[0]] == '1')))
+		return (1);
+	else if (v[0] > 0 && info->map[c[1]][(c[0] - 1)] == '1'
+		&& ((v[1] <= 0 && info->map[(c[1] + 1)][c[0]] == '1')
+			|| (v[1] >= 0 && info->map[(c[1] - 1)][c[0]] == '1')))
+		return (1);
+	return (0);
+}
+
 static int	angled_view(t_info *info, t_proj *proj, int side)
 {
 	if (!side)
 	{
 		proj->cur[1] = proj->delta[0] * proj->v[1] + proj->prev[1];
-		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1'
+			|| is_in_corner(info, proj->cur, proj->v, 2))
 			return (draw_wall(info, proj, 2));
 	}
 	else
 	{
 		proj->cur[0] = proj->delta[1] * proj->v[0] + proj->prev[0];
-		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1'
+			|| is_in_corner(info, proj->cur, proj->v, 1))
 			return (draw_wall(info, proj, 1));
 	}
 	proj->prev[0] = proj->cur[0];
