@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:18:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 16:19:35 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 18:39:11 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int	isvalid(char **map, t_info *info)
 		}
 		i++;
 	}
+	info->xmax = j;
+	info->ymax = i;
 	if (info->dir && info->isvalid)
 		return (1);
 	else if (!info->dir)

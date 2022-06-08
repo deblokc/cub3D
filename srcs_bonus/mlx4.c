@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 12:25:58 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 18:20:55 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 19:00:56 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	goright(t_info *info)
 
 void	turnright(t_info *info)
 {
-	info->player.angle -= ((2.5 * M_PI) / 180);
+	info->player.angle -= ((5 * M_PI) / 180);
 	if (info->player.angle == 0)
 		info->player.angle = 2 * M_PI;
 }

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 16:36:14 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/08 18:38:44 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ typedef struct s_info
 	char			dir;
 	t_player		player;
 	char			movement;
+	int				xmax;
+	int				ymax;
 }	t_info;
 
 int		charinstr(char *str, char c);

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 18:28:44 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 19:07:36 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,19 @@ int	getdiff(t_info *info)
 	max = WIDTH;
 	if (max > HEIGHT)
 		max = HEIGHT;
-	while (info->map[y])
-		y++;
-	while (info->map[0][x])
-		x++;
-	if (max/(x + 10) > max/(y + 10))
-		return (max/(y + 10));
-	return (max/(x + 10));
+	if (max/(info->xmax) > max/(info->ymax))
+		return (max/(info->ymax));
+	return (max/(info->xmax));
 }
 
-void	putplayer(t_img *img, int x, int y, t_info *info, unsigned int color)
+void	putplayer(t_img *img, int x, int y, unsigned int color)
 {
-	int	diff;
 	int	nexty;
 	int	nextx;
 	int	rety;
 	int	retx;
 	char *dest;
 
-	diff = getdiff(info);
 	retx = x - 3;
 	rety = y;
 	nexty = y + 3;
@@ -63,16 +57,14 @@ void	putplayer(t_img *img, int x, int y, t_info *info, unsigned int color)
 	}
 }
 
-void	putsquare(t_img *img, int x, int y, t_info *info, unsigned int color)
+void	putsquare(t_img *img, int x, int y, unsigned int color, int diff)
 {
-	int	diff;
 	int	nexty;
 	int	nextx;
 	int	retx;
 	int	rety;
 	char *dest;
 
-	diff = getdiff(info);
 	retx = x;
 	rety = y;
 	nexty = y + diff;
@@ -82,7 +74,7 @@ void	putsquare(t_img *img, int x, int y, t_info *info, unsigned int color)
 		x = retx;
 		while (x < nextx)
 		{
-			if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
+			if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 			{
 				dest = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 				*(unsigned int*)dest = color; 
@@ -112,18 +104,51 @@ void	putmaptoimg(t_info *info, t_img *img)
 		while (info->map[ymap][xmap])
 		{
 			if (info->map[ymap][xmap] == '1')
-				putsquare(img, ximg, yimg, info, 0x00FFFFFF);
+				putsquare(img, ximg, yimg, 0x00FFFFFF, diff);
 			if (info->map[ymap][xmap] == '0')
-				putsquare(img, ximg, yimg, info, 0x990000FF);
+				putsquare(img, ximg, yimg, 0x990000FF, diff);
 			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' || info->map[ymap][xmap] == 'E' || info->map[ymap][xmap] == 'S')
-				putsquare(img, ximg, yimg, info, 0x0000FF00);
+				putsquare(img, ximg, yimg, 0x0000FF00, diff);
 			ximg += diff;
 			xmap++;
 		}
 		yimg += diff;
 		ymap++;
 	}
-	putplayer(img, diff * info->player.x, diff * info->player.y, info, 0xFF0000);
+	putplayer(img, diff * info->player.x, diff * info->player.y, 0xFF0000);
+}
+
+void	putminimap(t_info *info, t_img *img)
+{
+	int	x;
+	int	y;
+	int	ximg;
+	int	yimg;
+
+	yimg = 0;
+	y = (int)info->player.y - 2;
+	while (y < (int)info->player.y + 3)
+	{
+		ximg = 0;
+		x = (int)info->player.x - 2;
+		while (x < (int)info->player.x + 3)
+		{
+			if (x >= 0 && y >= 0 && x < info->xmax && y < info->ymax)
+			{
+				if (info->map[y][x] == '1')
+					putsquare(img, ximg, yimg, 0xFFFFFF, 25);
+				if (info->map[y][x] == '0')
+					putsquare(img, ximg, yimg, 0x0000FF, 25);
+				if (info->map[y][x] == 'N' || info->map[y][x] == 'W' || info->map[y][x] == 'E' || info->map[y][x] == 'S')
+					putsquare(img, ximg, yimg, 0x00FF00, 25);
+			}
+			ximg += 25;
+			x++;
+		}
+		yimg += 25;
+		y++;
+	}
+	putplayer(img, 50 + (25 * (info->player.x - floor(info->player.x))), 50 + (25 * (info->player.y - floor(info->player.y))), 0xFF0000);
 }
 
 int	hook(int keycode, t_info *info)
@@ -209,6 +234,8 @@ int	loop(t_info *info)
 	raisewalls(info);
 	if (info->tabmap)
 		putmaptoimg(info, &info->img[info->current_img]);
+	else
+		putminimap(info, &info->img[info->current_img]);
 	mlx_put_image_to_window(info->mlx, info->win, \
 			info->img[info->current_img].img, 0, 0);
 	return (0);
