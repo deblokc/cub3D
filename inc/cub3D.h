@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 12:10:15 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/08 16:36:14 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,7 @@ typedef struct s_info
 	char			**map;
 	char			dir;
 	t_player		player;
-	struct timeval	begintab;
-	int				repeat;
+	char			movement;
 }	t_info;
 
 int		charinstr(char *str, char c);
@@ -114,7 +113,7 @@ void	freelstmap(t_map *map);
 int		mlx(t_info *info);
 void	freeallchunk(t_map *map);
 void	freeinfo(t_info *info);
-void	loop(t_info *info);
+int		loop(t_info *info);
 void	raisewalls(t_info *info);
 int		closewin(t_info *info);
 int		iswall(t_info *info, double y, double x);
