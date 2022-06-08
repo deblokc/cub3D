@@ -1,17 +1,17 @@
 #include "cub3D.h"
 
-int	check_north(t_info *info, double cur[2], double v[2])
+static int	check_north(t_info *info, double cur[2], double v[2])
 {
 	int	hit;
 
 	hit = 1;
-	if (info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1')
+	if (info->map[(int)(cur[1] + 1)][(int)(cur[0])] == '1')
 	{
 		hit = 2;
 		if ((v[0] <= 0
-				&& info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1')
+				&& info->map[(int)(cur[1])][(int)(cur[0] + 1)] == '1')
 			|| (v[0] >= 0
-				&& info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
+				&& info->map[(int)(cur[1])][(int)(cur[0] - 1)] == '1'))
 		{
 			hit = 1;
 			if (v[0] <= 0)
@@ -24,18 +24,18 @@ int	check_north(t_info *info, double cur[2], double v[2])
 	return (hit);
 }
 
-int	check_south(t_info *info, double cur[2], double v[2])
+static int	check_south(t_info *info, double cur[2], double v[2])
 {
 	int	hit;
 
 	hit = 1;
-	if (info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1')
+	if (info->map[(int)(cur[1] - 1)][(int)(cur[0])] == '1')
 	{
 		hit = 2;
 		if ((v[0] <= 0
-				&& info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1')
-			|| (v[0] >= 0 
-				&& info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1'))
+				&& info->map[(int)(cur[1])][(int)(cur[0] + 1)] == '1')
+			|| (v[0] >= 0
+				&& info->map[(int)(cur[1])][(int)(cur[0] - 1)] == '1'))
 		{
 			hit = 1;
 			if (v[0] <= 0)
@@ -48,15 +48,18 @@ int	check_south(t_info *info, double cur[2], double v[2])
 	return (hit);
 }
 
-int	check_west(t_info *info, double cur[2], double v[2])
+static int	check_west(t_info *info, double cur[2], double v[2])
 {
 	int	hit;
 
 	hit = 2;
-	if (info->map[(int)floor(cur[1])][(int)floor(cur[0] + 1)] == '1')
+	if (info->map[(int)(cur[1])][(int)(cur[0] + 1)] == '1')
 	{
 		hit = 1;
-		if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
+		if ((v[1] <= 0
+				&& info->map[(int)(cur[1] + 1)][(int)(cur[0])] == '1')
+			|| (v[1] >= 0
+				&& info->map[(int)(cur[1] - 1)][(int)(cur[0])] == '1'))
 		{
 			hit = 2;
 			if (v[1] <= 0)
@@ -69,15 +72,18 @@ int	check_west(t_info *info, double cur[2], double v[2])
 	return (hit);
 }
 
-int	check_east(t_info *info, double cur[2], double v[2])
+static int	check_east(t_info *info, double cur[2], double v[2])
 {
 	int	hit;
 
 	hit = 2;
-	if (info->map[(int)floor(cur[1])][(int)floor(cur[0] - 1)] == '1')
+	if (info->map[(int)(cur[1])][(int)(cur[0] - 1)] == '1')
 	{
 		hit = 1;
-		if ((v[1] <= 0 && info->map[(int)floor(cur[1] + 1)][(int)floor(cur[0])] == '1') || (v[1] >= 0 && info->map[(int)floor(cur[1] - 1)][(int)floor(cur[0])] == '1'))
+		if ((v[1] <= 0
+				&& info->map[(int)(cur[1] + 1)][(int)(cur[0])] == '1')
+			|| (v[1] >= 0
+				&& info->map[(int)(cur[1] - 1)][(int)(cur[0])] == '1'))
 		{
 			hit = 2;
 			if (v[1] <= 0)

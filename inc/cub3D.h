@@ -62,14 +62,21 @@ typedef struct s_player
 
 typedef struct s_proj
 {
-	int		x;
-	int		wall_height;
-	double	proj_screen[4];
-	double	dir_v[2];
-	double	v[2];
-	double	cur[2];
-	double	prev[2];
-	double	delta[2];
+	int			x;
+	int			wall_height;
+	int			start_pixel;
+	int			end_pixel;
+	char		*origin;
+	char		*dst;
+	double		proj_screen[4];
+	double		dir_v[2];
+	double		v[2];
+	double		cur[2];
+	double		prev[2];
+	double		delta[2];
+	double		percent_x;
+	double		step;
+	t_texture	target;
 }	t_proj;
 
 typedef struct s_info
@@ -144,5 +151,7 @@ void	initinfo(t_info *info);
 int		lenof(t_map *lstmap);
 int		ft_strlen_map(char *str);
 int		check_view_integrity(t_info *info, double cur[2], double v[2], int hit);
+void	get_walls(t_info *info, t_proj *proj);
+int		draw_wall(t_info *info, t_proj *proj, int hit);
 
 #endif
