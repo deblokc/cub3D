@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:18:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 13:06:01 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/09 19:55:20 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,26 @@ void	dirmap(char **map, int i, int j, t_info *info)
 	}
 }
 
+int	checkdoor(char **map, int i, int j)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	x = 0;
+	while (map[i][x])
+		x++;
+	while (map[y])
+		y++;
+	if (i == 0 || j == 0 || i >= y - 1 || j >= x - 1)
+		return (0);
+	if (map[i][j - 1] == '1' && map[i][j + 1] == '1' && map[i + 1][j] == '0' && map[i - 1][j] == '0')
+		return (1);
+	if (map[i - 1][j] == '1' && map[i + 1][j] == '1' && map[i][j + 1] == '0' && map[i][j - 1] == '0')
+		return (1);
+	return (0);
+}
+
 void	checkcharmap(char **map, int i, int j, t_info *info)
 {
 	if (!ischr(map[i][j]) && map[i][j] != ' ')
@@ -74,7 +94,14 @@ void	checkcharmap(char **map, int i, int j, t_info *info)
 			info->isvalid = 0;
 		}
 		if (map[i][j] == '2')
+		{
+			if (!checkdoor(map, i, j))
+			{
+				printerrcoo("Porte invalide en ", i, j, info);
+				info->isvalid = 0;
+			}
 			add_door(info, i, j);
+		}
 	}
 }
 
