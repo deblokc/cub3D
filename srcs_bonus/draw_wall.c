@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/08 09:43:37 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/09 14:44:10 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 	}
 	if (proj->percent_x >= 1)
 		proj->percent_x = 0.9999;
-	proj->percent_x = floor(proj->percent_x * (double)proj->target.width);
+	proj->percent_x = floor(proj->percent_x * (double)proj->target.texture->width);
 }
 
 static void	init_strip(t_info *info, t_proj *proj)
@@ -46,10 +46,10 @@ static void	init_strip(t_info *info, t_proj *proj)
 	proj->end_pixel = proj->start_pixel + proj->wall_height - 1;
 	proj->dst = info->img[info->current_img].addr + proj->x \
 				* (info->img[info->current_img].bits_per_pixel / 8);
-	proj->origin = proj->target.texture.addr +(int)proj->percent_x \
-				* (proj->target.texture.bits_per_pixel / 8);
+	proj->origin = proj->target.texture->addr +(int)proj->percent_x \
+				* (proj->target.texture->bits_per_pixel / 8);
 	proj->step = ((double)1 / (double)proj->wall_height) \
-				* (double)(proj->target.height);
+				* (double)(proj->target.texture->height);
 }
 
 static void	ceiling_and_floor(t_info *info, t_proj *proj, int *it, char type)
@@ -88,10 +88,10 @@ static void	draw_strip(t_info *info, t_proj *proj, int hit)
 	while (it < HEIGHT && it <= proj->end_pixel)
 	{
 		percent_y = (int)current;
-		if (percent_y == proj->target.height)
-			percent_y = proj->target.height - 1;
+		if (percent_y == proj->target.texture->height)
+			percent_y = proj->target.texture->height - 1;
 		*(unsigned int *)proj->dst = *(unsigned int *)(proj->origin \
-				+ (int)percent_y * proj->target.texture.line_length);
+				+ (int)percent_y * proj->target.texture->line_length);
 		proj->dst += info->img[info->current_img].line_length;
 		current += proj->step;
 		it++;

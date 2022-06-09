@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 11:50:20 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 16:39:21 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,14 +206,55 @@ int	hook_release(int keycode, t_info *info)
 
 int	gettext(t_texture *text, t_info *info)
 {
-	text->texture.img = mlx_xpm_file_to_image(info->mlx, text->path, \
-			&text->width, &text->height);
-	if (!text->texture.img)
-		return (puterr("Impossible d'ouvrir ", info), \
-				ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
-	text->texture.addr = mlx_get_data_addr(text->texture.img, \
-			&text->texture.bits_per_pixel, &text->texture.line_length,
-			&text->texture.endian);
+	DIR	*dir;
+	struct dirent	*file;
+	int	i;
+	char	*tmp;
+
+	dir = opendir(text->path);
+	text->numtext = 0;
+	if (!dir)
+	{
+		printf("no dir\n");
+		text->numtextmax = 1;
+		text->texture = malloc(sizeof(t_img) * 2);
+		text->texture[0].img = mlx_xpm_file_to_image(info->mlx, text->path, \
+				&text->texture[0].width, &text->texture[0].height);
+		if (!text->texture[0].img)
+			return (puterr("Impossible d'ouvrir ", info), \
+					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+		text->texture[0].addr = mlx_get_data_addr(text->texture[0].img, \
+				&text->texture[0].bits_per_pixel, &text->texture[0].line_length,
+				&text->texture[0].endian);
+	}
+	else
+	{
+		i = 0;
+		file = readdir(dir);
+		while (file != NULL)
+		{
+			i++;
+			file = readdir(dir);
+		}
+		i -= 2;
+		text->texture = malloc(sizeof(t_img) * (i + 1));
+		text->numtextmax = i;
+		while (i--)
+		{
+			tmp = ft_strjoin_free(ft_strdup(text->path), ft_itoa(i));
+			text->texture[i].img = mlx_xpm_file_to_image(info->mlx, tmp, \
+					&text->texture[i].width, &text->texture[i].height);
+			if (!text->texture[i].img)
+				return (puterr("Impossible d'ouvrir ", info), \
+					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+			text->texture[i].addr = mlx_get_data_addr(text->texture[i].img, \
+					&text->texture[i].bits_per_pixel,\
+					&text->texture[i].line_length,\
+					&text->texture[i].endian);
+			free(tmp);
+		}
+	}
+	closedir(dir);
 	return (0);
 }
 

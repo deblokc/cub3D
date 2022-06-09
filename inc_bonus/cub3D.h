@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 13:36:52 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/09 15:32:44 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <sys/time.h>
+# include <sys/types.h>
+# include <dirent.h>
 # include <time.h>
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
@@ -44,13 +46,15 @@ typedef struct s_img
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		width;
+	int		height;
 }	t_img;
 
 typedef struct s_texture
 {
-	t_img	texture;
-	int		width;
-	int		height;
+	t_img	*texture;
+	int		numtext;
+	int		numtextmax;
 	char	*path;
 }	t_texture;
 
@@ -171,5 +175,6 @@ void	get_walls(t_info *info, t_proj *proj);
 int		draw_wall(t_info *info, t_proj *proj, int hit);
 void	add_door(t_info *info, int y, int x);
 int		add_door_text(t_info *info);
+t_map	*newchunk(char *str);
 
 #endif
