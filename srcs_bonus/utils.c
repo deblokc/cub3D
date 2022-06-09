@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 11:43:07 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 13:24:04 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	initinfo(t_info *info)
 	info->so.texture.img = NULL;
 	info->we.texture.img = NULL;
 	info->ea.texture.img = NULL;
+	info->door.texture.img = NULL;
+	info->doors = NULL;
 	info->mlx = NULL;
 	info->win = NULL;
 }

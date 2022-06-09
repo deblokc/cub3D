@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/30 11:59:08 by tnaton            #+#    #+#              #
-#    Updated: 2022/06/08 09:46:22 by bdetune          ###   ########.fr        #
+#    Updated: 2022/06/09 13:36:10 by bdetune          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,13 +28,14 @@ OBJDIR_BONUS := objs_bonus
 
 SRC = main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c getwalls.c draw_wall.c
 
-SRC_BONUS =  main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c getwalls.c draw_wall.c
+SRC_BONUS =  main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c getwalls.c draw_wall.c doors.c
 
 source = $(addprefix srcs/,$(SRC))
 
 source_bonus = $(addprefix srcs_bonus/,$(SRC_BONUS))
 
 CFLAGS = -Wall -Werror -Wextra -Iinc -g
+CFLAGS_BONUS = -Wall -Werror -Wextra -Iinc_bonus -g
 
 CC = clang
 
@@ -46,7 +47,7 @@ $(NAME) : $(LIBFT) $(MLX) $(object)
 	$(CC) $(CFLAGS) $(object) $(MLX) $(LIBFT) -lXext -lX11 -lm -Iminilibx -o $@
 
 $(NAME_BONUS) : $(object_bonus) $(LIBFT) $(MLX)
-	$(CC) $(CFLAGS) $(object_bonus) $(MLX) $(LIBFT) -lXext -lX11 -lm -Iminilibx -o $@
+	$(CC) $(CFLAGS_BONUS) $(object_bonus) $(MLX) $(LIBFT) -lXext -lX11 -lm -Iminilibx -o $@
 
 -include libft/Makefile
 
@@ -64,7 +65,7 @@ $(OBJDIR)/%.o: srcs/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(OBJDIR_BONUS)/%.o : srcs_bonus/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS_BONUS) -o $@ -c $<
 
 $(OBJDIR) :
 	mkdir $(OBJDIR)
@@ -100,7 +101,7 @@ re : fclean all
 
 $(object) : libft/libft.h inc/cub3D.h
 
-$(object_bonus) : libft/libft.h inc/cub3D.h
+$(object_bonus) : libft/libft.h inc_bonus/cub3D.h
 
 .SECONDARY : $(object)
 

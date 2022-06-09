@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:16:16 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 16:17:36 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 13:09:41 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,20 @@ void	freetexture(t_info *info)
 		mlx_destroy_image(info->mlx, info->ea.texture.img);
 }
 
+void	freedoors(t_info *info)
+{
+	t_door	*current;
+	t_door	*next;
+
+	current = info->doors;
+	while (current)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+}
+
 void	freeinfo(t_info *info)
 {
 	free(info->no.path);
@@ -58,6 +72,7 @@ void	freeinfo(t_info *info)
 	freeallchunk(info->lstmap);
 	freecharchar(info->map);
 	freetexture(info);
+	freedoors(info);
 	if (info->win)
 		mlx_destroy_window(info->mlx, info->win);
 	if (info->mlx)

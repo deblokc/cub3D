@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:18:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 11:42:51 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 13:06:01 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ void	checkcharmap(char **map, int i, int j, t_info *info)
 					i, j, info);
 			info->isvalid = 0;
 		}
+		if (map[i][j] == '2')
+			add_door(info, i, j);
 	}
 }
 
