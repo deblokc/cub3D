@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 13:36:52 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/09 15:36:34 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_proj
 	int			end_pixel;
 	char		*origin;
 	char		*dst;
+	char		is_door;
 	double		proj_screen[4];
 	double		dir_v[2];
 	double		v[2];
@@ -87,6 +88,7 @@ typedef struct s_proj
 	double		delta[2];
 	double		percent_x;
 	double		step;
+	t_door		*door;
 	t_texture	target;
 }	t_proj;
 
@@ -171,5 +173,6 @@ void	get_walls(t_info *info, t_proj *proj);
 int		draw_wall(t_info *info, t_proj *proj, int hit);
 void	add_door(t_info *info, int y, int x);
 int		add_door_text(t_info *info);
+int		is_on_door(t_info *info, t_proj *proj, int hit);
 
 #endif

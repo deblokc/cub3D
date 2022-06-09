@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/09 15:38:25 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/09 15:25:28 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ static int	straight_line(t_info *info, t_proj *proj)
 {
 	if (fabs(proj->v[0]) < 0.0001)
 	{
-		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1'
-				|| is_on_door(info, proj, 1))
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
 			return (draw_wall(info, proj, 1));
 		else
 		{
@@ -54,8 +53,7 @@ static int	straight_line(t_info *info, t_proj *proj)
 	}
 	else
 	{
-		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1'
-				|| is_on_door(info, proj, 2))
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
 			return (draw_wall(info, proj, 2));
 		else
 		{
@@ -106,7 +104,7 @@ static t_door *find_door(t_info *info, int coords[2])
 	return (current);
 }
 
-int	is_on_door(t_info *info, t_proj *proj, int hit)
+static int	is_on_door(t_info *info, t_proj *proj, int hit)
 {
 	double	visible[2];
 	double	next[2];
@@ -118,9 +116,7 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 	c[1] = (int)proj->cur[1];
 	if (info->map[c[1]][c[0]] != '2')
 		return (0);
-	proj->door = find_door(info, c);
-	if (!proj->door)
-		return (0);
+	door = find_door(info, c);
 	if (hit == 1)
 	{
 		if (proj->v[1] < 0)
@@ -129,7 +125,7 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 			visible[1] = visible[0] + (double)door->visible / 100;
 			if (proj->cur[0] >= visible[0] && proj->cur[0] <= visible[1])
 			{
-				proj->is_door = 1;
+				proj->door = 1;
 				return (1);
 			}
 			next[1] = (double)c[1];
@@ -138,7 +134,7 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 			{
 				proj->cur[0] = next[0];
 				proj->cur[1] = next[1];
-				proj->is_door = 1;
+				proj->door = 1;
 				return (1);
 			}
 		}
@@ -148,14 +144,13 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 			visible[1] = visible[0] - 0.0001 - (double)door->visible / 100;
 			if (proj->cur[0] <= visible[0] && proj->cur[0] >= visible[1])
 			{
-				proj->is_door = 1;
+				proj->door =1;
 				return (1);
 			}
 			next[1] = (double)c[1] + 0.9999;
 			next[0] = (fabs(next[1] - proj->cur[1]) / fabs(v[1])) * v[0] + proj->cur[0];
-			if (next[0] <= visible[0] && next[0] >= visible[1])
+			if (next[1] <= visible[0] && next[1] >= visible[1])
 			{
-				proj->is_door = 1;
 				proj->cur[0] = next[0];
 				proj->cur[1] = next[1];
 				return (1);
@@ -168,17 +163,13 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 		visible[0] = c[1] + 1;
 		visible[1] = visible[0] - 0.0001 - (double)door->visible / 100;
 		if (proj->cur[1] <= visible[0] && proj->cur[1] >= visible[1])
-		{
-			proj->is_door = 1;
 			return (1);
-		}
 		next[0] = (double)c[0];
 		next[1] = (fabs(next[0] - proj->cur[0]) / fabs(v[0])) * v[1] + proj->cur[1];
 		if (next[1] <= visible[0] && next[1] >= visible[1])
 		{
 			proj->cur[0] = next[0];
 			proj->cur[1] = next[1];
-			proj->is_door = 1;
 			return (1);
 		}
 	}	
@@ -187,21 +178,18 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 		visible[0] = c[1];
 		visible[1] = visible[0] + (double)door->visible / 100;
 		if (proj->cur[1] >= visible[0] && proj->cur[1] <= visible[1])
-		{
-			proj->is_door = 1;
 			return (1);
-		}
 		next[0] = (double)c[0] + 0.9999;
 		next[1] = (fabs(next[0] - proj->cur[0]) / fabs(v[0])) * v[1] + proj->cur[1];
 		if (next[1] >= visible[0] && next[1] <= visible[1])
 		{
 			proj->cur[0] = next[0];
 			proj->cur[1] = next[1];
-			proj->is_door = 1;
 			return (1);
 		}
 	}
 	return (0);
+
 }
 
 static int	angled_view(t_info *info, t_proj *proj, int side)
@@ -218,8 +206,7 @@ static int	angled_view(t_info *info, t_proj *proj, int side)
 	{
 		proj->cur[0] = proj->delta[1] * proj->v[0] + proj->prev[0];
 		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1'
-			|| is_in_corner(info, proj->cur, proj->v, 1)
-			|| is_on_door(info, proj, 1))
+			|| is_in_corner(info, proj->cur, proj->v, 1))
 			return (draw_wall(info, proj, 1));
 	}
 	proj->prev[0] = proj->cur[0];

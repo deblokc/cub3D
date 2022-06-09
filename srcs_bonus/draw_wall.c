@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/08 09:43:37 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/09 15:42:31 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,14 @@
 
 static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 {
+	double	door_size;
+
 	if (hit == 1)
 	{
+		if (proj->is_door)
+		{
+			proj->target = info->door;
+		}		
 		proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
 		proj->target = info->no;
 		if (proj->v[1] > 0)
@@ -120,7 +126,8 @@ int	draw_wall(t_info *info, t_proj *proj, int hit)
 		distance1 = hypot(fabs(proj->v[0]), fabs(proj->v[1]));
 	wall_ratio = distance1 / distance0;
 	proj->wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
-	hit = check_view_integrity(info, proj->cur, proj->v, hit);
+	if (!proj->is_door)
+		hit = check_view_integrity(info, proj->cur, proj->v, hit);
 	draw_strip(info, proj, hit);
 	return (hit);
 }
