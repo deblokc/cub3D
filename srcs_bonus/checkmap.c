@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:18:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 18:39:11 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 11:42:51 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	checkcharmap(char **map, int i, int j, t_info *info)
 		info->isvalid = 0;
 	}
 	if (map[i][j] == '0' || map[i][j] == 'E' || map[i][j] == 'W' \
-			|| map[i][j] == 'N' || map[i][j] == 'S')
+			|| map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == '2')
 	{
 		if (!checkcub(map, i, j))
 		{
