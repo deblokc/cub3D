@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:16:16 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 16:43:09 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 17:57:24 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	freetexture(t_info *info)
 	int	i;
 
 	i = 0;
-	if (info->no.texture->img)
+	if (info->no.texture)
 	{
 		while (i < info->no.numtextmax)
 		{
@@ -52,7 +52,7 @@ void	freetexture(t_info *info)
 	}
 	free(info->no.texture);
 	i = 0;
-	if (info->so.texture->img)
+	if (info->so.texture)
 	{
 		while (i < info->so.numtextmax)
 		{
@@ -62,7 +62,7 @@ void	freetexture(t_info *info)
 	}
 	free(info->so.texture);
 	i = 0;
-	if (info->we.texture->img)
+	if (info->we.texture)
 	{
 		while (i < info->we.numtextmax)
 		{
@@ -72,7 +72,7 @@ void	freetexture(t_info *info)
 	}
 	free(info->we.texture);
 	i = 0;
-	if (info->ea.texture->img)
+	if (info->ea.texture)
 	{
 		while (i < info->ea.numtextmax)
 		{

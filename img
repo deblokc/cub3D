@@ -1,0 +1,481 @@
+	if (!ischr(map[i - 1][j - 1]) || !ischr(map[i - 1][j]) \
+			|| !ischr(map[i - 1][j + 1]))
+	if (!ischr(map[i][j - 1]) || !ischr(map[i][j + 1]))
+	if (!ischr(map[i + 1][j - 1]) || !ischr(map[i + 1][j]) \
+	info->dir = c;
+		info->player.angle = M_PI / 2;
+		info->player.angle = M_PI;
+		info->player.angle = (3 * M_PI) / 2;
+		info->player.angle = 2 * M_PI;
+	info->player.x = j + 0.5;
+	info->player.y = i + 0.5;
+		if (!info->dir)
+			info->isvalid = 0;
+		info->isvalid = 0;
+			info->isvalid = 0;
+	info->isvalid = 1;
+	info->xmax = j;
+	info->ymax = i;
+	if (info->dir && info->isvalid)
+	else if (!info->dir)
+	if (info->map[(int)(cur[1] + 1)][(int)(cur[0])] == '1')
+				&& info->map[(int)(cur[1])][(int)(cur[0] + 1)] == '1')
+				&& info->map[(int)(cur[1])][(int)(cur[0] - 1)] == '1'))
+	if (info->map[(int)(cur[1] - 1)][(int)(cur[0])] == '1')
+				&& info->map[(int)(cur[1])][(int)(cur[0] + 1)] == '1')
+				&& info->map[(int)(cur[1])][(int)(cur[0] - 1)] == '1'))
+	if (info->map[(int)(cur[1])][(int)(cur[0] + 1)] == '1')
+				&& info->map[(int)(cur[1] + 1)][(int)(cur[0])] == '1')
+				&& info->map[(int)(cur[1] - 1)][(int)(cur[0])] == '1'))
+	if (info->map[(int)(cur[1])][(int)(cur[0] - 1)] == '1')
+				&& info->map[(int)(cur[1] + 1)][(int)(cur[0])] == '1')
+				&& info->map[(int)(cur[1] - 1)][(int)(cur[0])] == '1'))
+	new_door->x = x;
+	new_door->y = y;
+	new_door->opened_time = 0;
+	new_door->visible = 100;
+	new_door->motion = 0;
+	if (!info->doors)
+		info->doors = new_door;
+		current = info->doors;
+		while (current->next)
+			current = current->next;
+		current->next = new_door;
+	info->door.texture->img = mlx_xpm_file_to_image(info->mlx, DOOR_PATH, \
+			&info->door.texture->width, &info->door.texture->height);
+	if (!info->door.texture->img)
+	info->door.texture->addr = mlx_get_data_addr(info->door.texture->img, \
+			&info->door.texture->bits_per_pixel, &info->door.texture->line_length,
+			&info->door.texture->endian);
+		proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
+		proj->target = info->no;
+		if (proj->v[1] > 0)
+			proj->target = info->so;
+			proj->percent_x = 1 - proj->percent_x;
+		proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
+		proj->target = info->ea;
+		if (proj->v[0] < 0)
+			proj->target = info->we;
+			proj->percent_x = 1 - proj->percent_x;
+	if (proj->percent_x >= 1)
+		proj->percent_x = 0.9999;
+	proj->percent_x = floor(proj->percent_x * (double)proj->target.texture->width);
+	proj->start_pixel = (int)floor((((double)HEIGHT - 1) / 2) \
+			- ((double)proj->wall_height / 2));
+	proj->end_pixel = proj->start_pixel + proj->wall_height - 1;
+	proj->dst = info->img[info->current_img].addr + proj->x \
+				* (info->img[info->current_img].bits_per_pixel / 8);
+	proj->origin = proj->target.texture->addr +(int)proj->percent_x \
+				* (proj->target.texture->bits_per_pixel / 8);
+	proj->step = ((double)1 / (double)proj->wall_height) \
+				* (double)(proj->target.texture->height);
+		while (*it < HEIGHT && *it < proj->start_pixel)
+			*(unsigned int *)proj->dst = info->c;
+			proj->dst += info->img[info->current_img].line_length;
+			*(unsigned int *)proj->dst = info->f;
+			proj->dst += info->img[info->current_img].line_length;
+	current = (double)(it - proj->start_pixel) * proj->step;
+	while (it < HEIGHT && it <= proj->end_pixel)
+		if (percent_y == proj->target.texture->height)
+			percent_y = proj->target.texture->height - 1;
+		*(unsigned int *)proj->dst = *(unsigned int *)(proj->origin \
+				+ (int)percent_y * proj->target.texture->line_length);
+		proj->dst += info->img[info->current_img].line_length;
+		current += proj->step;
+	if (fabs(proj->cur[0] - info->player.x) < 0.0001)
+		distance0 = fabs(proj->cur[1] - info->player.y);
+	else if (fabs(proj->cur[1] - info->player.y) < 0.0001)
+		distance0 = fabs(proj->cur[0] - info->player.x);
+		distance0 = hypot(fabs(proj->cur[0] - info->player.x), \
+				fabs(proj->cur[1] - info->player.y));
+	if (fabs(proj->v[0]) < 0.0001)
+		distance1 = fabs(proj->v[1]);
+	else if (fabs(proj->v[1]) < 0.0001)
+		distance1 = fabs(proj->v[0]);
+		distance1 = hypot(fabs(proj->v[0]), fabs(proj->v[1]));
+	proj->wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
+	hit = check_view_integrity(info, proj->cur, proj->v, hit);
+		map = map->next;
+	if (info->no.texture->img)
+		while (i < info->no.numtextmax)
+			mlx_destroy_image(info->mlx, info->no.texture[i].img);
+	free(info->no.texture);
+	if (info->so.texture->img)
+		while (i < info->so.numtextmax)
+			mlx_destroy_image(info->mlx, info->so.texture[i].img);
+	free(info->so.texture);
+	if (info->we.texture->img)
+		while (i < info->we.numtextmax)
+			mlx_destroy_image(info->mlx, info->we.texture[i].img);
+	free(info->we.texture);
+	if (info->ea.texture->img)
+		while (i < info->ea.numtextmax)
+			mlx_destroy_image(info->mlx, info->ea.texture[i].img);
+	free(info->ea.texture);
+	current = info->doors;
+		next = current->next;
+	free(info->no.path);
+	free(info->so.path);
+	free(info->we.path);
+	free(info->ea.path);
+	freeallchunk(info->lstmap);
+	freecharchar(info->map);
+	if (info->win)
+		mlx_destroy_window(info->mlx, info->win);
+	if (info->mlx)
+		mlx_destroy_display(info->mlx);
+		free(info->mlx);
+		free(map->ligne);
+		map = map->next;
+	if (proj->v[fixed] < 0)
+		tmp[fixed] = proj->cur[fixed] - 1;
+		tmp[fixed] = proj->cur[fixed] + 1;
+	proj->delta[fixed] = fabs(tmp[fixed] - proj->cur[fixed]) \
+						/ fabs(proj->v[fixed]);
+	if (proj->v[pendant] < 0)
+		tmp[pendant] = floor(proj->cur[pendant]) - 0.0001;
+		tmp[pendant] = ceil(proj->cur[pendant]);
+	proj->delta[pendant] = fabs(tmp[pendant] - proj->cur[pendant]) \
+							/ fabs(proj->v[pendant]);
+	if (fabs((double)proj->delta[pendant]) < 0.0001)
+	proj->delta[pendant] = fabs(tmp[pendant] - proj->cur[pendant]) \
+							/ fabs(proj->v[pendant]);
+	proj->cur[0] = tmp[0];
+	proj->cur[1] = tmp[1];
+	if (fabs(proj->v[0]) < 0.0001)
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+			proj->cur[1] += 1;
+			if (proj->v[1] < 0)
+				proj->cur[1] -= 2;
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1')
+			proj->cur[0] += 1;
+			if (proj->v[0] < 0)
+				proj->cur[0] -= 2;
+		if (v[1] < 0 && info->map[(c[1] + 1)][c[0]] == '1'
+			&& ((v[0] <= 0 && info->map[c[1]][(c[0] + 1)] == '1')
+				|| (v[0] >= 0 && info->map[c[1]][(c[0] - 1)] == '1')))
+		else if (v[1] > 0 && info->map[(c[1] - 1)][c[0]] == '1'
+			&& ((v[0] <= 0 && info->map[c[1]][(c[0] + 1)] == '1')
+				|| (v[0] >= 0 && info->map[c[1]][(c[0] - 1)] == '1')))
+	if (v[0] < 0 && info->map[c[1]][(c[0] + 1)] == '1'
+		&& ((v[1] <= 0 && info->map[(c[1] + 1)][c[0]] == '1')
+			|| (v[1] >= 0 && info->map[(c[1] - 1)][c[0]] == '1')))
+	else if (v[0] > 0 && info->map[c[1]][(c[0] - 1)] == '1'
+		&& ((v[1] <= 0 && info->map[(c[1] + 1)][c[0]] == '1')
+			|| (v[1] >= 0 && info->map[(c[1] - 1)][c[0]] == '1')))
+		proj->cur[1] = proj->delta[0] * proj->v[1] + proj->prev[1];
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1'
+			|| is_in_corner(info, proj->cur, proj->v, 2))
+		proj->cur[0] = proj->delta[1] * proj->v[0] + proj->prev[0];
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == '1'
+			|| is_in_corner(info, proj->cur, proj->v, 1))
+	proj->prev[0] = proj->cur[0];
+	proj->prev[1] = proj->cur[1];
+	proj->prev[0] = info->player.x;
+	proj->prev[1] = info->player.y;
+		if (fabs(proj->v[0]) < 0.0001 || fabs(proj->v[1]) < 0.0001)
+			if (fabs(proj->delta[0] - proj->delta[1]) < 0.0001
+				|| proj->delta[0] < proj->delta[1])
+	tmp->next = NULL;
+	tmp->ligne = str;
+	if (str[i - 1] == 'b' && str[i - 2] == 'u' && str[i - 3] == 'c' \
+			&& str[i - 4] == '.' && str[i - 5] != '/')
+	if (!current->ligne)
+	while (current->ligne)
+		current->next = newchunk(get_next_line(fd));
+		if (!current->next)
+		current = current->next;
+		mlx_destroy_image(info->mlx, info->img[i].img);
+	mlx_do_key_autorepeaton(info->mlx);
+	if (info->map[(int)floor(y)][(int)floor(x)] == '1')
+	if (sin(info->player.angle) > 0)
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * \
+							(STEP)) - 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle) * STEP);
+			info->player.y = floor(info->player.y) + 0.1;
+		if (!iswall(info, (info->player.y - (sin(info->player.angle) * \
+							(STEP)) + 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle) * STEP);
+			info->player.y = ceil(info->player.y) - 0.1;
+	if (cos(info->player.angle) > 0)
+		if (!iswall(info, oldy, (info->player.x + cos(info->player.angle) * \
+			info->player.x += (cos(info->player.angle) * STEP);
+			info->player.x = ceil(info->player.x) - 0.1;
+		if (!iswall(info, oldy, (info->player.x + cos(info->player.angle) * \
+						(STEP) - 0.1)))
+			info->player.x += (cos(info->player.angle) * STEP);
+			info->player.x = floor(info->player.x) + 0.1;
+	oldy = info->player.y;
+	oldx = info->player.x;
+	if (iswall(info, info->player.y, info->player.x))
+		info->player.y = oldy;
+		info->player.x = oldx;
+	if (sin(info->player.angle) < 0)
+		if (!iswall(info, (info->player.y + (sin(info->player.angle) * \
+							(STEP)) - 0.1), info->player.x))
+			info->player.y += (sin(info->player.angle) * STEP);
+			info->player.y = floor(info->player.y) + 0.1;
+		if (!iswall(info, (info->player.y + (sin(info->player.angle) * \
+							(STEP)) + 0.1), info->player.x))
+			info->player.y += (sin(info->player.angle) * STEP);
+			info->player.y = ceil(info->player.y) - 0.1;
+	if (cos(info->player.angle) < 0)
+		if (!iswall(info, oldy, (info->player.x - cos(info->player.angle) * \
+			info->player.x -= (cos(info->player.angle) * STEP);
+			info->player.x = ceil(info->player.x) - 0.1;
+		if (!iswall(info, oldy, (info->player.x - cos(info->player.angle) * \
+						(STEP) - 0.1)))
+			info->player.x -= (cos(info->player.angle) * STEP);
+			info->player.x = floor(info->player.x) + 0.1;
+	oldy = info->player.y;
+	oldx = info->player.x;
+	if (iswall(info, info->player.y, info->player.x))
+		info->player.y = oldy;
+		info->player.x = oldx;
+	if (sin(info->player.angle + (M_PI / 2)) > 0)
+		if (!iswall(info, (info->player.y - (sin(info->player.angle + \
+								(M_PI / 2)) * (STEP)) - 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle + (M_PI / 2)) * STEP);
+			info->player.y = floor(info->player.y) + 0.1;
+		if (!iswall(info, (info->player.y - (sin(info->player.angle + \
+								(M_PI / 2)) * (STEP)) + 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle + (M_PI / 2)) * STEP);
+			info->player.y = ceil(info->player.y) - 0.1;
+	if (cos(info->player.angle + (M_PI / 2)) > 0)
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle + \
+			info->player.x += (cos(info->player.angle + (M_PI / 2)) * STEP);
+			info->player.x = ceil(info->player.x) - 0.1;
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle + \
+								(M_PI / 2)) * (STEP)) - 0.1)))
+			info->player.x += (cos(info->player.angle + (M_PI / 2)) * STEP);
+			info->player.x = floor(info->player.x) + 0.1;
+	oldy = info->player.y;
+	oldx = info->player.x;
+	if (iswall(info, info->player.y, info->player.x))
+		info->player.y = oldy;
+		info->player.x = oldx;
+	if (sin(info->player.angle - (M_PI / 2)) > 0)
+		if (!iswall(info, (info->player.y - (sin(info->player.angle - \
+								(M_PI / 2)) * (STEP)) - 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle - (M_PI / 2)) * STEP);
+			info->player.y = floor(info->player.y) + 0.1;
+		if (!iswall(info, (info->player.y - (sin(info->player.angle - \
+								(M_PI / 2)) * (STEP)) + 0.1), info->player.x))
+			info->player.y -= (sin(info->player.angle - (M_PI / 2)) * STEP);
+			info->player.y = ceil(info->player.y) - 0.1;
+	if (cos(info->player.angle - (M_PI / 2)) > 0)
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle - \
+			info->player.x += (cos(info->player.angle - (M_PI / 2)) * STEP);
+			info->player.x = ceil(info->player.x) - 0.1;
+		if (!iswall(info, oldy, (info->player.x + (cos(info->player.angle - \
+								(M_PI / 2)) * (STEP)) - 0.1)))
+			info->player.x += (cos(info->player.angle - (M_PI / 2)) * STEP);
+			info->player.x = floor(info->player.x) + 0.1;
+	oldy = info->player.y;
+	oldx = info->player.x;
+	if (iswall(info, info->player.y, info->player.x))
+		info->player.y = oldy;
+		info->player.x = oldx;
+	info->player.angle -= ((5 * M_PI) / 180);
+	if (info->player.angle == 0)
+		info->player.angle = 2 * M_PI;
+	if (max / (info->xmax) > max / (info->ymax))
+		return (max / (info->ymax));
+	return (max / (info->xmax));
+	retx = x - 3;
+	y -= 3;
+				dest = img->addr + (y * img->line_length + x * \
+						(img->bits_per_pixel / 8));
+				dest = img->addr + (y * img->line_length + x * \
+						(img->bits_per_pixel / 8));
+	while (info->map[ymap])
+		while (info->map[ymap][xmap])
+			if (info->map[ymap][xmap] == '2')
+			if (info->map[ymap][xmap] == '1')
+			if (info->map[ymap][xmap] == '0')
+			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' \
+					|| info->map[ymap][xmap] == 'E' \
+					|| info->map[ymap][xmap] == 'S')
+	putplayer(img, diff * info->player.x, diff * info->player.y, 0xFF0000);
+	y = (int)info->player.y - 2;
+	while (y < (int)info->player.y + 3)
+		x = (int)info->player.x - 2;
+		while (x < (int)info->player.x + 3)
+			if (x >= 0 && y >= 0 && x < info->xmax && y < info->ymax)
+				if (info->map[y][x] == '2')
+				if (info->map[y][x] == '1')
+				if (info->map[y][x] == '0')
+				if (info->map[y][x] == 'N' || info->map[y][x] == 'W' \
+						|| info->map[y][x] == 'E' \
+						|| info->map[y][x] == 'S')
+	putplayer(img, 50 + (25 * (info->player.x - floor(info->player.x))), \
+			50 + (25 * (info->player.y - floor(info->player.y))), 0xFF0000);
+		info->movement += 1;
+		info->movement += (1 << 1);
+		info->movement += (1 << 2);
+		info->movement += (1 << 3);
+		info->movement += (1 << 4);
+		info->movement += (1 << 5);
+		info->tabmap = 1;
+		info->movement -= 1;
+		info->movement -= (1 << 1);
+		info->movement -= (1 << 2);
+		info->movement -= (1 << 3);
+		info->movement -= (1 << 4);
+		info->movement -= (1 << 5);
+		info->tabmap = 0;
+	dir = opendir(text->path);
+	text->numtext = 0;
+		text->numtextmax = 1;
+		text->texture = malloc(sizeof(t_img) * 2);
+		text->texture[0].img = mlx_xpm_file_to_image(info->mlx, text->path, \
+				&text->texture[0].width, &text->texture[0].height);
+		if (!text->texture[0].img)
+					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+		text->texture[0].addr = mlx_get_data_addr(text->texture[0].img, \
+				&text->texture[0].bits_per_pixel, &text->texture[0].line_length,
+				&text->texture[0].endian);
+		i -= 2;
+		text->texture = malloc(sizeof(t_img) * (i + 1));
+		text->numtextmax = i;
+		while (i--)
+			tmp = ft_strjoin_free(ft_strdup(text->path), ft_itoa(i));
+			text->texture[i].img = mlx_xpm_file_to_image(info->mlx, tmp, \
+					&text->texture[i].width, &text->texture[i].height);
+			if (!text->texture[i].img)
+					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+			text->texture[i].addr = mlx_get_data_addr(text->texture[i].img, \
+					&text->texture[i].bits_per_pixel,\
+					&text->texture[i].line_length,\
+					&text->texture[i].endian);
+	if (gettext(&info->no, info) || gettext(&info->so, info) \
+			|| gettext(&info->we, info) || gettext(&info->ea, info))
+	if (info->movement & 1 && !(info->movement & (1 << 1)))
+	if (info->movement & (1 << 1) && !(info->movement & 1))
+	if (info->movement & (1 << 2) && !(info->movement & (1 << 3)))
+	if (info->movement & (1 << 3) && !(info->movement & (1 << 2)))
+	if (info->movement & (1 << 4) && !(info->movement & (1 << 5)))
+	if (info->movement & (1 << 5) && !(info->movement & (1 << 4)))
+	info->current_img += 1;
+	if (info->current_img >= NB_IMG)
+		info->current_img = 0;
+	if (info->tabmap)
+		putmaptoimg(info, &info->img[info->current_img]);
+		putminimap(info, &info->img[info->current_img]);
+	mlx_do_sync(info->mlx);
+	mlx_put_image_to_window(info->mlx, info->win, \
+			info->img[info->current_img].img, 0, 0);
+	info->movement = 0;
+	info->tabmap = 0;
+	info->mlx = mlx_init();
+	info->win = mlx_new_window(info->mlx, WIDTH, HEIGHT, "cub3D");
+		info->img[i].img = mlx_new_image(info->mlx, WIDTH, HEIGHT);
+		info->img[i].addr = mlx_get_data_addr(info->img[i].img, \
+				&info->img[i].bits_per_pixel, &info->img[i].line_length, \
+				&info->img[i].endian);
+	info->current_img = i;
+	mlx_do_key_autorepeatoff(info->mlx);
+	mlx_hook(info->win, 17, 0, closewin, info);
+	mlx_hook(info->win, 2, 1L << 0, hook, info);
+	mlx_hook(info->win, 3, 1L << 1, hook_release, info);
+	mlx_loop_hook(info->mlx, loop, info);
+	mlx_loop(info->mlx);
+	j = i - j;
+	ret = ft_substr(ligne, i, ft_strlen(ligne) - i);
+		return (free(lst), free(str), -2);
+		j = ft_atoi_free(ft_substr(str, j, i - j));
+			return (free(lst), free(str), -2);
+	if (!info->printerr)
+		info->printerr = 1;
+	if (!info->no.path)
+	if (!info->so.path)
+	if (!info->we.path)
+	if (!info->ea.path)
+	if (info->f < 0)
+	if (info->c < 0)
+	if (substrinstr(current->ligne, "NO") && !info->no.path)
+		info->no.path = getlaststr(current->ligne);
+	else if (substrinstr(current->ligne, "SO") && !info->so.path)
+		info->so.path = getlaststr(current->ligne);
+	else if (substrinstr(current->ligne, "WE") && !info->we.path)
+		info->we.path = getlaststr(current->ligne);
+	else if (substrinstr(current->ligne, "EA") && !info->ea.path)
+		info->ea.path = getlaststr(current->ligne);
+	else if (charinstr(current->ligne, 'F') && info->f == -1)
+		info->f = getlist(getlaststr(current->ligne));
+	else if (charinstr(current->ligne, 'C') && info->c == -1)
+		info->c = getlist(getlaststr(current->ligne));
+	return (substrinstr(current->ligne, "NO") || \
+				substrinstr(current->ligne, "SO") || \
+				substrinstr(current->ligne, "WE") || \
+				substrinstr(current->ligne, "EA") || \
+				charinstr(current->ligne, 'F') || \
+				charinstr(current->ligne, 'C'));
+			ft_putstr_fd(current->ligne, 2), \
+		else if (ft_strcmp_free(ft_strtrim(current->ligne, " "), "\n"))
+			free(current->ligne);
+		current = current->next;
+	while (lstmap->ligne)
+		if (ft_strlen_map(lstmap->ligne) > max)
+			max = ft_strlen_map(lstmap->ligne);
+		lstmap = lstmap->next;
+	i = ft_strlen(str) - 1;
+		i--;
+	while (ft_strcmp_free(ft_strtrim(lstmap->ligne, " \n"), ""))
+		map[i] = getligne(lstmap->ligne, maxlen);
+		lstmap = lstmap->next;
+		if (ft_strcmp_free(ft_strtrim(lstmap->ligne, " \n"), ""))
+						"Error\nLigne non-vide apres la map\n", 2), NULL);
+		free(lstmap->ligne);
+		lstmap = lstmap->next;
+	proj->cur[0] = info->player.x;
+	if (proj->v[0] < -0.0001 || proj->v[0] > 0.0001)
+		if (proj->v[0] < -0.0001)
+			proj->cur[0] = floor(info->player.x) - 0.0001;
+			proj->cur[0] = ceil(info->player.x);
+		proj->delta[0] = fabs(proj->cur[0] - info->player.x) / fabs(proj->v[0]);
+	proj->cur[1] = info->player.y;
+	if (proj->v[1] < -0.0001 || proj->v[1] > 0.0001)
+		if (proj->v[1] < -0.0001)
+			proj->cur[1] = floor(info->player.y) - 0.0001;
+			proj->cur[1] = ceil(info->player.y);
+		proj->delta[1] = fabs(proj->cur[1] - info->player.y) / fabs(proj->v[1]);
+	proj->proj_screen[0] = info->player.angle + (M_PI / 4);
+	proj->proj_screen[1] = (-sin(proj->proj_screen[0])) \
+								/ cos(M_PI / 4)) + info->player.y;
+	proj->proj_screen[0] = cos(proj->proj_screen[0]) \
+								/ cos(M_PI / 4)) + info->player.x;
+	proj->proj_screen[2] = info->player.angle - (M_PI / 4);
+	proj->proj_screen[3] = (-sin(proj->proj_screen[2])) \
+								/ cos(M_PI / 4)) + info->player.y;
+	proj->proj_screen[2] = cos(proj->proj_screen[2]) \
+								/ cos(M_PI / 4)) + info->player.x;
+	proj->dir_v[0] = (proj->proj_screen[2] - proj->proj_screen[0]) \
+					/ (double)(WIDTH - 1);
+	proj->dir_v[1] = (proj->proj_screen[3] - proj->proj_screen[1]) \
+					/ (double)(WIDTH - 1);
+	if (fabs(info->player.angle + M_PI / 2) < 0.0001)
+		info->player.angle = 3 * M_PI * 2;
+	else if (fabs(info->player.angle) < 0.0001)
+		info->player.angle = 2 * M_PI;
+					- info->player.x;
+					- info->player.y;
+	info->player.angle += ((5 * M_PI) / 180);
+	if (info->player.angle == 0)
+		info->player.angle = 2 * M_PI;
+	info->no.path = NULL;
+	info->so.path = NULL;
+	info->we.path = NULL;
+	info->ea.path = NULL;
+	info->f = -1;
+	info->c = -1;
+	info->map = NULL;
+	info->lstmap = NULL;
+	info->dir = 0;
+	info->printerr = 0;
+	info->door.texture = malloc(sizeof(t_img));
+	info->door.texture->img = NULL;
+	info->doors = NULL;
+	info->mlx = NULL;
+	info->win = NULL;
+		lstmap = lstmap->next;

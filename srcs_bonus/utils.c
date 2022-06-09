@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 16:37:49 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 17:56:07 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ void	initinfo(t_info *info)
 	info->lstmap = NULL;
 	info->dir = 0;
 	info->printerr = 0;
+	info->no.texture = NULL;
+	info->so.texture = NULL;
+	info->we.texture = NULL;
+	info->ea.texture = NULL;
 	info->door.texture = malloc(sizeof(t_img));
 	info->door.texture->img = NULL;
 	info->doors = NULL;

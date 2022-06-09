@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 16:39:21 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/09 17:59:19 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,8 +245,14 @@ int	gettext(t_texture *text, t_info *info)
 			text->texture[i].img = mlx_xpm_file_to_image(info->mlx, tmp, \
 					&text->texture[i].width, &text->texture[i].height);
 			if (!text->texture[i].img)
+			{
+				closedir(dir);
+				free(text->texture);
+				free(tmp);
+				text->texture = NULL;
 				return (puterr("Impossible d'ouvrir ", info), \
 					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+			}
 			text->texture[i].addr = mlx_get_data_addr(text->texture[i].img, \
 					&text->texture[i].bits_per_pixel,\
 					&text->texture[i].line_length,\
@@ -283,6 +289,22 @@ int	loop(t_info *info)
 	info->current_img += 1;
 	if (info->current_img >= NB_IMG)
 		info->current_img = 0;
+	if (info->no.numtext == info->no.numtextmax - 1)
+		info->no.numtext = 0;
+	else
+		info->no.numtext++;
+	if (info->so.numtext == info->so.numtextmax - 1)
+		info->so.numtext = 0;
+	else
+		info->so.numtext++;
+	if (info->we.numtext == info->we.numtextmax - 1)
+		info->we.numtext = 0;
+	else
+		info->we.numtext++;
+	if (info->ea.numtext == info->ea.numtextmax - 1)
+		info->ea.numtext = 0;
+	else
+		info->ea.numtext++;
 	raisewalls(info);
 	if (info->tabmap)
 		putmaptoimg(info, &info->img[info->current_img]);
