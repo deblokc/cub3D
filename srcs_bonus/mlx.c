@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 13:24:44 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 16:49:09 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,76 @@ void	putminimap(t_info *info, t_img *img)
 			50 + (25 * (info->player.y - floor(info->player.y))), 0xFF0000);
 }
 
+double	distance(double x0, double y0, double x1, double y1)
+{
+	if (fabs(x1 - x0) < 0.0001)
+		return (fabs(y1 - y0));
+	if (fabs(y1 - y0) < 0.0001)
+		return (fabs(x1 - x0));
+	return (hypot(fabs(x1 - x0), fabs(y1 - y0)));
+}
+
+void	toggle_door(t_info *info)
+{
+	t_proj	proj;
+	int		coords[2];
+
+	proj.door = NULL;
+	proj.v[0] = cos(info->player.angle);
+	proj.v[1] = -sin(info->player.angle);
+	proj.cur[0] = info->player.x;
+	proj.delta[0] = 10;
+	if (proj.v[0] < -0.0001 || proj.v[0] > 0.0001)
+	{
+		if (proj.v[0] < -0.0001)
+			proj.cur[0] = floor(info->player.x) - 0.0001;
+		else
+			proj.cur[0] = ceil(info->player.x);
+		proj.delta[0] = fabs(proj.cur[0] - info->player.x) / fabs(proj.v[0]);
+	}
+	proj.cur[1] = info->player.y;
+	proj.delta[1] = 10;
+	if (proj.v[1] < -0.0001 || proj.v[1] > 0.0001)
+	{
+		if (proj.v[1] < -0.0001)
+			proj.cur[1] = floor(info->player.y) - 0.0001;
+		else
+			proj.cur[1] = ceil(info->player.y);
+		proj.delta[1] = fabs(proj.cur[1] - info->player.y) / fabs(proj.v[1]);
+	}
+	if (proj.delta[0] < proj.delta[1])
+		proj.cur[1] = proj.delta[0] * proj.v[1] + info->player.y;
+	else
+		proj.cur[0] = proj.delta[1] * proj.v[0] + info->player.x;
+//	printf("player coords: %.2f;%.2f\n");
+	while (distance(proj.cur[0], proj.cur[1], info->player.x, info->player.y) <= 1)
+	{
+		coords[0] = (int)proj.cur[0];
+		coords[1] = (int)proj.cur[1];
+		if (info->map[coords[1]][coords[0]] == '1')
+			return ;
+		if (info->map[coords[1]][coords[0]] == '2')
+		{
+			proj.door = find_door(info, coords);
+			break ;
+		}
+		proj.cur[0] += 0.1 * proj.v[0];
+		proj.cur[1] += 0.1 * proj.v[1];
+	}
+	if (proj.door)
+	{
+		proj.door->opened_time = 0;
+		if (proj.door->motion == 0 && proj.door->visible == 100)
+			proj.door->motion = -1;
+		else if (proj.door->motion == 0)
+			proj.door->motion = 1;
+		else if (proj.door->motion == 1)
+			proj.door->motion = -1;
+		else
+			proj.door->motion = 1;
+	}
+}
+
 int	hook(int keycode, t_info *info)
 {
 	if (keycode == 65307)
@@ -180,6 +250,8 @@ int	hook(int keycode, t_info *info)
 		info->movement += (1 << 5);
 	if (keycode == 65289)
 		info->tabmap = 1;
+	if (keycode == 32)
+		toggle_door(info);
 	loop(info);
 	return (0);
 }
@@ -227,8 +299,51 @@ int	gettexture(t_info *info)
 	return (0);
 }
 
+void	handle_doors(t_info *info)
+{
+	t_door	*current;
+
+	current = info->doors;
+	while (current)
+	{
+		if ((int)info->player.x == current->x && (int)info->player.y == current->y)
+		{
+			current->opened_time = 0;
+			current->visible = 0;
+			current->motion = 0;
+			printf("Coords player: %d;%d\nCoords door: %d;%d\n", (int)info->player.x, (int)info->player.y, current->x, current->y);
+			printf("Opened time:%d, visible:%d, motion:%d\n", (int)current->opened_time, (int)current->visible, (int)current->motion);
+		}
+		else
+		{
+			if (current->opened_time == 60)
+				current->motion = 1;
+			if (current->motion == -1)
+				current->visible -= 2;
+			else if (current->motion == 1)
+				current->visible += 2;
+			else if (current->visible != 100 && current->motion == 0)
+				current->opened_time += 1;
+			if (current->visible < 0)
+			{
+				current->visible = 0;
+				current->motion = 0;
+				current->opened_time = 1;
+			}
+			else if (current->visible > 100)
+			{
+				current->visible = 100;
+				current->motion = 0;
+				current->opened_time = 0;
+			}
+		}
+		current = current->next;
+	}
+}
+
 int	loop(t_info *info)
 {
+	handle_doors(info);
 	if (info->movement & 1 && !(info->movement & (1 << 1)))
 		goforward(info);
 	if (info->movement & (1 << 1) && !(info->movement & 1))

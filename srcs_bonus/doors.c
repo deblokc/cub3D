@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 13:06:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 14:29:57 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 14:56:58 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,14 @@ int	add_door_text(t_info *info)
 			&info->door.texture.bits_per_pixel, &info->door.texture.line_length,
 			&info->door.texture.endian);
 	return (0);
+}
+
+t_door *find_door(t_info *info, int coords[2])
+{
+	t_door	*current;
+
+	current = info->doors;
+	while (current && current->x != coords[0] && current->y != coords[1])
+		current = current->next;
+	return (current);
 }

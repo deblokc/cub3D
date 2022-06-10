@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 15:36:34 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 15:00:35 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,5 +174,6 @@ int		draw_wall(t_info *info, t_proj *proj, int hit);
 void	add_door(t_info *info, int y, int x);
 int		add_door_text(t_info *info);
 int		is_on_door(t_info *info, t_proj *proj, int hit);
+t_door	*find_door(t_info *info, int coords[2]);
 
 #endif
