@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 13:06:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 13:27:01 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 14:29:57 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	add_door(t_info *info, int y, int x)
 	new_door->x = x;
 	new_door->y = y;
 	new_door->opened_time = 0;
-	new_door->visible = 10;
+	new_door->visible = 75;
 	new_door->motion = 0;
 	if (!info->doors)
 		info->doors = new_door;

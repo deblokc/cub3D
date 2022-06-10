@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 13:13:45 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 14:17:45 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,11 @@ static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 		{
 			proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
 			proj->target = info->no;
-		}
-		if (proj->v[1] > 0)
-		{
-			proj->percent_x = 1 - proj->percent_x;
-			if (!proj->is_door)
+			if (proj->v[1] > 0)
+			{
+				proj->percent_x = 1 - proj->percent_x;
 				proj->target = info->so;
+			}
 		}
 	}
 	else
@@ -44,12 +43,11 @@ static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 		{
 			proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
 			proj->target = info->ea;
-		}
-		if (proj->v[0] < 0)
-		{
-			proj->percent_x = 1 - proj->percent_x;
-			if (!proj->is_door)
+			if (proj->v[0] < 0)
+			{
+				proj->percent_x = 1 - proj->percent_x;
 				proj->target = info->we;
+			}
 		}
 	}
 	if (proj->percent_x >= 1)
