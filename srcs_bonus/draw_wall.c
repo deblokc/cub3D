@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/09 17:26:32 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/10 14:17:45 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,38 @@ static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 {
 	if (hit == 1)
 	{
-		proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
-		proj->target = info->no;
-		if (proj->v[1] > 0)
+		if (proj->is_door)
 		{
-			proj->target = info->so;
-			proj->percent_x = 1 - proj->percent_x;
+			proj->target = info->door;
+			proj->percent_x = (double)(100 - proj->door->visible) / 100 + (proj->cur[0] - floor(proj->cur[0]));
+		}		
+		else
+		{
+			proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
+			proj->target = info->no;
+			if (proj->v[1] > 0)
+			{
+				proj->percent_x = 1 - proj->percent_x;
+				proj->target = info->so;
+			}
 		}
 	}
 	else
 	{
-		proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
-		proj->target = info->ea;
-		if (proj->v[0] < 0)
+		if (proj->is_door)
 		{
-			proj->target = info->we;
-			proj->percent_x = 1 - proj->percent_x;
+			proj->target = info->door;
+			proj->percent_x = (double)(100 - proj->door->visible) / 100 + (proj->cur[1] - floor(proj->cur[1]));
+		}
+		else
+		{
+			proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
+			proj->target = info->ea;
+			if (proj->v[0] < 0)
+			{
+				proj->percent_x = 1 - proj->percent_x;
+				proj->target = info->we;
+			}
 		}
 	}
 	if (proj->percent_x >= 1)
@@ -120,7 +136,8 @@ int	draw_wall(t_info *info, t_proj *proj, int hit)
 		distance1 = hypot(fabs(proj->v[0]), fabs(proj->v[1]));
 	wall_ratio = distance1 / distance0;
 	proj->wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
-	hit = check_view_integrity(info, proj->cur, proj->v, hit);
+	if (!proj->is_door)
+		hit = check_view_integrity(info, proj->cur, proj->v, hit);
 	draw_strip(info, proj, hit);
 	return (hit);
 }

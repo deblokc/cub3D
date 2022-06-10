@@ -95,8 +95,6 @@ int	main(int ac, char **av)
 			|| info.f < 0 || info.c < 0 || !info.lstmap)
 		return (freelstmap(info.lstmap), freeinfo(&info), 1);
 	info.map = parsemap(info.lstmap);
-	if (info.doors && add_door_text(&info))
-		return (freeinfo(&info), 1);
 	if (!info.map || !isvalid(info.map, &info))
 		return (freeinfo(&info), 1);
 	if (mlx(&info))
