@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 13:37:26 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 13:24:56 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ int	main(int ac, char **av)
 			|| info.f < 0 || info.c < 0 || !info.lstmap)
 		return (freelstmap(info.lstmap), freeinfo(&info), 1);
 	info.map = parsemap(info.lstmap);
-	if (info.doors && add_door_text(&info))
-		return (freeinfo(&info), 1);
 	if (!info.map || !isvalid(info.map, &info))
 		return (freeinfo(&info), 1);
 	if (mlx(&info))

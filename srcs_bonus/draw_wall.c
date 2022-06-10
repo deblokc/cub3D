@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/09 15:42:31 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 13:13:45 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,42 @@
 
 static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 {
-	double	door_size;
-
 	if (hit == 1)
 	{
 		if (proj->is_door)
 		{
 			proj->target = info->door;
+			proj->percent_x = (double)(100 - proj->door->visible) / 100 + (proj->cur[0] - floor(proj->cur[0]));
 		}		
-		proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
-		proj->target = info->no;
+		else
+		{
+			proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
+			proj->target = info->no;
+		}
 		if (proj->v[1] > 0)
 		{
-			proj->target = info->so;
 			proj->percent_x = 1 - proj->percent_x;
+			if (!proj->is_door)
+				proj->target = info->so;
 		}
 	}
 	else
 	{
-		proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
-		proj->target = info->ea;
+		if (proj->is_door)
+		{
+			proj->target = info->door;
+			proj->percent_x = (double)(100 - proj->door->visible) / 100 + (proj->cur[1] - floor(proj->cur[1]));
+		}
+		else
+		{
+			proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
+			proj->target = info->ea;
+		}
 		if (proj->v[0] < 0)
 		{
-			proj->target = info->we;
 			proj->percent_x = 1 - proj->percent_x;
+			if (!proj->is_door)
+				proj->target = info->we;
 		}
 	}
 	if (proj->percent_x >= 1)

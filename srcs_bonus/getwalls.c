@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/09 15:38:25 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 13:12:15 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 {
 	double	visible[2];
 	double	next[2];
-	double	ratio;
-	t_door	*door;
 	int		c[2];
 	
 	c[0] = (int)proj->cur[0];
@@ -126,14 +124,14 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 		if (proj->v[1] < 0)
 		{
 			visible[0] = c[0];
-			visible[1] = visible[0] + (double)door->visible / 100;
+			visible[1] = visible[0] + (double)proj->door->visible / 100;
 			if (proj->cur[0] >= visible[0] && proj->cur[0] <= visible[1])
 			{
 				proj->is_door = 1;
 				return (1);
 			}
 			next[1] = (double)c[1];
-			next[0] = (fabs(next[1] - proj->cur[1]) / fabs(v[1])) * v[0] + proj->cur[0];
+			next[0] = (fabs(next[1] - proj->cur[1]) / fabs(proj->v[1])) * proj->v[0] + proj->cur[0];
 			if (next[0] >= visible[0] && next[0] <= visible[1])
 			{
 				proj->cur[0] = next[0];
@@ -142,17 +140,17 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 				return (1);
 			}
 		}
-		else if (v[1] > 0)
+		else if (proj->v[1] > 0)
 		{
 			visible[0] = c[0] + 1;
-			visible[1] = visible[0] - 0.0001 - (double)door->visible / 100;
+			visible[1] = visible[0] - 0.0001 - (double)proj->door->visible / 100;
 			if (proj->cur[0] <= visible[0] && proj->cur[0] >= visible[1])
 			{
 				proj->is_door = 1;
 				return (1);
 			}
 			next[1] = (double)c[1] + 0.9999;
-			next[0] = (fabs(next[1] - proj->cur[1]) / fabs(v[1])) * v[0] + proj->cur[0];
+			next[0] = (fabs(next[1] - proj->cur[1]) / fabs(proj->v[1])) * proj->v[0] + proj->cur[0];
 			if (next[0] <= visible[0] && next[0] >= visible[1])
 			{
 				proj->is_door = 1;
@@ -166,14 +164,14 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 	if (proj->v[0] < 0)
 	{
 		visible[0] = c[1] + 1;
-		visible[1] = visible[0] - 0.0001 - (double)door->visible / 100;
+		visible[1] = visible[0] - 0.0001 - (double)proj->door->visible / 100;
 		if (proj->cur[1] <= visible[0] && proj->cur[1] >= visible[1])
 		{
 			proj->is_door = 1;
 			return (1);
 		}
 		next[0] = (double)c[0];
-		next[1] = (fabs(next[0] - proj->cur[0]) / fabs(v[0])) * v[1] + proj->cur[1];
+		next[1] = (fabs(next[0] - proj->cur[0]) / fabs(proj->v[0])) * proj->v[1] + proj->cur[1];
 		if (next[1] <= visible[0] && next[1] >= visible[1])
 		{
 			proj->cur[0] = next[0];
@@ -185,14 +183,14 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 	else if (proj->v[0] > 0)
 	{
 		visible[0] = c[1];
-		visible[1] = visible[0] + (double)door->visible / 100;
+		visible[1] = visible[0] + (double)proj->door->visible / 100;
 		if (proj->cur[1] >= visible[0] && proj->cur[1] <= visible[1])
 		{
 			proj->is_door = 1;
 			return (1);
 		}
 		next[0] = (double)c[0] + 0.9999;
-		next[1] = (fabs(next[0] - proj->cur[0]) / fabs(v[0])) * v[1] + proj->cur[1];
+		next[1] = (fabs(next[0] - proj->cur[0]) / fabs(proj->v[0])) * proj->v[1] + proj->cur[1];
 		if (next[1] >= visible[0] && next[1] <= visible[1])
 		{
 			proj->cur[0] = next[0];

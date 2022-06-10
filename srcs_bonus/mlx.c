@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 11:50:20 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/10 13:24:44 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,8 @@ int	gettexture(t_info *info)
 {
 	if (gettext(&info->no, info) || gettext(&info->so, info) \
 			|| gettext(&info->we, info) || gettext(&info->ea, info))
+		return (1);
+	if (info->doors && add_door_text(info))
 		return (1);
 	return (0);
 }
