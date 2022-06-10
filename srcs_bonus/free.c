@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:16:16 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 17:57:24 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/10 19:54:09 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,26 @@ void	freetexture(t_info *info)
 		}
 	}
 	free(info->ea.texture);
+	i = 0;
+	if (info->door.texture)
+	{
+		while (i < info->door.numtextmax)
+		{
+			mlx_destroy_image(info->mlx, info->door.texture[i].img);
+			i++;
+		}
+	}
+	free(info->door.texture);
+	i = 0;
+	if (info->exit.texture)
+	{
+		while (i < info->exit.numtextmax)
+		{
+			mlx_destroy_image(info->mlx, info->exit.texture[i].img);
+			i++;
+		}
+	}
+	free(info->exit.texture);
 }
 
 void	freedoors(t_info *info)
@@ -103,6 +123,10 @@ void	freeinfo(t_info *info)
 	free(info->so.path);
 	free(info->we.path);
 	free(info->ea.path);
+	if (ft_strcmp(info->door.path, DOOR_PATH))
+		free(info->door.path);
+	if (ft_strcmp(info->exit.path, EXIT_PATH))
+		free(info->exit.path);
 	freeallchunk(info->lstmap);
 	freecharchar(info->map);
 	freetexture(info);

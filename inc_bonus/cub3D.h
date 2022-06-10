@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 14:28:56 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/10 19:43:56 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define NB_IMG 16
 # define STEP 0.25
 # define DOOR_PATH "textures/door.xpm"
+# define EXIT_PATH "textures/portal/"
 
 typedef struct s_map
 {
@@ -109,6 +110,7 @@ typedef struct s_info
 	t_texture		we;
 	t_texture		ea;
 	t_texture		door;
+	t_texture		exit;
 	t_door			*doors;
 	int				f;
 	int				c;

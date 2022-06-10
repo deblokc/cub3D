@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 13:06:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 18:17:55 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 19:33:12 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ void	add_door(t_info *info, int y, int x)
 
 int	add_door_text(t_info *info)
 {
+	if (!info->door.path)
+		info->door.path = DOOR_PATH;
 	info->door.numtext = 0;
-	info->door.texture[info->door.numtext].img = mlx_xpm_file_to_image(info->mlx, DOOR_PATH, \
+	info->door.texture[info->door.numtext].img = mlx_xpm_file_to_image(info->mlx, info->door.path, \
 			&info->door.texture[info->door.numtext].width, &info->door.texture[info->door.numtext].height);
 	if (!info->door.texture[info->door.numtext].img)
 		return (puterr("Impossible d'ouvrir ", info), \

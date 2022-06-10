@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 15:14:40 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/10 19:34:42 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	initinfo(t_info *info)
 	info->so.path = NULL;
 	info->we.path = NULL;
 	info->ea.path = NULL;
+	info->door.path = NULL;
+	info->exit.path = NULL;
 	info->f = -1;
 	info->c = -1;
 	info->map = NULL;
@@ -35,8 +37,8 @@ void	initinfo(t_info *info)
 	info->so.texture = NULL;
 	info->we.texture = NULL;
 	info->ea.texture = NULL;
-	info->door.texture = malloc(sizeof(t_img));
-	info->door.texture->img = NULL;
+	info->door.texture = NULL;
+	info->exit.texture = NULL;
 	info->doors = NULL;
 	info->mlx = NULL;
 	info->win = NULL;

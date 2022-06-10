@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 18:14:59 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 19:59:48 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,10 +336,13 @@ int	gettext(t_texture *text, t_info *info)
 
 int	gettexture(t_info *info)
 {
+	if (!info->door.path)
+		info->door.path = DOOR_PATH;
+	if (!info->exit.path)
+		info->exit.path = EXIT_PATH;
 	if (gettext(&info->no, info) || gettext(&info->so, info) \
-			|| gettext(&info->we, info) || gettext(&info->ea, info))
-		return (1);
-	if (info->doors && add_door_text(info))
+			|| gettext(&info->we, info) || gettext(&info->ea, info) \
+			|| gettext(&info->door, info) || gettext(&info->exit, info))
 		return (1);
 	return (0);
 }
@@ -418,6 +421,14 @@ int	loop(t_info *info)
 		info->ea.numtext = 0;
 	else
 		info->ea.numtext++;
+	if (info->door.numtext == info->door.numtextmax - 1)
+		info->door.numtext = 0;
+	else
+		info->door.numtext++;
+	if (info->exit.numtext == info->door.numtextmax - 1)
+		info->exit.numtext = 0;
+	else
+		info->exit.numtext++;
 	raisewalls(info);
 	if (info->tabmap)
 		putmaptoimg(info, &info->img[info->current_img]);
