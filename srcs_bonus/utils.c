@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 13:24:04 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 15:14:40 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ void	initinfo(t_info *info)
 	info->lstmap = NULL;
 	info->dir = 0;
 	info->printerr = 0;
-	info->no.texture.img = NULL;
-	info->so.texture.img = NULL;
-	info->we.texture.img = NULL;
-	info->ea.texture.img = NULL;
-	info->door.texture.img = NULL;
+	info->no.texture = NULL;
+	info->so.texture = NULL;
+	info->we.texture = NULL;
+	info->ea.texture = NULL;
+	info->door.texture = malloc(sizeof(t_img));
+	info->door.texture->img = NULL;
 	info->doors = NULL;
 	info->mlx = NULL;
 	info->win = NULL;
@@ -44,7 +45,7 @@ void	initinfo(t_info *info)
 int	ischr(char c)
 {
 	return (c == '0' || c == '1' || c == 'E' \
-			|| c == 'W' || c == 'N' || c == 'S' || c == '2');
+			|| c == 'W' || c == 'N' || c == 'S' || c == '2' || c == 'X');
 }
 
 int	lenof(t_map *lstmap)

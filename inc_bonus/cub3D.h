@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 15:00:35 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 14:28:56 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <sys/time.h>
+# include <sys/types.h>
+# include <dirent.h>
 # include <time.h>
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
@@ -44,13 +46,15 @@ typedef struct s_img
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		width;
+	int		height;
 }	t_img;
 
 typedef struct s_texture
 {
-	t_img	texture;
-	int		width;
-	int		height;
+	t_img	*texture;
+	int		numtext;
+	int		numtextmax;
 	char	*path;
 }	t_texture;
 
@@ -116,6 +120,9 @@ typedef struct s_info
 	char			movement;
 	int				xmax;
 	int				ymax;
+	int				click;
+	int				xmouse;
+	int				newxmouse;
 }	t_info;
 
 int		charinstr(char *str, char c);
@@ -175,5 +182,6 @@ void	add_door(t_info *info, int y, int x);
 int		add_door_text(t_info *info);
 int		is_on_door(t_info *info, t_proj *proj, int hit);
 t_door	*find_door(t_info *info, int coords[2]);
+t_map	*newchunk(char *str);
 
 #endif

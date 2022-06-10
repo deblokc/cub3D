@@ -1,4 +1,4 @@
-NO ./textures/eagle.xpm
+NO ./textures/portal.xpm
 SO ./textures/eagle.xpm
 EA ./textures/eagle.xpm
 WE ./textures/eagle.xpm
@@ -7,5 +7,5 @@ F 0,10,0
 C 0,10,0
 
 1111
-10N1
+1XN1
 1111

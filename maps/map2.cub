@@ -1,9 +1,9 @@
-NO ./textures/iench.xpm
-SO ./textures/iench.xpm
-EA ./textures/iench.xpm
-WE ./textures/iench.xpm
-F 74, 65, 42
-C 74, 65, 42
+NO ./textures/pepe/
+SO ./textures/pepe/
+EA ./textures/pepe/
+WE ./textures/pepe/
+F 0, 0, 0
+C 0, 0, 0
 
                       11111111111
                       10000000001

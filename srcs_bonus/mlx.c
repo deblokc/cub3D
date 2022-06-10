@@ -109,7 +109,7 @@ void	putmaptoimg(t_info *info, t_img *img)
 				putsquare(img, ximg, yimg, 0x00FFFF, diff);
 			if (info->map[ymap][xmap] == '1')
 				putsquare(img, ximg, yimg, 0x00FFFFFF, diff);
-			if (info->map[ymap][xmap] == '0')
+			if (info->map[ymap][xmap] == '0' || info->map[ymap][xmap] == 'X')
 				putsquare(img, ximg, yimg, 0x990000FF, diff);
 			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' \
 					|| info->map[ymap][xmap] == 'E' \
@@ -145,7 +145,7 @@ void	putminimap(t_info *info, t_img *img)
 					putsquare(img, ximg, yimg, 0x00FFFF, 25);
 				if (info->map[y][x] == '1')
 					putsquare(img, ximg, yimg, 0xFFFFFF, 25);
-				if (info->map[y][x] == '0')
+				if (info->map[y][x] == '0' || info->map[y][x] == 'X')
 					putsquare(img, ximg, yimg, 0x0000FF, 25);
 				if (info->map[y][x] == 'N' || info->map[y][x] == 'W' \
 						|| info->map[y][x] == 'E' \
@@ -277,14 +277,60 @@ int	hook_release(int keycode, t_info *info)
 
 int	gettext(t_texture *text, t_info *info)
 {
-	text->texture.img = mlx_xpm_file_to_image(info->mlx, text->path, \
-			&text->width, &text->height);
-	if (!text->texture.img)
-		return (puterr("Impossible d'ouvrir ", info), \
-				ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
-	text->texture.addr = mlx_get_data_addr(text->texture.img, \
-			&text->texture.bits_per_pixel, &text->texture.line_length,
-			&text->texture.endian);
+	DIR	*dir;
+	struct dirent	*file;
+	int	i;
+	char	*tmp;
+
+	dir = opendir(text->path);
+	text->numtext = 0;
+	if (!dir)
+	{
+		text->numtextmax = 1;
+		text->texture = malloc(sizeof(t_img) * 2);
+		text->texture[0].img = mlx_xpm_file_to_image(info->mlx, text->path, \
+				&text->texture[0].width, &text->texture[0].height);
+		if (!text->texture[0].img)
+			return (puterr("Impossible d'ouvrir ", info), \
+					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+		text->texture[0].addr = mlx_get_data_addr(text->texture[0].img, \
+				&text->texture[0].bits_per_pixel, &text->texture[0].line_length,
+				&text->texture[0].endian);
+	}
+	else
+	{
+		i = 0;
+		file = readdir(dir);
+		while (file != NULL)
+		{
+			i++;
+			file = readdir(dir);
+		}
+		i -= 2;
+		text->texture = malloc(sizeof(t_img) * (i + 1));
+		text->numtextmax = i;
+		while (i--)
+		{
+			tmp = ft_strjoin_free(ft_strdup(text->path), ft_itoa(i));
+			text->texture[i].img = mlx_xpm_file_to_image(info->mlx, tmp, \
+					&text->texture[i].width, &text->texture[i].height);
+			if (!text->texture[i].img)
+			{
+				closedir(dir);
+				free(text->texture);
+				free(tmp);
+				text->texture = NULL;
+				return (puterr("Impossible d'ouvrir ", info), \
+					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+			}
+			text->texture[i].addr = mlx_get_data_addr(text->texture[i].img, \
+					&text->texture[i].bits_per_pixel,\
+					&text->texture[i].line_length,\
+					&text->texture[i].endian);
+			free(tmp);
+		}
+	}
+	closedir(dir);
 	return (0);
 }
 
@@ -356,15 +402,71 @@ int	loop(t_info *info)
 	info->current_img += 1;
 	if (info->current_img >= NB_IMG)
 		info->current_img = 0;
+	if (info->no.numtext == info->no.numtextmax - 1)
+		info->no.numtext = 0;
+	else
+		info->no.numtext++;
+	if (info->so.numtext == info->so.numtextmax - 1)
+		info->so.numtext = 0;
+	else
+		info->so.numtext++;
+	if (info->we.numtext == info->we.numtextmax - 1)
+		info->we.numtext = 0;
+	else
+		info->we.numtext++;
+	if (info->ea.numtext == info->ea.numtextmax - 1)
+		info->ea.numtext = 0;
+	else
+		info->ea.numtext++;
 	raisewalls(info);
 	if (info->tabmap)
 		putmaptoimg(info, &info->img[info->current_img]);
 	else
 		putminimap(info, &info->img[info->current_img]);
+	if (info->click && info->xmouse != info->newxmouse)
+	{
+		info->player.angle -= ((double)(info->xmouse - info->newxmouse)/(double)WIDTH) * (M_PI/2);
+		info->xmouse = info->newxmouse;
+	}
+	if (info->map[(int)info->player.y][(int)info->player.x] == 'X')
+		closewin(info);
 	mlx_do_sync(info->mlx);
 	mlx_put_image_to_window(info->mlx, info->win, \
 			info->img[info->current_img].img, 0, 0);
 	return (0);
+}
+
+int	mouse_press(int keycode, int x, int y, t_info *info)
+{
+	(void)y;
+	if (keycode == 1)
+	{
+		info->newxmouse = x;
+		info->xmouse = x;
+		info->click = 1;
+	}
+	return (0);
+}
+
+int	mouse_release(int keycode, int x, int y, t_info *info)
+{
+	(void)y;
+	if (keycode == 1)
+	{
+		info->xmouse = x;
+		info->click = 0;
+	}
+	return (info->tabmap);
+}
+
+int	mouse_move(int x, int y, t_info *info)
+{
+	(void)y;
+	if (info->click)
+		info->newxmouse = x;
+	else
+		info->xmouse = x;
+	return (info->tabmap);
 }
 
 int	mlx(t_info *info)
@@ -373,6 +475,7 @@ int	mlx(t_info *info)
 
 	info->movement = 0;
 	info->tabmap = 0;
+	info->click = 0;
 	info->mlx = mlx_init();
 	if (gettexture(info))
 		return (1);
@@ -392,6 +495,9 @@ int	mlx(t_info *info)
 	mlx_hook(info->win, 17, 0, closewin, info);
 	mlx_hook(info->win, 2, 1L << 0, hook, info);
 	mlx_hook(info->win, 3, 1L << 1, hook_release, info);
+	mlx_hook(info->win, 4, 1L << 2, mouse_press, info);
+	mlx_hook(info->win, 5, 1L << 3, mouse_release, info);
+	mlx_hook(info->win, 6, 1L << 6, mouse_move, info);
 	mlx_loop_hook(info->mlx, loop, info);
 	mlx_loop(info->mlx);
 	return (0);

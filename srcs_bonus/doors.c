@@ -42,14 +42,15 @@ void	add_door(t_info *info, int y, int x)
 
 int	add_door_text(t_info *info)
 {
-	info->door.texture.img = mlx_xpm_file_to_image(info->mlx, DOOR_PATH, \
-			&info->door.width, &info->door.height);
-	if (!info->door.texture.img)
+	info->door.numtext = 0;
+	info->door.texture[info->door.numtext].img = mlx_xpm_file_to_image(info->mlx, DOOR_PATH, \
+			&info->door.texture[info->door.numtext].width, &info->door.texture[info->door.numtext].height);
+	if (!info->door.texture[info->door.numtext].img)
 		return (puterr("Impossible d'ouvrir ", info), \
 				ft_putstr_fd(DOOR_PATH, 2), ft_putstr_fd(" !\n", 2), 1);
-	info->door.texture.addr = mlx_get_data_addr(info->door.texture.img, \
-			&info->door.texture.bits_per_pixel, &info->door.texture.line_length,
-			&info->door.texture.endian);
+	info->door.texture->addr = mlx_get_data_addr(info->door.texture->img, \
+			&info->door.texture->bits_per_pixel, &info->door.texture->line_length,
+			&info->door.texture->endian);
 	return (0);
 }
 
