@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 16:49:09 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:14:59 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,6 @@ void	toggle_door(t_info *info)
 		proj.cur[1] = proj.delta[0] * proj.v[1] + info->player.y;
 	else
 		proj.cur[0] = proj.delta[1] * proj.v[0] + info->player.x;
-//	printf("player coords: %.2f;%.2f\n");
 	while (distance(proj.cur[0], proj.cur[1], info->player.x, info->player.y) <= 1)
 	{
 		coords[0] = (int)proj.cur[0];
@@ -223,7 +222,7 @@ void	toggle_door(t_info *info)
 		proj.door->opened_time = 0;
 		if (proj.door->motion == 0 && proj.door->visible == 100)
 			proj.door->motion = -1;
-		else if (proj.door->motion == 0)
+		else if (proj.door->motion == 0 && proj.door->visible == 0)
 			proj.door->motion = 1;
 		else if (proj.door->motion == 1)
 			proj.door->motion = -1;
@@ -311,8 +310,6 @@ void	handle_doors(t_info *info)
 			current->opened_time = 0;
 			current->visible = 0;
 			current->motion = 0;
-			printf("Coords player: %d;%d\nCoords door: %d;%d\n", (int)info->player.x, (int)info->player.y, current->x, current->y);
-			printf("Opened time:%d, visible:%d, motion:%d\n", (int)current->opened_time, (int)current->visible, (int)current->motion);
 		}
 		else
 		{
@@ -322,7 +319,7 @@ void	handle_doors(t_info *info)
 				current->visible -= 2;
 			else if (current->motion == 1)
 				current->visible += 2;
-			else if (current->visible != 100 && current->motion == 0)
+			else if (current->visible == 0 && current->motion == 0)
 				current->opened_time += 1;
 			if (current->visible < 0)
 			{

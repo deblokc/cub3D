@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 13:06:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 14:56:58 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:17:55 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	add_door(t_info *info, int y, int x)
 	t_door	*current;
 	t_door	*new_door;
 
-	printf("Adding door\n");
 	new_door = (t_door *)ft_calloc(1, sizeof(t_door));
 	if (!new_door)
 	{
@@ -28,7 +27,7 @@ void	add_door(t_info *info, int y, int x)
 	new_door->x = x;
 	new_door->y = y;
 	new_door->opened_time = 0;
-	new_door->visible = 75;
+	new_door->visible = 100;
 	new_door->motion = 0;
 	if (!info->doors)
 		info->doors = new_door;
@@ -43,7 +42,6 @@ void	add_door(t_info *info, int y, int x)
 
 int	add_door_text(t_info *info)
 {
-	printf("Has doors\n");
 	info->door.texture.img = mlx_xpm_file_to_image(info->mlx, DOOR_PATH, \
 			&info->door.width, &info->door.height);
 	if (!info->door.texture.img)
@@ -60,7 +58,11 @@ t_door *find_door(t_info *info, int coords[2])
 	t_door	*current;
 
 	current = info->doors;
-	while (current && current->x != coords[0] && current->y != coords[1])
+	while (current)
+	{
+		if (current->x == coords[0] && current->y == coords[1])
+			return (current);
 		current = current->next;
-	return (current);
+	}
+	return (NULL);
 }
