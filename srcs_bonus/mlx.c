@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 17:59:19 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/10 15:18:23 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	putmaptoimg(t_info *info, t_img *img)
 				putsquare(img, ximg, yimg, 0x00FFFF, diff);
 			if (info->map[ymap][xmap] == '1')
 				putsquare(img, ximg, yimg, 0x00FFFFFF, diff);
-			if (info->map[ymap][xmap] == '0')
+			if (info->map[ymap][xmap] == '0' || info->map[ymap][xmap] == 'X')
 				putsquare(img, ximg, yimg, 0x990000FF, diff);
 			if (info->map[ymap][xmap] == 'N' || info->map[ymap][xmap] == 'W' \
 					|| info->map[ymap][xmap] == 'E' \
@@ -145,7 +145,7 @@ void	putminimap(t_info *info, t_img *img)
 					putsquare(img, ximg, yimg, 0x00FFFF, 25);
 				if (info->map[y][x] == '1')
 					putsquare(img, ximg, yimg, 0xFFFFFF, 25);
-				if (info->map[y][x] == '0')
+				if (info->map[y][x] == '0' || info->map[y][x] == 'X')
 					putsquare(img, ximg, yimg, 0x0000FF, 25);
 				if (info->map[y][x] == 'N' || info->map[y][x] == 'W' \
 						|| info->map[y][x] == 'E' \
@@ -215,7 +215,6 @@ int	gettext(t_texture *text, t_info *info)
 	text->numtext = 0;
 	if (!dir)
 	{
-		printf("no dir\n");
 		text->numtextmax = 1;
 		text->texture = malloc(sizeof(t_img) * 2);
 		text->texture[0].img = mlx_xpm_file_to_image(info->mlx, text->path, \
@@ -310,10 +309,50 @@ int	loop(t_info *info)
 		putmaptoimg(info, &info->img[info->current_img]);
 	else
 		putminimap(info, &info->img[info->current_img]);
+	if (info->click && info->xmouse != info->newxmouse)
+	{
+		info->player.angle -= ((double)(info->xmouse - info->newxmouse)/(double)WIDTH) * (M_PI/2);
+		info->xmouse = info->newxmouse;
+	}
+	if (info->map[(int)info->player.y][(int)info->player.x] == 'X')
+		closewin(info);
 	mlx_do_sync(info->mlx);
 	mlx_put_image_to_window(info->mlx, info->win, \
 			info->img[info->current_img].img, 0, 0);
 	return (0);
+}
+
+int	mouse_press(int keycode, int x, int y, t_info *info)
+{
+	(void)y;
+	if (keycode == 1)
+	{
+		info->newxmouse = x;
+		info->xmouse = x;
+		info->click = 1;
+	}
+	return (0);
+}
+
+int	mouse_release(int keycode, int x, int y, t_info *info)
+{
+	(void)y;
+	if (keycode == 1)
+	{
+		info->xmouse = x;
+		info->click = 0;
+	}
+	return (info->tabmap);
+}
+
+int	mouse_move(int x, int y, t_info *info)
+{
+	(void)y;
+	if (info->click)
+		info->newxmouse = x;
+	else
+		info->xmouse = x;
+	return (info->tabmap);
 }
 
 int	mlx(t_info *info)
@@ -322,6 +361,7 @@ int	mlx(t_info *info)
 
 	info->movement = 0;
 	info->tabmap = 0;
+	info->click = 0;
 	info->mlx = mlx_init();
 	if (gettexture(info))
 		return (1);
@@ -341,6 +381,9 @@ int	mlx(t_info *info)
 	mlx_hook(info->win, 17, 0, closewin, info);
 	mlx_hook(info->win, 2, 1L << 0, hook, info);
 	mlx_hook(info->win, 3, 1L << 1, hook_release, info);
+	mlx_hook(info->win, 4, 1L << 2, mouse_press, info);
+	mlx_hook(info->win, 5, 1L << 3, mouse_release, info);
+	mlx_hook(info->win, 6, 1L << 6, mouse_move, info);
 	mlx_loop_hook(info->mlx, loop, info);
 	mlx_loop(info->mlx);
 	return (0);

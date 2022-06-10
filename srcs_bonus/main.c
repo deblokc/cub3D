@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 13:37:26 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/10 15:29:59 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	printerrcoo(char *str, int i, int j, t_info *info)
 	tmp = ft_itoa(j);
 	ft_putstr_fd(tmp, 2);
 	ft_putstr_fd(" !\n", 2);
+	free(tmp);
 }
 
 t_map	*getcurrent(char *path)

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:18:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/09 19:55:20 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/10 15:25:34 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,11 @@ void	dirmap(char **map, int i, int j, t_info *info)
 	}
 }
 
+int	isfloor(char c)
+{
+	return (c == '0' || c == 'X' || c == 'E' || c == 'W' || c == 'N' || c == 'S');
+}
+
 int	checkdoor(char **map, int i, int j)
 {
 	int	x;
@@ -70,9 +75,9 @@ int	checkdoor(char **map, int i, int j)
 		y++;
 	if (i == 0 || j == 0 || i >= y - 1 || j >= x - 1)
 		return (0);
-	if (map[i][j - 1] == '1' && map[i][j + 1] == '1' && map[i + 1][j] == '0' && map[i - 1][j] == '0')
+	if (map[i][j - 1] == '1' && map[i][j + 1] == '1' && isfloor(map[i + 1][j]) && isfloor(map[i - 1][j]))
 		return (1);
-	if (map[i - 1][j] == '1' && map[i + 1][j] == '1' && map[i][j + 1] == '0' && map[i][j - 1] == '0')
+	if (map[i - 1][j] == '1' && map[i + 1][j] == '1' && isfloor(map[i][j + 1]) && isfloor(map[i][j - 1]))
 		return (1);
 	return (0);
 }
@@ -85,7 +90,7 @@ void	checkcharmap(char **map, int i, int j, t_info *info)
 		info->isvalid = 0;
 	}
 	if (map[i][j] == '0' || map[i][j] == 'E' || map[i][j] == 'W' \
-			|| map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == '2')
+			|| map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == '2' || map[i][j] == 'X')
 	{
 		if (!checkcub(map, i, j))
 		{
