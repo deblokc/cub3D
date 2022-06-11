@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/11 11:53:28 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/11 13:22:08 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,50 @@
 
 void	handle_exit(t_info *info, t_proj *proj)
 {
-	double	exit_center[2];
-	double	vect[2];
+	double	coords[2];
 	double	coeff;
+	double	angle;
+	double	current_distance;
 
 	if (!proj->exit_distance)
 	{
-		exit_center[0] = floor(proj->cur[0]) + 0.5;
-		exit_center[1] = floor(proj->cur[1]) + 0.5;
-		proj->exit_distance = distance(info->player.x, info->player.y, exit_center[0], exit_center[1]);
-		vect[0] = -(exit_center[1] - info->player.y);
-		vect[1] = exit_center[0] - info->player.x;
-		coeff = sqrt(pow(0.5, 2) / (pow(vect[0], 2) + pow(vect[1], 2)));
-		proj->exit_ends[0] = coeff * vect[0] + exit_center[0];
-		proj->exit_ends[1] = coeff * vect[1] + exit_center[1];
-		proj->exit_ends[2] = -coeff * vect[0] + exit_center[0];
-		proj->exit_ends[3] = -coeff * vect[1] + exit_center[1];
-		printf("Exit ends: %.4f;%.4f - %.4f;%.4f\n", proj->exit_ends[0], proj->exit_ends[1], proj->exit_ends[2], proj->exit_ends[3]);
+		proj->exit_center[0] = floor(proj->cur[0]) + 0.5;
+		proj->exit_center[1] = floor(proj->cur[1]) + 0.5;
+		proj->exit_distance = distance(info->player.x, info->player.y, proj->exit_center[0], proj->exit_center[1]);
+		proj->exit_v[0] = -(proj->exit_center[1] - info->player.y);
+		proj->exit_v[1] = proj->exit_center[0] - info->player.x;
+		coeff = sqrt(pow(0.5, 2) / (pow(proj->exit_v[0], 2) + pow(proj->exit_v[1], 2)));
+		proj->exit_ends[0] = coeff * proj->exit_v[0] + proj->exit_center[0];
+		proj->exit_ends[1] = coeff *  proj->exit_v[1] + proj->exit_center[1];
+		proj->exit_ends[2] = -coeff * proj->exit_v[0] + proj->exit_center[0];
+		proj->exit_ends[3] = -coeff * proj->exit_v[1] + proj->exit_center[1];
+		angle = vector_angle(proj->exit_v, proj->v);
+		if (fabs(angle) < 0.0001)
+			current_distance = proj->exit_distance;
+		else
+			current_distance = proj->exit_distance / cos(angle);
+		proj->exit_height = (distance(0, 0, proj->v[0], proj->v[1]) / current_distance) * ((double)WIDTH / 2);
+		proj->exit_st_px = (int)floor((((double)HEIGHT - 1) / 2) \
+			- ((double)proj->exit_height / 2));
+		proj->exit_end_px = proj->exit_st_px + proj->exit_height - 1;
+		proj->exit_step = ((double)1 / (double)proj->exit_height) \
+				* (double)(info->exit.texture[info->exit.numtext].height);
 	}
+	angle = vector_angle(proj->exit_v, proj->v);
+	if (fabs(angle) < 0.0001)
+		current_distance = proj->exit_distance;
+	else
+		current_distance = proj->exit_distance / cos(angle);
+	coeff = sqrt(pow(current_distance, 2) / (pow(proj->v[0], 2) + pow(proj->v[1], 2)));
+	coords[0] = info->player.x + proj->v[0] * coeff;
+	coords[1] = info->player.y + proj->v[1] * coeff;
+	if (distance(coords[0], coords[1], proj->exit_center[0], proj->exit_center[1]) > 0.5)
+		return ;
+	proj->has_exit = 1;
+	proj->exit_percent_x = distance(proj->exit_ends[0], proj->exit_ends[1], coords[0], coords[1]);
+	if (proj->exit_percent_x >= 1)
+		proj->exit_percent_x = 0.9999;
+	proj->exit_percent_x = floor(proj->exit_percent_x * info->exit.texture[info->exit.numtext].width);
 }
 
 static void	get_next_edge(t_proj *proj, int fixed)

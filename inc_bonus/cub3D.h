@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/11 11:20:09 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/11 13:07:39 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ typedef struct s_proj
 	int			wall_height;
 	int			start_pixel;
 	int			end_pixel;
+	int			exit_st_px;
+	int			exit_end_px;
 	char		*origin;
 	char		*dst;
 	char		is_door;
@@ -95,9 +97,12 @@ typedef struct s_proj
 	double		percent_x;
 	double		step;
 	double		exit_distance;
+	double		exit_v[2];
 	double		exit_height;
+	double		exit_center[2];
 	double		exit_ends[4];
 	double		exit_percent_x;
+	double		exit_step;
 	t_door		*door;
 	t_texture	target;
 }	t_proj;
@@ -191,5 +196,6 @@ int		is_on_door(t_info *info, t_proj *proj, int hit);
 t_door	*find_door(t_info *info, int coords[2]);
 t_map	*newchunk(char *str);
 double	distance(double x0, double y0, double x1, double y1);
+double	vector_angle(double v0[2], double v1[2]);
 
 #endif
