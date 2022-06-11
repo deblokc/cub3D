@@ -6,11 +6,33 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 14:59:55 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/11 11:53:28 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+void	handle_exit(t_info *info, t_proj *proj)
+{
+	double	exit_center[2];
+	double	vect[2];
+	double	coeff;
+
+	if (!proj->exit_distance)
+	{
+		exit_center[0] = floor(proj->cur[0]) + 0.5;
+		exit_center[1] = floor(proj->cur[1]) + 0.5;
+		proj->exit_distance = distance(info->player.x, info->player.y, exit_center[0], exit_center[1]);
+		vect[0] = -(exit_center[1] - info->player.y);
+		vect[1] = exit_center[0] - info->player.x;
+		coeff = sqrt(pow(0.5, 2) / (pow(vect[0], 2) + pow(vect[1], 2)));
+		proj->exit_ends[0] = coeff * vect[0] + exit_center[0];
+		proj->exit_ends[1] = coeff * vect[1] + exit_center[1];
+		proj->exit_ends[2] = -coeff * vect[0] + exit_center[0];
+		proj->exit_ends[3] = -coeff * vect[1] + exit_center[1];
+		printf("Exit ends: %.4f;%.4f - %.4f;%.4f\n", proj->exit_ends[0], proj->exit_ends[1], proj->exit_ends[2], proj->exit_ends[3]);
+	}
+}
 
 static void	get_next_edge(t_proj *proj, int fixed)
 {
@@ -47,6 +69,8 @@ static int	straight_line(t_info *info, t_proj *proj)
 			return (draw_wall(info, proj, 1));
 		else
 		{
+			if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == 'X')
+				handle_exit(info, proj);
 			proj->cur[1] += 1;
 			if (proj->v[1] < 0)
 				proj->cur[1] -= 2;
@@ -59,6 +83,8 @@ static int	straight_line(t_info *info, t_proj *proj)
 			return (draw_wall(info, proj, 2));
 		else
 		{
+			if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == 'X')
+				handle_exit(info, proj);
 			proj->cur[0] += 1;
 			if (proj->v[0] < 0)
 				proj->cur[0] -= 2;
@@ -173,6 +199,8 @@ static int	angled_view(t_info *info, t_proj *proj, int side)
 			|| is_in_corner(info, proj->cur, proj->v, 2)
 			|| is_on_door(info, proj, 2))
 			return (draw_wall(info, proj, 2));
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == 'X')
+			handle_exit(info, proj);
 	}
 	else
 	{
@@ -181,6 +209,8 @@ static int	angled_view(t_info *info, t_proj *proj, int side)
 			|| is_in_corner(info, proj->cur, proj->v, 1)
 			|| is_on_door(info, proj, 1))
 			return (draw_wall(info, proj, 1));
+		if (info->map[(int)proj->cur[1]][(int)proj->cur[0]] == 'X')
+			handle_exit(info, proj);
 	}
 	proj->prev[0] = proj->cur[0];
 	proj->prev[1] = proj->cur[1];

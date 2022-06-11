@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 13:33:24 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/09 15:08:39 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/11 11:08:01 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,12 @@ void	raisewalls(t_info *info)
 		info->player.angle = 2 * M_PI;
 	get_proj_screen(info, &proj);
 	get_dir_v(&proj);
+	proj.exit_distance = 0;
 	proj.x = 0;
 	while (proj.x < WIDTH)
 	{
 		proj.is_door = 0;
+		proj.has_exit = 0;
 		proj.v[0] = (proj.proj_screen[0] + proj.dir_v[0] * proj.x) \
 					- info->player.x;
 		proj.v[1] = (proj.proj_screen[1] + proj.dir_v[1] * proj.x) \

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 19:59:48 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/11 11:20:54 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,15 +160,6 @@ void	putminimap(t_info *info, t_img *img)
 	}
 	putplayer(img, 50 + (25 * (info->player.x - floor(info->player.x))), \
 			50 + (25 * (info->player.y - floor(info->player.y))), 0xFF0000);
-}
-
-double	distance(double x0, double y0, double x1, double y1)
-{
-	if (fabs(x1 - x0) < 0.0001)
-		return (fabs(y1 - y0));
-	if (fabs(y1 - y0) < 0.0001)
-		return (fabs(x1 - x0));
-	return (hypot(fabs(x1 - x0), fabs(y1 - y0)));
 }
 
 void	toggle_door(t_info *info)
