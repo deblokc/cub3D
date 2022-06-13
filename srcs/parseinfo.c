@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 16:24:32 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 13:26:50 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,23 @@ t_info	errdeligne(t_info info, t_map *current)
 			freeallchunk(current), info);
 }
 
+int	checkline(char *line, t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!ischr(line[i]))
+		{
+			puterr("Invalide char in : ", info);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
 t_info	getinfo(t_map *map)
 {
 	t_info	info;
@@ -81,6 +98,10 @@ t_info	getinfo(t_map *map)
 			return (errdeligne(info, current));
 		else if (ft_strcmp_free(ft_strtrim(current->ligne, " "), "\n"))
 		{
+			if (!checkline(current->ligne, &info))
+				ft_putstr_fd(current->ligne, 2);
+			else if (info.c < 0 || info.f < 0 || info.no.path || info.so.path || info.we.path || info.ea.path)
+				puterr("Il manque des valeurs avant la declaration de la map\n", &info);
 			info.lstmap = current;
 			break ;
 		}

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 11:55:40 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 13:39:24 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,14 +331,35 @@ int	gettext(t_texture *text, t_info *info)
 
 int	gettexture(t_info *info)
 {
+	int	dpath;
+	int	xpath;
+
+	dpath = 0;
+	xpath = 0;
 	if (!info->door.path)
+	{
 		info->door.path = DOOR_PATH;
+		dpath = 1;
+	}
 	if (!info->exit.path)
+	{
 		info->exit.path = EXIT_PATH;
+		xpath = 1;
+	}
 	if (gettext(&info->no, info) || gettext(&info->so, info) \
 			|| gettext(&info->we, info) || gettext(&info->ea, info) \
 			|| gettext(&info->door, info) || gettext(&info->exit, info))
+	{
+		if (dpath)
+			info->door.path = NULL;
+		if (xpath)
+			info->exit.path = NULL;
 		return (1);
+	}
+	if (dpath)
+		info->door.path = NULL;
+	if (xpath)
+		info->exit.path = NULL;
 	return (0);
 }
 
