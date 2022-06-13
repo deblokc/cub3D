@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 12:20:58 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 18:47:43 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 15:19:22 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	closewin(t_info *info)
 
 int	iswall(t_info *info, double y, double x)
 {
-	t_door *tmp;
-	int	relou[2];
+	t_door	*tmp;
+	int		relou[2];
 
 	if (info->map[(int)floor(y)][(int)floor(x)] == '1')
 		return (1);

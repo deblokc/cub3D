@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/11 13:07:39 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:38:11 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,5 +197,9 @@ t_door	*find_door(t_info *info, int coords[2]);
 t_map	*newchunk(char *str);
 double	distance(double x0, double y0, double x1, double y1);
 double	vector_angle(double v0[2], double v1[2]);
+void	handle_exit(t_info *info, t_proj *proj);
+void	draw_exit(t_info *info, t_proj *proj);
+int		set_door_texture(t_info *info, t_proj *proj, int vect);
+void	get_x_px_origin(t_proj *proj);
 
 #endif

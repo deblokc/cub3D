@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/13 11:27:27 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:38:23 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,43 +16,29 @@ static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 {
 	if (hit == 1)
 	{
-		if (proj->is_door)
+		if (set_door_texture(info, proj, 0))
+			return ;
+		proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
+		proj->target = info->no;
+		if (proj->v[1] > 0)
 		{
-			proj->target = info->door;
-			proj->percent_x = (double)(100 - proj->door->visible) / 100 + (proj->cur[0] - floor(proj->cur[0]));
-		}		
-		else
-		{
-			proj->percent_x = (proj->cur[0] - floor(proj->cur[0])) / 1;
-			proj->target = info->no;
-			if (proj->v[1] > 0)
-			{
-				proj->percent_x = 1 - proj->percent_x;
-				proj->target = info->so;
-			}
+			proj->percent_x = 1 - proj->percent_x;
+			proj->target = info->so;
 		}
 	}
 	else
 	{
-		if (proj->is_door)
+		if (set_door_texture(info, proj, 1))
+			return ;
+		proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
+		proj->target = info->ea;
+		if (proj->v[0] < 0)
 		{
-			proj->target = info->door;
-			proj->percent_x = (double)(100 - proj->door->visible) / 100 + (proj->cur[1] - floor(proj->cur[1]));
-		}
-		else
-		{
-			proj->percent_x = (proj->cur[1] - floor(proj->cur[1])) / 1;
-			proj->target = info->ea;
-			if (proj->v[0] < 0)
-			{
-				proj->percent_x = 1 - proj->percent_x;
-				proj->target = info->we;
-			}
+			proj->percent_x = 1 - proj->percent_x;
+			proj->target = info->we;
 		}
 	}
-	if (proj->percent_x >= 1)
-		proj->percent_x = 0.9999;
-	proj->percent_x = floor(proj->percent_x * (double)proj->target.texture[proj->target.numtext].width);
+	get_x_px_origin(proj);
 }
 
 static void	init_strip(t_info *info, t_proj *proj)
@@ -62,8 +48,9 @@ static void	init_strip(t_info *info, t_proj *proj)
 	proj->end_pixel = proj->start_pixel + proj->wall_height - 1;
 	proj->dst = info->img[info->current_img].addr + proj->x \
 				* (info->img[info->current_img].bits_per_pixel / 8);
-	proj->origin = proj->target.texture[proj->target.numtext].addr +(int)proj->percent_x \
-				* (proj->target.texture[proj->target.numtext].bits_per_pixel / 8);
+	proj->origin = proj->target.texture[proj->target.numtext].addr \
+			+ (int)proj->percent_x \
+			* (proj->target.texture[proj->target.numtext].bits_per_pixel / 8);
 	proj->step = ((double)1 / (double)proj->wall_height) \
 				* (double)(proj->target.texture[proj->target.numtext].height);
 }
@@ -90,43 +77,6 @@ static void	ceiling_and_floor(t_info *info, t_proj *proj, int *it, char type)
 	}
 }
 
-static void	draw_exit(t_info *info, t_proj *proj)
-{
-	int				it;
-	double			current;
-	int				percent_y;
-	unsigned int	val;
-
-	proj->dst = info->img[info->current_img].addr + proj->x \
-				* (info->img[info->current_img].bits_per_pixel / 8);
-	proj->origin = info->exit.texture[info->exit.numtext].addr +(int)proj->exit_percent_x \
-				* (info->exit.texture[info->exit.numtext].bits_per_pixel / 8);
-	if (proj->exit_st_px < 0)
-	{
-		it = 0;
-		current = (double)(it - proj->exit_st_px) * proj->exit_step;
-	}
-	else
-	{
-		it = proj->exit_st_px;
-		current = 0;
-	}
-	proj->dst += info->img[info->current_img].line_length * it;
-	while (it < HEIGHT && it <= proj->exit_end_px)
-	{
-		percent_y = (int)current;
-		if (percent_y == info->exit.texture[info->exit.numtext].height)
-			percent_y = info->exit.texture[info->exit.numtext].height - 1;
-		val = *(unsigned int *)(proj->origin \
-				+ (int)percent_y * info->exit.texture[info->exit.numtext].line_length);
-		if (!(val >> 24))
-			*(unsigned int *)proj->dst = val;
-		proj->dst += info->img[info->current_img].line_length;
-		current += proj->exit_step;
-		it++;
-	}
-}
-
 static void	draw_strip(t_info *info, t_proj *proj, int hit)
 {
 	int				it;
@@ -144,7 +94,8 @@ static void	draw_strip(t_info *info, t_proj *proj, int hit)
 		if (percent_y == proj->target.texture[proj->target.numtext].height)
 			percent_y = proj->target.texture[proj->target.numtext].height - 1;
 		*(unsigned int *)proj->dst = *(unsigned int *)(proj->origin \
-				+ (int)percent_y * proj->target.texture[proj->target.numtext].line_length);
+					+ (int)percent_y \
+					* proj->target.texture[proj->target.numtext].line_length);
 		proj->dst += info->img[info->current_img].line_length;
 		current += proj->step;
 		it++;

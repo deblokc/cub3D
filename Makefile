@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/30 11:59:08 by tnaton            #+#    #+#              #
-#    Updated: 2022/06/11 11:20:32 by bdetune          ###   ########.fr        #
+#    Updated: 2022/06/13 15:09:00 by bdetune          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,9 +26,9 @@ OBJDIR := objs
 
 OBJDIR_BONUS := objs_bonus
 
-SRC = main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c getwalls.c draw_wall.c
+SRC = main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c getwalls.c draw_wall.c hooks.c
 
-SRC_BONUS =  main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c getwalls.c draw_wall.c doors.c utils2.c
+SRC_BONUS =  main.c checkmap.c free.c parseinfo.c parseinfo2.c parsemap.c mlx.c mlx2.c mlx3.c mlx4.c utils.c raisewalls.c check_view_integrity.c getwalls.c draw_wall.c doors.c utils2.c exit.c doors2.c
 
 source = $(addprefix srcs/,$(SRC))
 

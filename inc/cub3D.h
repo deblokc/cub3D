@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 18:38:44 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 12:48:13 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,5 +156,7 @@ int		ft_strlen_map(char *str);
 int		check_view_integrity(t_info *info, double cur[2], double v[2], int hit);
 void	get_walls(t_info *info, t_proj *proj);
 int		draw_wall(t_info *info, t_proj *proj, int hit);
+int		hook(int keycode, t_info *info);
+int		hook_release(int keycode, t_info *info);
 
 #endif

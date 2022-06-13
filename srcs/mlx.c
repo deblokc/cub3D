@@ -6,49 +6,11 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 16:51:48 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 12:48:38 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-
-int	hook(int keycode, t_info *info)
-{
-	if (keycode == 65307)
-		closewin(info);
-	if (keycode == 119)
-		info->movement += 1;
-	if (keycode == 115)
-		info->movement += (1 << 1);
-	if (keycode == 97)
-		info->movement += (1 << 2);
-	if (keycode == 100)
-		info->movement += (1 << 3);
-	if (keycode == 65363)
-		info->movement += (1 << 4);
-	if (keycode == 65361)
-		info->movement += (1 << 5);
-	loop(info);
-	return (0);
-}
-
-int	hook_release(int keycode, t_info *info)
-{
-	if (keycode == 119)
-		info->movement -= 1;
-	if (keycode == 115)
-		info->movement -= (1 << 1);
-	if (keycode == 97)
-		info->movement -= (1 << 2);
-	if (keycode == 100)
-		info->movement -= (1 << 3);
-	if (keycode == 65363)
-		info->movement -= (1 << 4);
-	if (keycode == 65361)
-		info->movement -= (1 << 5);
-	loop(info);
-	return (0);
-}
 
 int	gettext(t_texture *text, t_info *info)
 {

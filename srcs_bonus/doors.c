@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 13:06:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 19:33:12 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 13:41:33 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,20 @@ int	add_door_text(t_info *info)
 	if (!info->door.path)
 		info->door.path = DOOR_PATH;
 	info->door.numtext = 0;
-	info->door.texture[info->door.numtext].img = mlx_xpm_file_to_image(info->mlx, info->door.path, \
-			&info->door.texture[info->door.numtext].width, &info->door.texture[info->door.numtext].height);
+	info->door.texture[info->door.numtext].img = \
+			mlx_xpm_file_to_image(info->mlx, info->door.path, \
+			&info->door.texture[info->door.numtext].width, \
+			&info->door.texture[info->door.numtext].height);
 	if (!info->door.texture[info->door.numtext].img)
 		return (puterr("Impossible d'ouvrir ", info), \
 				ft_putstr_fd(DOOR_PATH, 2), ft_putstr_fd(" !\n", 2), 1);
 	info->door.texture->addr = mlx_get_data_addr(info->door.texture->img, \
-			&info->door.texture->bits_per_pixel, &info->door.texture->line_length,
-			&info->door.texture->endian);
+			&info->door.texture->bits_per_pixel, \
+			&info->door.texture->line_length, &info->door.texture->endian);
 	return (0);
 }
 
-t_door *find_door(t_info *info, int coords[2])
+t_door	*find_door(t_info *info, int coords[2])
 {
 	t_door	*current;
 

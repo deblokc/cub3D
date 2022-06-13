@@ -5,9 +5,10 @@ WE ./textures/eagle.xpm
 
 F 0,10,0
 C 0,10,0
+X textures/portal/
 
-D ./textures/portal/
-X ./textures/portal/
 11111
-1X2N1
+102N1
 11111
+
+
