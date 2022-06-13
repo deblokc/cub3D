@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/11 11:20:54 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 11:29:09 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -416,7 +416,7 @@ int	loop(t_info *info)
 		info->door.numtext = 0;
 	else
 		info->door.numtext++;
-	if (info->exit.numtext == info->door.numtextmax - 1)
+	if (info->exit.numtext == info->exit.numtextmax - 1)
 		info->exit.numtext = 0;
 	else
 		info->exit.numtext++;

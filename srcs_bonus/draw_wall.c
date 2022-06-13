@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/10 14:17:45 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 11:27:27 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,43 @@ static void	ceiling_and_floor(t_info *info, t_proj *proj, int *it, char type)
 	}
 }
 
+static void	draw_exit(t_info *info, t_proj *proj)
+{
+	int				it;
+	double			current;
+	int				percent_y;
+	unsigned int	val;
+
+	proj->dst = info->img[info->current_img].addr + proj->x \
+				* (info->img[info->current_img].bits_per_pixel / 8);
+	proj->origin = info->exit.texture[info->exit.numtext].addr +(int)proj->exit_percent_x \
+				* (info->exit.texture[info->exit.numtext].bits_per_pixel / 8);
+	if (proj->exit_st_px < 0)
+	{
+		it = 0;
+		current = (double)(it - proj->exit_st_px) * proj->exit_step;
+	}
+	else
+	{
+		it = proj->exit_st_px;
+		current = 0;
+	}
+	proj->dst += info->img[info->current_img].line_length * it;
+	while (it < HEIGHT && it <= proj->exit_end_px)
+	{
+		percent_y = (int)current;
+		if (percent_y == info->exit.texture[info->exit.numtext].height)
+			percent_y = info->exit.texture[info->exit.numtext].height - 1;
+		val = *(unsigned int *)(proj->origin \
+				+ (int)percent_y * info->exit.texture[info->exit.numtext].line_length);
+		if (!(val >> 24))
+			*(unsigned int *)proj->dst = val;
+		proj->dst += info->img[info->current_img].line_length;
+		current += proj->exit_step;
+		it++;
+	}
+}
+
 static void	draw_strip(t_info *info, t_proj *proj, int hit)
 {
 	int				it;
@@ -113,6 +150,8 @@ static void	draw_strip(t_info *info, t_proj *proj, int hit)
 		it++;
 	}
 	ceiling_and_floor(info, proj, &it, 'f');
+	if (proj->has_exit)
+		draw_exit(info, proj);
 }
 
 int	draw_wall(t_info *info, t_proj *proj, int hit)

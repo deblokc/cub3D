@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/11 13:22:08 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 11:27:39 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,8 @@ void	handle_exit(t_info *info, t_proj *proj)
 		proj->exit_ends[1] = coeff *  proj->exit_v[1] + proj->exit_center[1];
 		proj->exit_ends[2] = -coeff * proj->exit_v[0] + proj->exit_center[0];
 		proj->exit_ends[3] = -coeff * proj->exit_v[1] + proj->exit_center[1];
-		angle = vector_angle(proj->exit_v, proj->v);
-		if (fabs(angle) < 0.0001)
-			current_distance = proj->exit_distance;
-		else
-			current_distance = proj->exit_distance / cos(angle);
-		proj->exit_height = (distance(0, 0, proj->v[0], proj->v[1]) / current_distance) * ((double)WIDTH / 2);
-		proj->exit_st_px = (int)floor((((double)HEIGHT - 1) / 2) \
-			- ((double)proj->exit_height / 2));
-		proj->exit_end_px = proj->exit_st_px + proj->exit_height - 1;
-		proj->exit_step = ((double)1 / (double)proj->exit_height) \
-				* (double)(info->exit.texture[info->exit.numtext].height);
+		proj->exit_v[0] = proj->exit_center[0] - info->player.x;
+		proj->exit_v[1] = proj->exit_center[1] - info->player.y;
 	}
 	angle = vector_angle(proj->exit_v, proj->v);
 	if (fabs(angle) < 0.0001)
@@ -58,6 +49,13 @@ void	handle_exit(t_info *info, t_proj *proj)
 	if (proj->exit_percent_x >= 1)
 		proj->exit_percent_x = 0.9999;
 	proj->exit_percent_x = floor(proj->exit_percent_x * info->exit.texture[info->exit.numtext].width);
+	proj->exit_height = (distance(0, 0, proj->v[0], proj->v[1]) / current_distance) * ((double)WIDTH / 2);
+	proj->exit_st_px = (int)floor((((double)HEIGHT - 1) / 2) \
+			- ((double)proj->exit_height / 2));
+	proj->exit_end_px = proj->exit_st_px + proj->exit_height - 1;
+	proj->exit_step = ((double)1 / (double)proj->exit_height) \
+			* (double)(info->exit.texture[info->exit.numtext].height);
+
 }
 
 static void	get_next_edge(t_proj *proj, int fixed)
