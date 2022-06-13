@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 11:29:09 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 11:55:40 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,8 +282,12 @@ int	gettext(t_texture *text, t_info *info)
 		text->texture[0].img = mlx_xpm_file_to_image(info->mlx, text->path, \
 				&text->texture[0].width, &text->texture[0].height);
 		if (!text->texture[0].img)
+		{
+			free(text->texture);
+			text->texture = NULL;
 			return (puterr("Impossible d'ouvrir ", info), \
 					ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
+		}
 		text->texture[0].addr = mlx_get_data_addr(text->texture[0].img, \
 				&text->texture[0].bits_per_pixel, &text->texture[0].line_length,
 				&text->texture[0].endian);
