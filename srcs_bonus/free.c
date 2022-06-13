@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:16:16 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 13:40:00 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 16:09:14 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,70 +37,30 @@ void	freecharchar(char **lst)
 	}
 }
 
-void	freetexture(t_info *info)
+void	freetext(t_texture text, void *mlx)
 {
 	int	i;
 
 	i = 0;
-	if (info->no.texture)
+	if (text.texture)
 	{
-		while (i < info->no.numtextmax)
+		while (i < text.numtextmax)
 		{
-			mlx_destroy_image(info->mlx, info->no.texture[i].img);
+			mlx_destroy_image(mlx, text.texture[i].img);
 			i++;
 		}
 	}
-	free(info->no.texture);
-	i = 0;
-	if (info->so.texture)
-	{
-		while (i < info->so.numtextmax)
-		{
-			mlx_destroy_image(info->mlx, info->so.texture[i].img);
-			i++;
-		}
-	}
-	free(info->so.texture);
-	i = 0;
-	if (info->we.texture)
-	{
-		while (i < info->we.numtextmax)
-		{
-			mlx_destroy_image(info->mlx, info->we.texture[i].img);
-			i++;
-		}
-	}
-	free(info->we.texture);
-	i = 0;
-	if (info->ea.texture)
-	{
-		while (i < info->ea.numtextmax)
-		{
-			mlx_destroy_image(info->mlx, info->ea.texture[i].img);
-			i++;
-		}
-	}
-	free(info->ea.texture);
-	i = 0;
-	if (info->door.texture)
-	{
-		while (i < info->door.numtextmax)
-		{
-			mlx_destroy_image(info->mlx, info->door.texture[i].img);
-			i++;
-		}
-	}
-	free(info->door.texture);
-	i = 0;
-	if (info->exit.texture)
-	{
-		while (i < info->exit.numtextmax)
-		{
-			mlx_destroy_image(info->mlx, info->exit.texture[i].img);
-			i++;
-		}
-	}
-	free(info->exit.texture);
+	free(text.texture);
+}
+
+void	freetexture(t_info *info)
+{
+	freetext(info->no, info->mlx);
+	freetext(info->so, info->mlx);
+	freetext(info->we, info->mlx);
+	freetext(info->ea, info->mlx);
+	freetext(info->door, info->mlx);
+	freetext(info->exit, info->mlx);
 }
 
 void	freedoors(t_info *info)

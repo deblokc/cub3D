@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 12:48:13 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 17:49:56 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@
 # define HEIGHT 1300
 # define NB_IMG 16
 # define STEP 0.25
+
+typedef struct s_square
+{
+	int				x;
+	int				y;
+	unsigned int	color;
+	int				diff;
+}	t_square;
 
 typedef struct s_map
 {

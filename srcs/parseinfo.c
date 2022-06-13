@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 13:26:50 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 16:04:46 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void	printerr(t_info *info)
 		puterr("Erreur sur la ligne WE\n", info);
 	if (!info->ea.path)
 		puterr("Erreur sur la ligne EA\n", info);
-	if (info->f < 0)
+	if (info->f == -1)
 		puterr("Erreur sur la ligne F\n", info);
-	if (info->c < 0)
+	if (info->c == -1)
 		puterr("Erreur sur la ligne C\n", info);
 }
 
@@ -38,9 +38,9 @@ int	getlineinfo(t_map *current, t_info *info)
 		info->we.path = getlaststr(current->ligne);
 	else if (substrinstr(current->ligne, "EA") && !info->ea.path)
 		info->ea.path = getlaststr(current->ligne);
-	else if (charinstr(current->ligne, 'F') && info->f == -1)
+	else if (charinstr(current->ligne, 'F') && info->f == -2)
 		info->f = getlist(getlaststr(current->ligne));
-	else if (charinstr(current->ligne, 'C') && info->c == -1)
+	else if (charinstr(current->ligne, 'C') && info->c == -2)
 		info->c = getlist(getlaststr(current->ligne));
 	else
 		return (0);
@@ -70,11 +70,13 @@ int	checkline(char *line, t_info *info)
 	int	i;
 
 	i = 0;
+	info->isvalid = 1;
 	while (line[i])
 	{
-		if (!ischr(line[i]))
+		if (!ischr(line[i]) && line[i] != '\n')
 		{
-			puterr("Invalide char in : ", info);
+			puterr("Invalide char in first line of map\n", info);
+			info->isvalid = 0;
 			return (0);
 		}
 		i++;
@@ -98,10 +100,7 @@ t_info	getinfo(t_map *map)
 			return (errdeligne(info, current));
 		else if (ft_strcmp_free(ft_strtrim(current->ligne, " "), "\n"))
 		{
-			if (!checkline(current->ligne, &info))
-				ft_putstr_fd(current->ligne, 2);
-			else if (info.c < 0 || info.f < 0 || info.no.path || info.so.path || info.we.path || info.ea.path)
-				puterr("Il manque des valeurs avant la declaration de la map\n", &info);
+			checkline(current->ligne, &info);
 			info.lstmap = current;
 			break ;
 		}

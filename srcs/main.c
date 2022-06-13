@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/07 14:43:14 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:51:01 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,13 @@ int	main(int ac, char **av)
 		return (1);
 	info = getinfo(map);
 	if (!info.no.path || !info.so.path || !info.we.path || !info.ea.path \
-			|| info.f < 0 || info.c < 0 || !info.lstmap)
+			|| info.f == -1 || info.c == -1 || !info.lstmap || !info.isvalid)
 		return (freelstmap(info.lstmap), freeinfo(&info), 1);
 	info.map = parsemap(info.lstmap);
+	if (info.f == -2)
+		return (puterr("F not set !\n", &info), freeinfo(&info), 1);
+	if (info.c == -2)
+		return (puterr("C not set !\n", &info), freeinfo(&info), 1);
 	if (!info.map || !isvalid(info.map, &info))
 		return (freeinfo(&info), 1);
 	if (mlx(&info))

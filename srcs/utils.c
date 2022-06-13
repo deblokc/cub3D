@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/08 20:44:40 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 15:30:37 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	initinfo(t_info *info)
 	info->so.path = NULL;
 	info->we.path = NULL;
 	info->ea.path = NULL;
-	info->f = -1;
-	info->c = -1;
+	info->f = -2;
+	info->c = -2;
 	info->map = NULL;
 	info->lstmap = NULL;
 	info->dir = 0;
