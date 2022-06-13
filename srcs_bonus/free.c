@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:16:16 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 16:09:14 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 18:51:32 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,6 @@ void	freetext(t_texture text, void *mlx)
 		}
 	}
 	free(text.texture);
-}
-
-void	freetexture(t_info *info)
-{
-	freetext(info->no, info->mlx);
-	freetext(info->so, info->mlx);
-	freetext(info->we, info->mlx);
-	freetext(info->ea, info->mlx);
-	freetext(info->door, info->mlx);
-	freetext(info->exit, info->mlx);
-}
-
-void	freedoors(t_info *info)
-{
-	t_door	*current;
-	t_door	*next;
-
-	current = info->doors;
-	while (current)
-	{
-		next = current->next;
-		free(current);
-		current = next;
-	}
 }
 
 void	freeinfo(t_info *info)

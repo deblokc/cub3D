@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hooks.c                                            :+:      :+:    :+:   */
+/*   hook.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/13 12:47:11 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/13 18:49:11 by tnaton           ###   ########.fr       */
+/*   Created: 2022/06/13 19:03:10 by tnaton            #+#    #+#             */
+/*   Updated: 2022/06/13 19:04:17 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ int	hook(int keycode, t_info *info)
 		info->movement += (1 << 4);
 	if (keycode == 65361)
 		info->movement += (1 << 5);
+	if (keycode == 65289)
+		info->tabmap = 1;
+	if (keycode == 32)
+		toggle_door(info);
 	loop(info);
 	return (0);
 }
@@ -46,14 +50,41 @@ int	hook_release(int keycode, t_info *info)
 		info->movement -= (1 << 4);
 	if (keycode == 65361)
 		info->movement -= (1 << 5);
+	if (keycode == 65289)
+		info->tabmap = 0;
 	loop(info);
 	return (0);
 }
 
-t_info	errdeligne(t_info info, t_map *current)
+int	mouse_press(int keycode, int x, int y, t_info *info)
 {
-	return (puterr("Cette ligne est en trop : ", &info), \
-			ft_putstr_fd(current->ligne, 2), \
-			freelstmap(current), \
-			freeallchunk(current), info);
+	(void)y;
+	if (keycode == 1)
+	{
+		info->newxmouse = x;
+		info->xmouse = x;
+		info->click = 1;
+	}
+	return (0);
+}
+
+int	mouse_release(int keycode, int x, int y, t_info *info)
+{
+	(void)y;
+	if (keycode == 1)
+	{
+		info->xmouse = x;
+		info->click = 0;
+	}
+	return (info->tabmap);
+}
+
+int	mouse_move(int x, int y, t_info *info)
+{
+	(void)y;
+	if (info->click)
+		info->newxmouse = x;
+	else
+		info->xmouse = x;
+	return (info->tabmap);
 }

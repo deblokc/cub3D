@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 17:49:56 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 18:49:37 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,5 +166,6 @@ void	get_walls(t_info *info, t_proj *proj);
 int		draw_wall(t_info *info, t_proj *proj, int hit);
 int		hook(int keycode, t_info *info);
 int		hook_release(int keycode, t_info *info);
+t_info	errdeligne(t_info info, t_map *current);
 
 #endif

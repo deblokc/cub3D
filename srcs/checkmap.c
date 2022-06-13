@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:18:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 16:19:35 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 18:46:12 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ int	checkcub(char **map, int i, int j)
 {
 	if (i == 0 || j == 0 || !map[i + 1] || !map[i][j + 1])
 		return (0);
-	if (!ischr(map[i - 1][j - 1]) || !ischr(map[i - 1][j]) \
-			|| !ischr(map[i - 1][j + 1]))
+	if (map[i - 1][j - 1] == ' ' || map[i - 1][j] == ' ' \
+			|| map[i - 1][j + 1] == ' ')
 		return (0);
-	if (!ischr(map[i][j - 1]) || !ischr(map[i][j + 1]))
+	if (map[i][j - 1] == ' ' || map[i][j + 1] == ' ')
 		return (0);
-	if (!ischr(map[i + 1][j - 1]) || !ischr(map[i + 1][j]) \
-			|| !ischr(map[i + 1][j + 1]))
+	if (map[i + 1][j - 1] == ' ' || map[i + 1][j] == ' ' \
+			|| map[i + 1][j + 1] == ' ')
 		return (0);
 	return (1);
 }

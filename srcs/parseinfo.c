@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 16:04:46 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 18:49:12 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,6 @@ int	ischiant(t_map *current)
 				substrinstr(current->ligne, "EA") || \
 				charinstr(current->ligne, 'F') || \
 				charinstr(current->ligne, 'C'));
-}
-
-t_info	errdeligne(t_info info, t_map *current)
-{
-	return (puterr("Cette ligne est en trop : ", &info), \
-			ft_putstr_fd(current->ligne, 2), \
-			freelstmap(current), \
-			freeallchunk(current), info);
 }
 
 int	checkline(char *line, t_info *info)

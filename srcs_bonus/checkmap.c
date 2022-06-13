@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:18:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 16:05:43 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/13 18:54:08 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,6 @@ void	infodir(t_info *info, char c, int i, int j)
 		info->player.angle = 2 * M_PI;
 	info->player.x = j + 0.5;
 	info->player.y = i + 0.5;
-}
-
-void	dirmap(char **map, int i, int j, t_info *info)
-{
-	if (map[i][j] == 'E' || map[i][j] == 'W' || map[i][j] == 'N' \
-			|| map[i][j] == 'S')
-	{
-		if (!info->dir)
-			infodir(info, map[i][j], i, j);
-		else
-		{
-			printerrcoo("Point de spawn excedant en ", i, j, info);
-			info->isvalid = 0;
-		}
-	}
-}
-
-int	isfloor(char c)
-{
-	return (c == '0' || c == 'X' || c == 'E' \
-			|| c == 'W' || c == 'N' || c == 'S');
 }
 
 int	checkdoor(char **map, int i, int j)

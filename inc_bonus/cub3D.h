@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 15:38:11 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/13 19:16:22 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,5 +201,33 @@ void	handle_exit(t_info *info, t_proj *proj);
 void	draw_exit(t_info *info, t_proj *proj);
 int		set_door_texture(t_info *info, t_proj *proj, int vect);
 void	get_x_px_origin(t_proj *proj);
+void	freetexture(t_info *info);
+void	freetext(t_texture text, void *mlx);
+void	freedoors(t_info *info);
+int		isfloor(char c);
+void	freetexture(t_info *info);
+void	freedoors(t_info *info);
+void	dirmap(char **map, int i, int j, t_info *info);
+int		isfloor(char c);
+void	hook_list(t_info *info);
+int		mouse_move(int x, int y, t_info *info);
+int		mouse_release(int keycode, int x, int y, t_info *info);
+int		mouse_press(int keycode, int x, int y, t_info *info);
+int		hook_release(int keycode, t_info *info);
+int		hook(int keycode, t_info *info);
+void	handle_doors(t_info *info);
+void	toggle_door(t_info *info);
+void	putminimap(t_info *info, t_img *img);
+void	putmaptoimg(t_info *info, t_img *img);
+void	putmaptoimg2(t_info *info, int lst[2], char c, int diff);
+void	putsquare(t_img *img, int lst[2], unsigned int color, int diff);
+void	putplayer(t_img *img, int x, int y, unsigned int color);
+int		gettext(t_texture *text, t_info *info);
+int		gettextdir(t_texture *text, t_info *info, DIR *dir);
+void	initgettextdir(t_texture *text, DIR *dir, int *i);
+int		gettextdirerr(t_texture *text, t_info *info, DIR *dir, char *tmp);
+int		gettextnodir(t_texture *text, t_info *info);
+void	putpixel(t_img *img, int x, int y, unsigned int color);
+int		getdiff(t_info *info);
 
 #endif
