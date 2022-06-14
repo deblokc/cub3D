@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 19:16:22 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 12:06:49 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ void	draw_exit(t_info *info, t_proj *proj);
 int		set_door_texture(t_info *info, t_proj *proj, int vect);
 void	get_x_px_origin(t_proj *proj);
 void	freetexture(t_info *info);
-void	freetext(t_texture text, void *mlx);
+void	freetext(t_texture *text, void *mlx);
 void	freedoors(t_info *info);
 int		isfloor(char c);
 void	freetexture(t_info *info);
@@ -225,7 +225,7 @@ void	putplayer(t_img *img, int x, int y, unsigned int color);
 int		gettext(t_texture *text, t_info *info);
 int		gettextdir(t_texture *text, t_info *info, DIR *dir);
 void	initgettextdir(t_texture *text, DIR *dir, int *i);
-int		gettextdirerr(t_texture *text, t_info *info, DIR *dir, char *tmp);
+int		gettextdirerr(t_texture *text, t_info *info, DIR *dir, int i);
 int		gettextnodir(t_texture *text, t_info *info);
 void	putpixel(t_img *img, int x, int y, unsigned int color);
 int		getdiff(t_info *info);

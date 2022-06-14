@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 19:07:20 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 19:07:56 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 12:08:28 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,16 @@ int	gettextnodir(t_texture *text, t_info *info)
 	return (0);
 }
 
-int	gettextdirerr(t_texture *text, t_info *info, DIR *dir, char *tmp)
+int	gettextdirerr(t_texture *text, t_info *info, DIR *dir, int i)
 {
 	closedir(dir);
+	i++;
+	while (i < text->numtextmax)
+	{
+		mlx_destroy_image(info->mlx, text->texture[i].img);
+		i++;
+	}
 	free(text->texture);
-	free(tmp);
 	text->texture = NULL;
 	return (puterr("Impossible d'ouvrir ", info), \
 		ft_putstr_fd(text->path, 2), ft_putstr_fd(" !\n", 2), 1);
@@ -69,7 +74,7 @@ int	gettextdir(t_texture *text, t_info *info, DIR *dir)
 		text->texture[i].img = mlx_xpm_file_to_image(info->mlx, tmp, \
 				&text->texture[i].width, &text->texture[i].height);
 		if (!text->texture[i].img)
-			return (gettextdirerr(text, info, dir, tmp));
+			return (free(tmp), gettextdirerr(text, info, dir, i));
 		text->texture[i].addr = mlx_get_data_addr(text->texture[i].img, \
 			&text->texture[i].bits_per_pixel, &text->texture[i].line_length, \
 			&text->texture[i].endian);

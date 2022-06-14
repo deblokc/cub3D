@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:16:16 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 18:51:32 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 12:04:04 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,20 @@ void	freecharchar(char **lst)
 	}
 }
 
-void	freetext(t_texture text, void *mlx)
+void	freetext(t_texture *text, void *mlx)
 {
 	int	i;
 
 	i = 0;
-	if (text.texture)
+	if (text->texture)
 	{
-		while (i < text.numtextmax)
+		while (i < text->numtextmax)
 		{
-			mlx_destroy_image(mlx, text.texture[i].img);
+			mlx_destroy_image(mlx, text->texture[i].img);
 			i++;
 		}
 	}
-	free(text.texture);
+	free(text->texture);
 }
 
 void	freeinfo(t_info *info)
