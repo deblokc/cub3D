@@ -12,7 +12,7 @@
 
 #include "cub3D.h"
 
-int	gettext(t_texture *text, t_info *info)
+int	get_text(t_texture *text, t_info *info)
 {
 	text->texture.img = mlx_xpm_file_to_image(info->mlx, text->path, \
 			&text->width, &text->height);
@@ -27,8 +27,8 @@ int	gettext(t_texture *text, t_info *info)
 
 int	gettexture(t_info *info)
 {
-	if (gettext(&info->no, info) || gettext(&info->so, info) \
-			|| gettext(&info->we, info) || gettext(&info->ea, info))
+	if (get_text(&info->no, info) || get_text(&info->so, info) \
+			|| get_text(&info->we, info) || get_text(&info->ea, info))
 		return (1);
 	return (0);
 }

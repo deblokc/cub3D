@@ -25,7 +25,7 @@ ft_strjoin_free.c ft_strcmp.c ft_strtrim_free.c ft_strcmp_free.c ft_atoi_free.c
 
 OBJS = $(SRCS:.c=.o)
 
-CC		= clang
+CC		= gcc
 
 RM		= rm -f
 

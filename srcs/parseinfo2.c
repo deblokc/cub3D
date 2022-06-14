@@ -95,8 +95,8 @@ int	getlist(char *str)
 		while (str[i] && str[i] != ',')
 			i++;
 		j = ft_atoi_free(ft_substr(str, j, i - j));
-		if (j < 0 || j > 255)
-			return (free(lst), free(str), -2);
+		if (j > 255)
+			return (free(lst), free(str), -1);
 		lst[k] = j;
 		i++;
 		k++;

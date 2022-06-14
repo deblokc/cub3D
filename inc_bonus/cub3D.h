@@ -227,7 +227,7 @@ void	putmaptoimg(t_info *info, t_img *img);
 void	putmaptoimg2(t_info *info, int lst[2], char c, int diff);
 void	putsquare(t_info *info, t_img *img, int lst[3], unsigned int color);
 void	putplayer(t_info *info, t_img *img, int coords[2], unsigned int color);
-int		gettext(t_texture *text, t_info *info);
+int		get_text(t_texture *text, t_info *info);
 int		gettextdir(t_texture *text, t_info *info, DIR *dir);
 void	initgettextdir(t_texture *text, DIR *dir, int *i);
 int		gettextdirerr(t_texture *text, t_info *info, DIR *dir, int i);

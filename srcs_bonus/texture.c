@@ -83,7 +83,7 @@ int	gettextdir(t_texture *text, t_info *info, DIR *dir)
 	return (0);
 }
 
-int	gettext(t_texture *text, t_info *info)
+int	get_text(t_texture *text, t_info *info)
 {
 	DIR	*dir;
 

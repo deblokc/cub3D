@@ -37,7 +37,7 @@ source_bonus = $(addprefix srcs_bonus/,$(SRC_BONUS))
 CFLAGS = -Wall -Werror -Wextra -Iinc -g
 CFLAGS_BONUS = -Wall -Werror -Wextra -Iinc_bonus -g
 
-CC = clang
+CC = gcc
 
 object := $(patsubst srcs/%.c,$(OBJDIR)/%.o,$(source)) 
 
