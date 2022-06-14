@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 19:51:24 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 15:55:11 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	getlineinfo(t_map *current, t_info *info)
 		info->door.path = getlaststr(current->ligne);
 	else if (charinstr(current->ligne, 'X') && !info->exit.path)
 		info->exit.path = getlaststr(current->ligne);
+	else if (charinstr(current->ligne, 'E') && !info->end.path)
+		info->end.path = getlaststr(current->ligne);
 	else
 		return (0);
 	return (1);
