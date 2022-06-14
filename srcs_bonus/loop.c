@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 19:05:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 13:05:05 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 15:52:40 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,28 @@ void	loop2(t_info *info)
 
 void	putend(t_info *info)
 {
-	int	x;
-	int	y;
+	int				x;
+	int				y;
+	double			ystep;
+	double			xstep;
+	char			*dest;
 
+	ystep = ((double)info->end.texture[info->end.numtext].height \
+			/ (double)(HEIGHT + 1));
+	xstep = ((double)info->end.texture[info->end.numtext].width \
+			/ (double)(WIDTH + 1));
 	y = 0;
-	x = 0;
-	while (
+	while (y < HEIGHT)
+	{
+		dest = info->end.texture[info->end.numtext].addr \
+		+ (int)(ystep * y) *info->end.texture[info->end.numtext].line_length;
+		x = -1;
+		while (++x < WIDTH)
+			putpixel(&info->img[info->current_img], x, y, \
+				(*(unsigned int *)(dest + (int)(xstep * x) \
+				*(info->end.texture[info->end.numtext].bits_per_pixel / 8))));
+		y++;
+	}
 }
 
 int	loop(t_info *info)
