@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 12:06:49 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 13:04:07 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ void	printerrcoo(char *str, int i, int j, t_info *info);
 void	initinfo(t_info *info);
 int		lenof(t_map *lstmap);
 int		ft_strlen_map(char *str);
-int		check_view_integrity(t_info *info, double cur[2], double v[2], int hit);
+int		check_view_integrity(t_info *info, t_proj *proj, int hit);
 void	get_walls(t_info *info, t_proj *proj);
 int		draw_wall(t_info *info, t_proj *proj, int hit);
 void	add_door(t_info *info, int y, int x);

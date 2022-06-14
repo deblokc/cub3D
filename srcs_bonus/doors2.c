@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 15:07:37 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/13 15:39:25 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/14 15:08:46 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,9 @@ int	is_on_door(t_info *info, t_proj *proj, int hit)
 	double	visible[2];
 	double	next[2];
 
+	proj->is_door = 0;
 	c[0] = (int)proj->cur[0];
 	c[1] = (int)proj->cur[1];
-	if (info->map[c[1]][c[0]] != '2')
-		return (0);
 	proj->door = find_door(info, c);
 	if (!proj->door)
 		return (0);

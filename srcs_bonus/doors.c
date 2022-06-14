@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 13:06:22 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/13 13:41:33 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/14 15:08:20 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ t_door	*find_door(t_info *info, int coords[2])
 {
 	t_door	*current;
 
+	if (info->map[coords[1]][coords[0]] != '2')
+		return (NULL);
 	current = info->doors;
 	while (current)
 	{
