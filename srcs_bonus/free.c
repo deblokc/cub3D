@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:16:16 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 12:04:04 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 12:27:44 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,9 @@ void	freeinfo(t_info *info)
 	free(info->so.path);
 	free(info->we.path);
 	free(info->ea.path);
-	if (info->door.path)
-		free(info->door.path);
-	if (info->exit.path)
-		free(info->exit.path);
+	free(info->door.path);
+	free(info->exit.path);
+	free(info->end.path);
 	freeallchunk(info->lstmap);
 	freecharchar(info->map);
 	freetexture(info);
