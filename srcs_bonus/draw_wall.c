@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/13 15:38:23 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/14 12:35:00 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int	draw_wall(t_info *info, t_proj *proj, int hit)
 	wall_ratio = distance1 / distance0;
 	proj->wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
 	if (!proj->is_door)
-		hit = check_view_integrity(info, proj->cur, proj->v, hit);
+		hit = check_view_integrity(info, proj, hit);
 	draw_strip(info, proj, hit);
 	return (hit);
 }
