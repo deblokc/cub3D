@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 18:51:09 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 18:53:54 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 12:03:34 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 void	freetexture(t_info *info)
 {
-	freetext(info->no, info->mlx);
-	freetext(info->so, info->mlx);
-	freetext(info->we, info->mlx);
-	freetext(info->ea, info->mlx);
-	freetext(info->door, info->mlx);
-	freetext(info->exit, info->mlx);
+	freetext(&info->no, info->mlx);
+	freetext(&info->so, info->mlx);
+	freetext(&info->we, info->mlx);
+	freetext(&info->ea, info->mlx);
+	freetext(&info->door, info->mlx);
+	freetext(&info->exit, info->mlx);
 }
 
 void	freedoors(t_info *info)
