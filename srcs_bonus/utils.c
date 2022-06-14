@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 19:34:42 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 12:26:37 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	initinfo(t_info *info)
 	info->ea.path = NULL;
 	info->door.path = NULL;
 	info->exit.path = NULL;
+	info->end.path = NULL;
 	info->f = -1;
 	info->c = -1;
 	info->map = NULL;
@@ -39,6 +40,7 @@ void	initinfo(t_info *info)
 	info->ea.texture = NULL;
 	info->door.texture = NULL;
 	info->exit.texture = NULL;
+	info->end.texture = NULL;
 	info->doors = NULL;
 	info->mlx = NULL;
 	info->win = NULL;

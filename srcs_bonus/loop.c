@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 19:05:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 19:08:17 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 13:05:05 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,6 @@ void	loop1(t_info *info)
 		turnright(info);
 	if (info->movement & (1 << 5) && !(info->movement & (1 << 4)))
 		turnleft(info);
-	info->current_img += 1;
-	if (info->current_img >= NB_IMG)
-		info->current_img = 0;
 	if (info->no.numtext == info->no.numtextmax - 1)
 		info->no.numtext = 0;
 	else
@@ -65,18 +62,36 @@ void	loop2(t_info *info)
 		putminimap(info, &info->img[info->current_img]);
 }
 
+void	putend(t_info *info)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	x = 0;
+	while (
+}
+
 int	loop(t_info *info)
 {
-	loop1(info);
-	loop2(info);
-	if (info->click && info->xmouse != info->newxmouse)
+	info->current_img += 1;
+	if (info->current_img >= NB_IMG)
+		info->current_img = 0;
+	if (!info->asended)
 	{
-		info->player.angle -= ((double)(info->xmouse - info->newxmouse) \
-				/ (double)WIDTH) * (M_PI / 2);
-		info->xmouse = info->newxmouse;
+		loop1(info);
+		loop2(info);
+		if (info->click && info->xmouse != info->newxmouse)
+		{
+			info->player.angle -= ((double)(info->xmouse - info->newxmouse) \
+					/ (double)WIDTH) * (M_PI / 2);
+			info->xmouse = info->newxmouse;
+		}
+		if (info->map[(int)info->player.y][(int)info->player.x] == 'X')
+			info->asended = 1;
 	}
-	if (info->map[(int)info->player.y][(int)info->player.x] == 'X')
-		closewin(info);
+	else
+		putend(info);
 	mlx_do_sync(info->mlx);
 	mlx_put_image_to_window(info->mlx, info->win, \
 			info->img[info->current_img].img, 0, 0);
@@ -85,6 +100,7 @@ int	loop(t_info *info)
 
 void	hook_list(t_info *info)
 {
+	info->asended = 0;
 	loop(info);
 	mlx_do_key_autorepeatoff(info->mlx);
 	mlx_hook(info->win, 17, 0, closewin, info);

@@ -6,7 +6,11 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/14 13:04:07 by bdetune          ###   ########.fr       */
+=======
+/*   Updated: 2022/06/14 12:45:09 by tnaton           ###   ########.fr       */
+>>>>>>> 9b77ef18739974c18630b6c8949b6e6608333ea1
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +37,7 @@
 # define STEP 0.25
 # define DOOR_PATH "textures/door.xpm"
 # define EXIT_PATH "textures/portal/"
+# define END_PATH "textures/theend.xpm"
 
 typedef struct s_map
 {
@@ -109,6 +114,7 @@ typedef struct s_proj
 
 typedef struct s_info
 {
+	int				asended;
 	int				tabmap;
 	void			*mlx;
 	void			*win;
@@ -121,6 +127,7 @@ typedef struct s_info
 	t_texture		ea;
 	t_texture		door;
 	t_texture		exit;
+	t_texture		end;
 	t_door			*doors;
 	int				f;
 	int				c;
