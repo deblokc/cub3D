@@ -25,8 +25,6 @@
 # include <time.h>
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
-# define WIDTH 2500
-# define HEIGHT 1300
 # define NB_IMG 16
 # define STEP 0.25
 
@@ -92,6 +90,8 @@ typedef struct s_info
 	int				tabmap;
 	void			*mlx;
 	void			*win;
+	int				width;
+	int				height;
 	t_img			img[NB_IMG];
 	int				current_img;
 	int				printerr;

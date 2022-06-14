@@ -41,7 +41,7 @@ static void	get_strip_origin(t_info *info, t_proj *proj, int hit)
 
 static void	init_strip(t_info *info, t_proj *proj)
 {
-	proj->start_pixel = (int)floor((((double)HEIGHT - 1) / 2) \
+	proj->start_pixel = (int)floor((((double)info->height - 1) / 2) \
 			- ((double)proj->wall_height / 2));
 	proj->end_pixel = proj->start_pixel + proj->wall_height - 1;
 	proj->dst = info->img[info->current_img].addr + proj->x \
@@ -56,7 +56,7 @@ static void	ceiling_and_floor(t_info *info, t_proj *proj, int *it, char type)
 {
 	if (type == 'c')
 	{
-		while (*it < HEIGHT && *it < proj->start_pixel)
+		while (*it < info->height && *it < proj->start_pixel)
 		{
 			*(unsigned int *)proj->dst = info->c;
 			proj->dst += info->img[info->current_img].line_length;
@@ -65,7 +65,7 @@ static void	ceiling_and_floor(t_info *info, t_proj *proj, int *it, char type)
 	}
 	else
 	{
-		while (*it < HEIGHT)
+		while (*it < info->height)
 		{
 			*(unsigned int *)proj->dst = info->f;
 			proj->dst += info->img[info->current_img].line_length;
@@ -85,7 +85,7 @@ static void	draw_strip(t_info *info, t_proj *proj, int hit)
 	it = 0;
 	ceiling_and_floor(info, proj, &it, 'c');
 	current = (double)(it - proj->start_pixel) * proj->step;
-	while (it < HEIGHT && it <= proj->end_pixel)
+	while (it < info->height && it <= proj->end_pixel)
 	{
 		percent_y = (int)current;
 		if (percent_y == proj->target.height)
@@ -119,7 +119,7 @@ int	draw_wall(t_info *info, t_proj *proj, int hit)
 	else
 		distance1 = hypot(fabs(proj->v[0]), fabs(proj->v[1]));
 	wall_ratio = distance1 / distance0;
-	proj->wall_height = (int)round(wall_ratio * ((double)WIDTH / 2));
+	proj->wall_height = (int)round(wall_ratio * ((double)info->width / 2));
 	hit = check_view_integrity(info, proj->cur, proj->v, hit);
 	draw_strip(info, proj, hit);
 	return (hit);

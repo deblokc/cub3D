@@ -53,12 +53,12 @@ static void	get_proj_screen(t_info *info, t_proj *proj)
 								/ cos(M_PI / 4)) + info->player.x;
 }
 
-static void	get_dir_v(t_proj *proj)
+static void	get_dir_v(t_info *info, t_proj *proj)
 {
 	proj->dir_v[0] = (proj->proj_screen[2] - proj->proj_screen[0]) \
-					/ (double)(WIDTH - 1);
+					/ (double)(info->width - 1);
 	proj->dir_v[1] = (proj->proj_screen[3] - proj->proj_screen[1]) \
-					/ (double)(WIDTH - 1);
+					/ (double)(info->width - 1);
 }
 
 void	raisewalls(t_info *info)
@@ -70,9 +70,9 @@ void	raisewalls(t_info *info)
 	else if (fabs(info->player.angle) < 0.0001)
 		info->player.angle = 2 * M_PI;
 	get_proj_screen(info, &proj);
-	get_dir_v(&proj);
+	get_dir_v(info, &proj);
 	proj.x = 0;
-	while (proj.x < WIDTH)
+	while (proj.x < info->width)
 	{
 		proj.v[0] = (proj.proj_screen[0] + proj.dir_v[0] * proj.x) \
 					- info->player.x;

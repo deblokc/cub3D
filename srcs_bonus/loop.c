@@ -71,16 +71,16 @@ void	putend(t_info *info)
 	char			*dest;
 
 	ystep = ((double)info->end.texture[info->end.numtext].height \
-			/ (double)(HEIGHT + 1));
+			/ (double)(info->height + 1));
 	xstep = ((double)info->end.texture[info->end.numtext].width \
-			/ (double)(WIDTH + 1));
+			/ (double)(info->width + 1));
 	y = 0;
-	while (y < HEIGHT)
+	while (y < info->height)
 	{
 		dest = info->end.texture[info->end.numtext].addr \
 		+ (int)(ystep * y) *info->end.texture[info->end.numtext].line_length;
 		x = -1;
-		while (++x < WIDTH)
+		while (++x < info->width)
 			putpixel(&info->img[info->current_img], x, y, \
 				(*(unsigned int *)(dest + (int)(xstep * x) \
 				*(info->end.texture[info->end.numtext].bits_per_pixel / 8))));
@@ -100,7 +100,7 @@ int	loop(t_info *info)
 		if (info->click && info->xmouse != info->newxmouse)
 		{
 			info->player.angle -= ((double)(info->xmouse - info->newxmouse) \
-					/ (double)WIDTH) * (M_PI / 2);
+					/ (double)info->width) * (M_PI / 2);
 			info->xmouse = info->newxmouse;
 		}
 		if (info->map[(int)info->player.y][(int)info->player.x] == 'X')

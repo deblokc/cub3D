@@ -70,8 +70,8 @@ void	handle_exit(t_info *info, t_proj *proj)
 	proj->exit_percent_x = floor(proj->exit_percent_x \
 							* info->exit.texture[info->exit.numtext].width);
 	proj->exit_height = (distance(0, 0, proj->v[0], proj->v[1]) \
-						/ current_distance) * ((double)WIDTH / 2);
-	proj->exit_st_px = (int)floor((((double)HEIGHT - 1) / 2) \
+						/ current_distance) * ((double)info->width / 2);
+	proj->exit_st_px = (int)floor((((double)info->height - 1) / 2) \
 			- ((double)proj->exit_height / 2));
 	proj->exit_end_px = proj->exit_st_px + proj->exit_height - 1;
 	proj->exit_step = ((double)1 / (double)proj->exit_height) \
@@ -106,7 +106,7 @@ void	draw_exit(t_info *info, t_proj *proj)
 	unsigned int	val;
 
 	init_exit_draw(info, proj, &it, &current);
-	while (it < HEIGHT && it <= proj->exit_end_px)
+	while (it < info->height && it <= proj->exit_end_px)
 	{
 		percent_y = (int)current;
 		if (percent_y == info->exit.texture[info->exit.numtext].height)

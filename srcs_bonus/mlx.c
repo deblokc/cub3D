@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 12:29:35 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/14 22:04:25 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,11 @@
 
 int	getdiff(t_info *info)
 {
-	int	x;
-	int	y;
 	int	max;
 
-	y = 0;
-	x = 0;
-	max = WIDTH;
-	if (max > HEIGHT)
-		max = HEIGHT;
+	max = info->width;
+	if (max > info->height)
+		max = info->height;
 	if (max / (info->xmax) > max / (info->ymax))
 		return (max / (info->ymax));
 	return (max / (info->xmax));
@@ -62,11 +58,14 @@ int	mlx(t_info *info)
 	info->mlx = mlx_init();
 	if (gettexture(info))
 		return (1);
-	info->win = mlx_new_window(info->mlx, WIDTH, HEIGHT, "cub3D");
+	mlx_get_screen_size(info->mlx, &info->width, &info->height);
+	info->width -= 100;
+	info->height -= 100;
+	info->win = mlx_new_window(info->mlx, info->width, info->height, "cub3D");
 	i = 0;
 	while (i < NB_IMG)
 	{
-		info->img[i].img = mlx_new_image(info->mlx, WIDTH, HEIGHT);
+		info->img[i].img = mlx_new_image(info->mlx, info->width, info->height);
 		info->img[i].addr = mlx_get_data_addr(info->img[i].img, \
 				&info->img[i].bits_per_pixel, &info->img[i].line_length, \
 				&info->img[i].endian);
