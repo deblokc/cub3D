@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 13:18:30 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 14:46:49 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 
 void	printerr(t_info *info)
 {
-	if (!info->no.path)
-		puterr("Erreur sur la ligne NO\n", info);
-	if (!info->so.path)
-		puterr("Erreur sur la ligne SO\n", info);
-	if (!info->we.path)
-		puterr("Erreur sur la ligne WE\n", info);
-	if (!info->ea.path)
-		puterr("Erreur sur la ligne EA\n", info);
-	if (info->f < 0)
-		puterr("Erreur sur la ligne F\n", info);
-	if (info->c < 0)
-		puterr("Erreur sur la ligne C\n", info);
+	if (info->isvalid)
+	{
+		if (!info->no.path)
+			puterr("Erreur sur la ligne NO\n", info);
+		if (!info->so.path)
+			puterr("Erreur sur la ligne SO\n", info);
+		if (!info->we.path)
+			puterr("Erreur sur la ligne WE\n", info);
+		if (!info->ea.path)
+			puterr("Erreur sur la ligne EA\n", info);
+		if (info->f < 0)
+			puterr("Erreur sur la ligne F\n", info);
+		if (info->c < 0)
+			puterr("Erreur sur la ligne C\n", info);
+	}
 }
 
 int	getlineinfo(t_map *current, t_info *info)
@@ -46,7 +49,9 @@ int	getlineinfo(t_map *current, t_info *info)
 		info->door.path = getlaststr(current->ligne);
 	else if (charinstr(current->ligne, 'X') && !info->exit.path)
 		info->exit.path = getlaststr(current->ligne);
-	else if (charinstr(current->ligne, 'E') && !info->end.path)
+	else if (!substrinstr(current->ligne, "WE") \
+			&& !substrinstr(current->ligne, "EA") \
+			&& charinstr(current->ligne, 'E') && !info->end.path)
 		info->end.path = getlaststr(current->ligne);
 	else
 		return (0);
@@ -71,13 +76,28 @@ t_info	errdeligne(t_info info, t_map *current)
 			freeallchunk(current), info);
 }
 
-t_info	getinfo(t_map *map)
+int	fl(char *str, t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ischr(str[i]) && str[i] != '\n')
+		{
+			info->isvalid = 0;
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+t_info	getinfo(t_map *current)
 {
 	t_info	info;
-	t_map	*current;
 	t_map	*tmp;
 
-	current = map;
 	initinfo(&info);
 	while (current)
 	{
@@ -87,6 +107,8 @@ t_info	getinfo(t_map *map)
 			return (errdeligne(info, current));
 		else if (ft_strcmp_free(ft_strtrim(current->ligne, " "), "\n"))
 		{
+			if (!fl(current->ligne, &info))
+				puterr("Ligne de map invalide !\n", &info);
 			info.lstmap = current;
 			break ;
 		}

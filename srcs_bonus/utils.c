@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:23:07 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 12:26:37 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 14:47:52 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	initinfo(t_info *info)
 	info->lstmap = NULL;
 	info->dir = 0;
 	info->printerr = 0;
+	info->isvalid = 1;
 	info->no.texture = NULL;
 	info->so.texture = NULL;
 	info->we.texture = NULL;
