@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 19:02:20 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 22:04:56 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 11:39:05 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	putplayer(t_info *info, t_img *img, int coords[2], unsigned int color)
 		coords[0] = retx;
 		while (coords[0] < nextx)
 		{
-			if (coords[0] > 0 && coords[0] < info->width && coords[1] > 0 && coords[1] < info->height)
+			if (coords[0] > 0 && coords[0] < info->width \
+					&& coords[1] > 0 && coords[1] < info->height)
 				putpixel(img, coords[0], coords[1], color);
 			coords[0] += 1;
 		}
@@ -51,7 +52,8 @@ void	putsquare(t_info *info, t_img *img, int lst[3], unsigned int color)
 		lst[0] = retx;
 		while (lst[0] < nextx)
 		{
-			if (lst[0] >= 0 && lst[0] < info->width && lst[1] >= 0 && lst[1] < info->height)
+			if (lst[0] >= 0 && lst[0] < info->width \
+					&& lst[1] >= 0 && lst[1] < info->height)
 				putpixel(img, lst[0], lst[1], color);
 			lst[0]++;
 		}
@@ -63,7 +65,7 @@ void	putsquare(t_info *info, t_img *img, int lst[3], unsigned int color)
 
 void	putmaptoimg2(t_info *info, int lst[2], char c, int diff)
 {
-	int lst_diff[3];
+	int	lst_diff[3];
 
 	lst_diff[0] = lst[0];
 	lst_diff[1] = lst[1];

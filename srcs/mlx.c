@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 12:48:38 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 11:45:11 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	get_text(t_texture *text, t_info *info)
 
 int	gettexture(t_info *info)
 {
+	info->movement = 0;
+	info->mlx = mlx_init();
 	if (get_text(&info->no, info) || get_text(&info->so, info) \
 			|| get_text(&info->we, info) || get_text(&info->ea, info))
 		return (1);
@@ -60,22 +62,19 @@ int	mlx(t_info *info)
 {
 	int	i;
 
-	info->movement = 0;
-	info->mlx = mlx_init();
 	if (gettexture(info))
 		return (1);
 	mlx_get_screen_size(info->mlx, &info->width, &info->height);
 	info->width -= 100;
 	info->height -= 100;
 	info->win = mlx_new_window(info->mlx, info->width, info->height, "cub3D");
-	i = 0;
-	while (i < NB_IMG)
+	i = -1;
+	while (++i < NB_IMG)
 	{
 		info->img[i].img = mlx_new_image(info->mlx, info->width, info->height);
 		info->img[i].addr = mlx_get_data_addr(info->img[i].img, \
 				&info->img[i].bits_per_pixel, &info->img[i].line_length, \
 				&info->img[i].endian);
-		i++;
 	}
 	info->current_img = i;
 	loop(info);
