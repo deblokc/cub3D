@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:04 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/15 13:24:29 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 14:47:52 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,84 +47,23 @@ static int	check_south(t_info *info, t_proj *proj)
 	tmp[1] = proj->cur[1];
 	if (info->map[(int)(tmp[1] - 1)][(int)(tmp[0])] == '1')
 	{
-		if ((proj->v[0] <= 0
-				&& info->map[(int)(tmp[1])][(int)(tmp[0] + 1)] == '1')
-			|| (proj->v[0] >= 0
-				&& info->map[(int)(tmp[1])][(int)(tmp[0] - 1)] == '1'))
-		{
-			if (proj->v[0] <= 0)
-				proj->cur[0] = 0;
-			else
-				proj->cur[0] = 0.9999;
-			proj->cur[1] = 0;
+		if (check_south_corner(info, proj, tmp))
 			return (1);
-		}
-		else
-		{
-			if (proj->v[0] <= 0)
-			{
-				proj->cur[0] = floor(tmp[0] + 1);
-				proj->cur[1] = tmp[1];
-				if (is_on_door(info, proj, 1))
-					return (1);
-			}
-			else
-			{
-				proj->cur[0] = floor(tmp[0]) - 0.0001;
-				proj->cur[1] = tmp[1];
-				if (is_on_door(info, proj, 1))
-					return (1);
-			}
-		}
-		proj->cur[0] = tmp[0];
-		proj->cur[1] = floor(tmp[1]) - 0.0001;
-		return (2);
+		return (set_current(proj->cur, tmp[0], (floor(tmp[1]) - 0.0001)), 2);
 	}
 	else if (fabs(ceil(tmp[0]) - tmp[0]) < 0.0002
 		|| fabs(floor(tmp[0]) - tmp[0]) < 0.0001)
 	{
-		proj->cur[0] = tmp[0];
-		proj->cur[1] = floor(tmp[1]) - 0.0001;
+		set_current(proj->cur, tmp[0], (floor(tmp[1]) - 0.0001));
 		if (is_on_door(info, proj, 2))
 		{
-			if ((proj->v[0] <= 0
-					&& info->map[(int)(tmp[1])][(int)(tmp[0] + 1)] == '1')
-				|| (proj->v[0] >= 0
-					&& info->map[(int)(tmp[1])][(int)(tmp[0] - 1)] == '1'))
-			{
-				if (proj->v[0] <= 0)
-					proj->cur[0] = 0;
-				else
-					proj->cur[0] = 0.9999;
-				proj->cur[1] = 0;
+			if (check_south_corner(info, proj, tmp))
 				return (1);
-			}
-			else
-			{
-				if (proj->v[0] <= 0)
-				{
-					proj->cur[0] = floor(tmp[0] + 1);
-					proj->cur[1] = tmp[1];
-					if (is_on_door(info, proj, 1))
-						return (1);
-				}
-				else
-				{
-					proj->cur[0] = floor(tmp[0]) - 0.0001;
-					proj->cur[1] = tmp[1];
-					if (is_on_door(info, proj, 1))
-						return (1);
-				}
-			}
-			proj->cur[0] = tmp[0];
-			proj->cur[1] = floor(tmp[1]) - 0.0001;
-			is_on_door(info, proj, 2);
-			return (2);
+			return (set_current(proj->cur, tmp[0], (floor(tmp[1]) - 0.0001)), \
+					is_on_door(info, proj, 2), 2);
 		}
 	}
-	proj->cur[0] = tmp[0];
-	proj->cur[1] = tmp[1];
-	return (1);
+	return (set_current(proj->cur, tmp[0], tmp[1]), 1);
 }
 
 static int	check_west(t_info *info, t_proj *proj)
@@ -135,84 +74,23 @@ static int	check_west(t_info *info, t_proj *proj)
 	tmp[1] = proj->cur[1];
 	if (info->map[(int)(tmp[1])][(int)(tmp[0] + 1)] == '1')
 	{
-		if ((proj->v[1] <= 0
-				&& info->map[(int)(tmp[1] + 1)][(int)(tmp[0])] == '1')
-			|| (proj->v[1] >= 0
-				&& info->map[(int)(tmp[1] - 1)][(int)(tmp[0])] == '1'))
-		{
-			if (proj->v[1] <= 0)
-				proj->cur[1] = 0;
-			else
-				proj->cur[1] = 0.9999;
-			proj->cur[0] = 0.9999;
+		if (check_west_corner(info, proj, tmp))
 			return (2);
-		}
-		else
-		{
-			if (proj->v[1] <= 0)
-			{
-				proj->cur[0] = tmp[0];
-				proj->cur[1] = floor(tmp[1] + 1);
-				if (is_on_door(info, proj, 2))
-					return (2);
-			}
-			else
-			{
-				proj->cur[0] = tmp[0];
-				proj->cur[1] = floor(tmp[1]) - 0.0001;
-				if (is_on_door(info, proj, 2))
-					return (2);
-			}
-		}
-		proj->cur[0] = ceil(tmp[0]);
-		proj->cur[1] = tmp[1];
-		return (1);
+		return (set_current(proj->cur, ceil(tmp[0]), tmp[1]), 1);
 	}
 	else if (fabs(ceil(tmp[1]) - tmp[1]) < 0.0002
 		|| fabs(floor(tmp[1]) - tmp[1]) < 0.0001)
 	{
-		proj->cur[0] = ceil(tmp[0]);
-		proj->cur[1] = tmp[1];
+		set_current(proj->cur, ceil(tmp[0]), tmp[1]);
 		if (is_on_door(info, proj, 1))
 		{
-			if ((proj->v[1] <= 0
-					&& info->map[(int)(tmp[1] + 1)][(int)(tmp[0])] == '1')
-				|| (proj->v[1] >= 0
-					&& info->map[(int)(tmp[1] - 1)][(int)(tmp[0])] == '1'))
-			{
-				if (proj->v[1] <= 0)
-					proj->cur[1] = 0;
-				else
-					proj->cur[1] = 0.9999;
-				proj->cur[0] = 0.9999;
+			if (check_west_corner(info, proj, tmp))
 				return (2);
-			}
-			else
-			{
-				if (proj->v[1] <= 0)
-				{
-					proj->cur[0] = tmp[0];
-					proj->cur[1] = floor(tmp[1] + 1);
-					if (is_on_door(info, proj, 2))
-						return (2);
-				}
-				else
-				{
-					proj->cur[0] = tmp[0];
-					proj->cur[1] = floor(tmp[1]) - 0.0001;
-					if (is_on_door(info, proj, 2))
-						return (2);
-				}
-			}
-			proj->cur[0] = ceil(tmp[0]);
-			proj->cur[1] = tmp[1];
-			is_on_door(info, proj, 1);
-			return (1);
+			return (set_current(proj->cur, ceil(tmp[0]), tmp[1]), \
+					is_on_door(info, proj, 1), 1);
 		}
 	}
-	proj->cur[0] = tmp[0];
-	proj->cur[1] = tmp[1];
-	return (2);
+	return (set_current(proj->cur, tmp[0], tmp[1]), 2);
 }
 
 static int	check_east(t_info *info, t_proj *proj)
@@ -223,84 +101,23 @@ static int	check_east(t_info *info, t_proj *proj)
 	tmp[1] = proj->cur[1];
 	if (info->map[(int)(tmp[1])][(int)(tmp[0] - 1)] == '1')
 	{
-		if ((proj->v[1] <= 0
-				&& info->map[(int)(tmp[1] + 1)][(int)(tmp[0])] == '1')
-			|| (proj->v[1] >= 0
-				&& info->map[(int)(tmp[1] - 1)][(int)(tmp[0])] == '1'))
-		{
-			if (proj->v[1] <= 0)
-				proj->cur[1] = 0;
-			else
-				proj->cur[1] = 0.9999;
-			proj->cur[0] = 0;
+		if (check_east_corner(info, proj, tmp))
 			return (2);
-		}
-		else
-		{
-			if (proj->v[1] <= 0)
-			{
-				proj->cur[0] = tmp[0];
-				proj->cur[1] = floor(tmp[1] + 1);
-				if (is_on_door(info, proj, 2))
-					return (2);
-			}
-			else
-			{
-				proj->cur[0] = tmp[0];
-				proj->cur[1] = floor(tmp[1]) - 0.0001;
-				if (is_on_door(info, proj, 2))
-					return (2);
-			}
-		}
-		proj->cur[0] = floor(tmp[0]) - 0.0001;
-		proj->cur[1] = tmp[1];
-		return (1);
+		return (set_current(proj->cur, (floor(tmp[0]) - 0.0001), tmp[1]), 1);
 	}
 	else if (fabs(ceil(tmp[1]) - tmp[1]) < 0.0002
 		|| fabs(floor(tmp[1]) - tmp[1]) < 0.0001)
 	{
-		proj->cur[0] = floor(tmp[0]) - 0.0001;
-		proj->cur[1] = tmp[1];
+		set_current(proj->cur, (floor(tmp[0]) - 0.0001), tmp[1]);
 		if (is_on_door(info, proj, 1))
 		{
-			if ((proj->v[1] <= 0
-					&& info->map[(int)(tmp[1] + 1)][(int)(tmp[0])] == '1')
-				|| (proj->v[1] >= 0
-					&& info->map[(int)(tmp[1] - 1)][(int)(tmp[0])] == '1'))
-			{
-				if (proj->v[1] <= 0)
-					proj->cur[1] = 0;
-				else
-					proj->cur[1] = 0.9999;
-				proj->cur[0] = 0;
+			if (check_east_corner(info, proj, tmp))
 				return (2);
-			}
-			else
-			{
-				if (proj->v[1] <= 0)
-				{
-					proj->cur[0] = tmp[0];
-					proj->cur[1] = floor(tmp[1] + 1);
-					if (is_on_door(info, proj, 2))
-						return (2);
-				}
-				else
-				{
-					proj->cur[0] = tmp[0];
-					proj->cur[1] = floor(tmp[1]) - 0.0001;
-					if (is_on_door(info, proj, 2))
-						return (2);
-				}
-			}
-			proj->cur[0] = floor(tmp[0]) - 0.0001;
-			proj->cur[1] = tmp[1];
-			is_on_door(info, proj, 1);
-			return (1);
+			return (set_current(proj->cur, (floor(tmp[0]) - 0.0001), tmp[1]), \
+					is_on_door(info, proj, 1), 1);
 		}
 	}
-	proj->cur[0] = tmp[0];
-	proj->cur[1] = tmp[1];
-	return (2);
+	return (set_current(proj->cur, tmp[0], tmp[1]), 2);
 }
 
 int	check_view_integrity(t_info *info, t_proj *proj, int hit)

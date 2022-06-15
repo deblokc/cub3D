@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 13:21:59 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 14:48:13 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,5 +236,8 @@ void	putpixel(t_img *img, int x, int y, unsigned int color);
 int		getdiff(t_info *info);
 void	set_current(double cur[2], double x, double y);
 int		check_north_corner(t_info *info, t_proj *proj, double tmp[2]);
+int		check_south_corner(t_info *info, t_proj *proj, double tmp[2]);
+int		check_west_corner(t_info *info, t_proj *proj, double tmp[2]);
+int		check_east_corner(t_info *info, t_proj *proj, double tmp[2]);
 
 #endif
