@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 19:05:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 13:12:25 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 15:23:46 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	loop1(t_info *info)
 {
+	if (info->turn_nb % FPT != 0)
+		return ;
 	handle_doors(info);
 	if (info->movement & 1 && !(info->movement & (1 << 1)))
 		goforward(info);
@@ -39,22 +41,25 @@ void	loop1(t_info *info)
 
 void	loop2(t_info *info)
 {
-	if (info->we.numtext == info->we.numtextmax - 1)
-		info->we.numtext = 0;
-	else
-		info->we.numtext++;
-	if (info->ea.numtext == info->ea.numtextmax - 1)
-		info->ea.numtext = 0;
-	else
-		info->ea.numtext++;
-	if (info->door.numtext == info->door.numtextmax - 1)
-		info->door.numtext = 0;
-	else
-		info->door.numtext++;
-	if (info->exit.numtext == info->exit.numtextmax - 1)
-		info->exit.numtext = 0;
-	else
-		info->exit.numtext++;
+	if (info->turn_nb % FPT == 0)
+	{
+		if (info->we.numtext == info->we.numtextmax - 1)
+			info->we.numtext = 0;
+		else
+			info->we.numtext++;
+		if (info->ea.numtext == info->ea.numtextmax - 1)
+			info->ea.numtext = 0;
+		else
+			info->ea.numtext++;
+		if (info->door.numtext == info->door.numtextmax - 1)
+			info->door.numtext = 0;
+		else
+			info->door.numtext++;
+		if (info->exit.numtext == info->exit.numtextmax - 1)
+			info->exit.numtext = 0;
+		else
+			info->exit.numtext++;
+	}
 	raisewalls(info);
 	if (info->tabmap)
 		putmaptoimg(info, &info->img[info->current_img]);
@@ -111,6 +116,8 @@ int	loop(t_info *info)
 	mlx_do_sync(info->mlx);
 	mlx_put_image_to_window(info->mlx, info->win, \
 			info->img[info->current_img].img, 0, 0);
+	if (++info->turn_nb > INT_MAX)
+		info->turn_nb = 0;
 	return (0);
 }
 

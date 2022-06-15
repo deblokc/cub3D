@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/30 11:59:08 by tnaton            #+#    #+#              #
-#    Updated: 2022/06/15 13:24:18 by bdetune          ###   ########.fr        #
+#    Updated: 2022/06/15 15:28:53 by bdetune          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ source_bonus = $(addprefix srcs_bonus/,$(SRC_BONUS))
 CFLAGS = -Wall -Werror -Wextra -Iinc -g
 CFLAGS_BONUS = -Wall -Werror -Wextra -Iinc_bonus -g
 
-CC = gcc
+CC = cc
 
 object := $(patsubst srcs/%.c,$(OBJDIR)/%.o,$(source)) 
 

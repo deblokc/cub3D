@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:19:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/15 13:23:40 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 15:08:26 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,21 @@ void	set_current(double cur[2], double x, double y)
 {
 	cur[0] = x;
 	cur[1] = y;
+}
+
+int	fl(char *str, t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ischr(str[i]) && str[i] != '\n')
+		{
+			info->isvalid = 0;
+			return (0);
+		}
+		i++;
+	}
+	return (1);
 }

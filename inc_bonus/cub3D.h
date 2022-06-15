@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 14:48:13 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 15:26:59 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@
 # include <sys/types.h>
 # include <dirent.h>
 # include <time.h>
+# include <limits.h>
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
-# define WIDTH 2500
-# define HEIGHT 1300
+# define FPT 1
 # define NB_IMG 16
 # define STEP 0.25
 # define DOOR_PATH "textures/door.xpm"
@@ -116,6 +116,7 @@ typedef struct s_info
 	void			*win;
 	int				height;
 	int				width;
+	unsigned int	turn_nb;
 	t_img			img[NB_IMG];
 	int				current_img;
 	int				printerr;
@@ -234,6 +235,7 @@ int		gettextdirerr(t_texture *text, t_info *info, DIR *dir, int i);
 int		gettextnodir(t_texture *text, t_info *info);
 void	putpixel(t_img *img, int x, int y, unsigned int color);
 int		getdiff(t_info *info);
+int		fl(char *str, t_info *info);
 void	set_current(double cur[2], double x, double y);
 int		check_north_corner(t_info *info, t_proj *proj, double tmp[2]);
 int		check_south_corner(t_info *info, t_proj *proj, double tmp[2]);

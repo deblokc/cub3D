@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 14:46:49 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 15:09:20 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,23 +74,6 @@ t_info	errdeligne(t_info info, t_map *current)
 			ft_putstr_fd(current->ligne, 2), \
 			freelstmap(current), \
 			freeallchunk(current), info);
-}
-
-int	fl(char *str, t_info *info)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (!ischr(str[i]) && str[i] != '\n')
-		{
-			info->isvalid = 0;
-			return (0);
-		}
-		i++;
-	}
-	return (1);
 }
 
 t_info	getinfo(t_map *current)

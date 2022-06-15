@@ -6,7 +6,7 @@
 #    By: tnaton <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/25 18:31:36 by tnaton            #+#    #+#              #
-#    Updated: 2022/06/07 14:12:27 by tnaton           ###   ########.fr        #
+#    Updated: 2022/06/15 15:29:24 by bdetune          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,12 +25,11 @@ ft_strjoin_free.c ft_strcmp.c ft_strtrim_free.c ft_strcmp_free.c ft_atoi_free.c
 
 OBJS = $(SRCS:.c=.o)
 
-CC		= gcc
-
 RM		= rm -f
 
 ifeq (libft,$(DIR))
 
+CC		= cc
 CFLAGS = -Wall -Wextra -Werror #-g3 -fsanitize=address
 
 NAME = libft.a

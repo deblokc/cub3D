@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:09:08 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/10 15:29:59 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 15:16:20 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	main(int ac, char **av)
 	info.map = parsemap(info.lstmap);
 	if (!info.map || !isvalid(info.map, &info))
 		return (freeinfo(&info), 1);
+	info.turn_nb = 0;
 	if (mlx(&info))
 		return (freeinfo(&info), 1);
 	freeinfo(&info);
