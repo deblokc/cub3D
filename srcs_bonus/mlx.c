@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:50 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 22:04:25 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 13:18:09 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ int	gettexture(t_info *info)
 		info->exit.path = ft_strdup(EXIT_PATH);
 	if (!info->end.path)
 		info->end.path = ft_strdup(END_PATH);
-	if (get_text(&info->no, info) || get_text(&info->so, info) \
-			|| get_text(&info->we, info) || get_text(&info->ea, info) \
-			|| get_text(&info->door, info) || get_text(&info->exit, info) \
-			|| get_text(&info->end, info))
+	if (get_text(&info->no, info) || get_text(&info->so, info)
+		|| get_text(&info->we, info) || get_text(&info->ea, info)
+		|| get_text(&info->door, info) || get_text(&info->exit, info)
+		|| get_text(&info->end, info))
 		return (1);
 	return (0);
 }

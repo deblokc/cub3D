@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:11:42 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 15:13:18 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 13:21:59 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,5 +234,7 @@ int		gettextdirerr(t_texture *text, t_info *info, DIR *dir, int i);
 int		gettextnodir(t_texture *text, t_info *info);
 void	putpixel(t_img *img, int x, int y, unsigned int color);
 int		getdiff(t_info *info);
+void	set_current(double cur[2], double x, double y);
+int		check_north_corner(t_info *info, t_proj *proj, double tmp[2]);
 
 #endif

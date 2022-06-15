@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 19:02:20 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 11:39:05 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 13:19:08 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,19 @@ void	putsquare(t_info *info, t_img *img, int lst[3], unsigned int color)
 
 	retx = lst[0];
 	rety = lst[1];
-	nexty = lst[1] + lst[3];
-	nextx = lst[0] + lst[3];
+	nexty = lst[1] + lst[2];
+	nextx = lst[0] + lst[2];
 	while (lst[1] < nexty)
 	{
 		lst[0] = retx;
 		while (lst[0] < nextx)
 		{
-			if (lst[0] >= 0 && lst[0] < info->width \
-					&& lst[1] >= 0 && lst[1] < info->height)
+			if (lst[0] >= 0 && lst[0] < info->width
+				&& lst[1] >= 0 && lst[1] < info->height)
 				putpixel(img, lst[0], lst[1], color);
-			lst[0]++;
+			lst[0] += 1;
 		}
-		lst[1]++;
+		lst[1] += 1;
 	}
 	lst[0] = retx;
 	lst[1] = rety;

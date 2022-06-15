@@ -6,7 +6,7 @@
 /*   By: bdetune <bdetune@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:43:04 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/15 11:40:06 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 13:24:29 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,84 +20,23 @@ static int	check_north(t_info *info, t_proj *proj)
 	tmp[1] = proj->cur[1];
 	if (info->map[(int)(tmp[1] + 1)][(int)(tmp[0])] == '1')
 	{
-		if ((proj->v[0] <= 0
-				&& info->map[(int)(tmp[1])][(int)(tmp[0] + 1)] == '1')
-			|| (proj->v[0] >= 0
-				&& info->map[(int)(tmp[1])][(int)(tmp[0] - 1)] == '1'))
-		{
-			if (proj->v[0] <= 0)
-				proj->cur[0] = 0;
-			else
-				proj->cur[0] = 0.9999;
-			proj->cur[1] = 0.9999;
+		if (check_north_corner(info, proj, tmp))
 			return (1);
-		}
-		else
-		{
-			if (proj->v[0] <= 0)
-			{
-				proj->cur[0] = floor(tmp[0] + 1);
-				proj->cur[1] = tmp[1];
-				if (is_on_door(info, proj, 1))
-					return (1);
-			}
-			else
-			{
-				proj->cur[0] = floor(tmp[0]) - 0.0001;
-				proj->cur[1] = tmp[1];
-				if (is_on_door(info, proj, 1))
-					return (1);
-			}
-		}
-		proj->cur[0] = tmp[0];
-		proj->cur[1] = ceil(tmp[1]);
-		return (2);
+		return (set_current(proj->cur, tmp[0], ceil(tmp[1])), 2);
 	}
-	else if (fabs(ceil(tmp[0]) - tmp[0]) < 0.0002 \
-			|| fabs(floor(tmp[0]) - tmp[0]) < 0.0001)
+	else if (fabs(ceil(tmp[0]) - tmp[0]) < 0.0002
+		|| fabs(floor(tmp[0]) - tmp[0]) < 0.0001)
 	{
-		proj->cur[0] = tmp[0];
-		proj->cur[1] = ceil(tmp[1]);
+		set_current(proj->cur, tmp[0], ceil(tmp[1]));
 		if (is_on_door(info, proj, 2))
 		{
-			if ((proj->v[0] <= 0
-					&& info->map[(int)(tmp[1])][(int)(tmp[0] + 1)] == '1')
-				|| (proj->v[0] >= 0
-					&& info->map[(int)(tmp[1])][(int)(tmp[0] - 1)] == '1'))
-			{
-				if (proj->v[0] <= 0)
-					proj->cur[0] = 0;
-				else
-					proj->cur[0] = 0.9999;
-				proj->cur[1] = 0.9999;
+			if (check_north_corner(info, proj, tmp))
 				return (1);
-			}
-			else
-			{
-				if (proj->v[0] <= 0)
-				{
-					proj->cur[0] = floor(tmp[0] + 1);
-					proj->cur[1] = tmp[1];
-					if (is_on_door(info, proj, 1))
-						return (1);
-				}
-				else
-				{
-					proj->cur[0] = floor(tmp[0]) - 0.0001;
-					proj->cur[1] = tmp[1];
-					if (is_on_door(info, proj, 1))
-						return (1);
-				}
-			}
-			proj->cur[0] = tmp[0];
-			proj->cur[1] = ceil(tmp[1]);
-			is_on_door(info, proj, 2);
-			return (2);
+			return (set_current(proj->cur, tmp[0], ceil(tmp[1])), \
+					is_on_door(info, proj, 2), 2);
 		}
 	}
-	proj->cur[0] = tmp[0];
-	proj->cur[1] = tmp[1];
-	return (1);
+	return (set_current(proj->cur, tmp[0], tmp[1]), 1);
 }
 
 static int	check_south(t_info *info, t_proj *proj)
@@ -141,8 +80,8 @@ static int	check_south(t_info *info, t_proj *proj)
 		proj->cur[1] = floor(tmp[1]) - 0.0001;
 		return (2);
 	}
-	else if (fabs(ceil(tmp[0]) - tmp[0]) < 0.0002 \
-			|| fabs(floor(tmp[0]) - tmp[0]) < 0.0001)
+	else if (fabs(ceil(tmp[0]) - tmp[0]) < 0.0002
+		|| fabs(floor(tmp[0]) - tmp[0]) < 0.0001)
 	{
 		proj->cur[0] = tmp[0];
 		proj->cur[1] = floor(tmp[1]) - 0.0001;
@@ -229,8 +168,8 @@ static int	check_west(t_info *info, t_proj *proj)
 		proj->cur[1] = tmp[1];
 		return (1);
 	}
-	else if (fabs(ceil(tmp[1]) - tmp[1]) < 0.0002 \
-			|| fabs(floor(tmp[1]) - tmp[1]) < 0.0001)
+	else if (fabs(ceil(tmp[1]) - tmp[1]) < 0.0002
+		|| fabs(floor(tmp[1]) - tmp[1]) < 0.0001)
 	{
 		proj->cur[0] = ceil(tmp[0]);
 		proj->cur[1] = tmp[1];
@@ -317,8 +256,8 @@ static int	check_east(t_info *info, t_proj *proj)
 		proj->cur[1] = tmp[1];
 		return (1);
 	}
-	else if (fabs(ceil(tmp[1]) - tmp[1]) < 0.0002 \
-			|| fabs(floor(tmp[1]) - tmp[1]) < 0.0001)
+	else if (fabs(ceil(tmp[1]) - tmp[1]) < 0.0002
+		|| fabs(floor(tmp[1]) - tmp[1]) < 0.0001)
 	{
 		proj->cur[0] = floor(tmp[0]) - 0.0001;
 		proj->cur[1] = tmp[1];

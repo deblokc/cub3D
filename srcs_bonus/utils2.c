@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:19:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/13 15:37:43 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 13:23:40 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,10 @@ void	get_x_px_origin(t_proj *proj)
 		proj->percent_x = 0.9999;
 	proj->percent_x = floor(proj->percent_x \
 					* (double)proj->target.texture[proj->target.numtext].width);
+}
+
+void	set_current(double cur[2], double x, double y)
+{
+	cur[0] = x;
+	cur[1] = y;
 }

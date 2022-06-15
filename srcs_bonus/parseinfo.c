@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/14 15:55:11 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 13:18:30 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ int	getlineinfo(t_map *current, t_info *info)
 
 int	ischiant(t_map *current)
 {
-	return (substrinstr(current->ligne, "NO") || \
-				substrinstr(current->ligne, "SO") || \
-				substrinstr(current->ligne, "WE") || \
-				substrinstr(current->ligne, "EA") || \
-				charinstr(current->ligne, 'F') || \
-				charinstr(current->ligne, 'C'));
+	return (substrinstr(current->ligne, "NO")
+		|| substrinstr(current->ligne, "SO")
+		|| substrinstr(current->ligne, "WE")
+		|| substrinstr(current->ligne, "EA")
+		|| charinstr(current->ligne, 'F')
+		|| charinstr(current->ligne, 'C'));
 }
 
 t_info	errdeligne(t_info info, t_map *current)
