@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 18:49:12 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 14:49:43 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 
 void	printerr(t_info *info)
 {
-	if (!info->no.path)
-		puterr("Erreur sur la ligne NO\n", info);
-	if (!info->so.path)
-		puterr("Erreur sur la ligne SO\n", info);
-	if (!info->we.path)
-		puterr("Erreur sur la ligne WE\n", info);
-	if (!info->ea.path)
-		puterr("Erreur sur la ligne EA\n", info);
-	if (info->f == -1)
-		puterr("Erreur sur la ligne F\n", info);
-	if (info->c == -1)
-		puterr("Erreur sur la ligne C\n", info);
+	if (info->isvalid)
+	{
+		if (!info->no.path)
+			puterr("Erreur sur la ligne NO\n", info);
+		if (!info->so.path)
+			puterr("Erreur sur la ligne SO\n", info);
+		if (!info->we.path)
+			puterr("Erreur sur la ligne WE\n", info);
+		if (!info->ea.path)
+			puterr("Erreur sur la ligne EA\n", info);
+		if (info->f == -1)
+			puterr("Erreur sur la ligne F\n", info);
+		if (info->c == -1)
+			puterr("Erreur sur la ligne C\n", info);
+	}
 }
 
 int	getlineinfo(t_map *current, t_info *info)

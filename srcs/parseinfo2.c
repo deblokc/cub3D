@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:14:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/13 14:40:17 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 15:05:03 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ int	charinstr(char *str, char c)
 	while (str[i])
 	{
 		if (str[i] == c)
-			return (1);
+		{
+			if (str[i + 1] == ' ')
+				return (1);
+			return (0);
+		}
 		if (str[i] == ' ')
 			return (0);
 		i++;
@@ -46,10 +50,12 @@ int	substrinstr(char *str, char *substr)
 		while (str[i] && str[i] != ' ' && str[i] != substr[0])
 			i++;
 		if (str[i] && str[i] != ' ' && str[i + 1] == substr[1])
-			return (1);
+			i++;
 		if (!str[i] || str[i] == ' ')
 			return (0);
-		i++;
+		if (!str[i + 1] || str[i + 1] != ' ')
+			return (0);
+		return (1);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:14:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 13:01:41 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 14:48:43 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@ int	charinstr(char *str, char c)
 	while (str[i])
 	{
 		if (str[i] == c)
-			return (1);
+		{
+			if (str[i + 1] == ' ')
+				return (1);
+			return (0);
+		}
 		if (str[i] == ' ')
 			return (0);
 		i++;
@@ -46,10 +50,12 @@ int	substrinstr(char *str, char *substr)
 		while (str[i] && str[i] != ' ' && str[i] != substr[0])
 			i++;
 		if (str[i] && str[i] != ' ' && str[i + 1] == substr[1])
-			return (1);
+			i++;
 		if (!str[i] || str[i] == ' ')
 			return (0);
-		i++;
+		if (!str[i + 1] || str[i + 1] != ' ')
+			return (0);
+		return (1);
 	}
 	return (0);
 }
@@ -80,7 +86,6 @@ int	getlist(char *str)
 {
 	unsigned int	i;
 	unsigned int	j;
-	long long		tmp;
 	int				k;
 	unsigned char	*lst;
 
@@ -95,10 +100,10 @@ int	getlist(char *str)
 		j = i;
 		while (str[i] && str[i] != ',')
 			i++;
-		tmp = ft_atoi_free(ft_substr(str, j, i - j));
-		if (tmp < 0 || tmp > 255)
+		j = ft_atoi_free(ft_substr(str, j, i - j));
+		if (j > 255)
 			return (free(lst), free(str), -2);
-		lst[k] = (unsigned char)tmp;
+		lst[k] = (unsigned char)j;
 		i++;
 		k++;
 	}
