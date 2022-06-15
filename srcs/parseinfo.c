@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 14:01:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/15 14:49:43 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 16:01:52 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	checkline(char *line, t_info *info)
 	info->isvalid = 1;
 	while (line[i])
 	{
-		if (!ischr(line[i]) && line[i] != '\n')
+		if (!ischr(line[i]) && line[i] != '\n' && line[i] != ' ')
 		{
 			puterr("Invalide char in first line of map\n", info);
 			info->isvalid = 0;

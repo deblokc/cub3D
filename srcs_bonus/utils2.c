@@ -6,7 +6,7 @@
 /*   By: bdetune <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:19:30 by bdetune           #+#    #+#             */
-/*   Updated: 2022/06/15 15:08:26 by bdetune          ###   ########.fr       */
+/*   Updated: 2022/06/15 15:59:50 by bdetune          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	fl(char *str, t_info *info)
 	i = 0;
 	while (str[i])
 	{
-		if (!ischr(str[i]) && str[i] != '\n')
+		if (!ischr(str[i]) && str[i] != '\n' && str[i] != ' ')
 		{
 			info->isvalid = 0;
 			return (0);
