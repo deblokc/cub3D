@@ -6,7 +6,7 @@
 /*   By: tnaton <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 16:14:13 by tnaton            #+#    #+#             */
-/*   Updated: 2022/06/06 16:14:40 by tnaton           ###   ########.fr       */
+/*   Updated: 2022/06/15 13:01:41 by tnaton           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	getlist(char *str)
 {
 	unsigned int	i;
 	unsigned int	j;
+	long long		tmp;
 	int				k;
 	unsigned char	*lst;
 
@@ -94,10 +95,10 @@ int	getlist(char *str)
 		j = i;
 		while (str[i] && str[i] != ',')
 			i++;
-		j = ft_atoi_free(ft_substr(str, j, i - j));
-		if (j > 255)
+		tmp = ft_atoi_free(ft_substr(str, j, i - j));
+		if (tmp < 0 || tmp > 255)
 			return (free(lst), free(str), -2);
-		lst[k] = j;
+		lst[k] = (unsigned char)tmp;
 		i++;
 		k++;
 	}
